@@ -18,6 +18,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.util.Calendar;
+import java.util.Date;
+
+import xyz.wendyltanpcy.myapplication.model.TodoEvent;
+
 /**
  * Created by Wendy on 2017/9/16.
  */
@@ -66,6 +71,20 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
                 break;
             case R.id.save:
                 Toast.makeText(this.getActivity(),"text save!",Toast.LENGTH_SHORT).show();
+                TodoEvent event = new TodoEvent();
+                event.setEventName(editEvent.getText().toString());
+                event.setEventFinish(false);
+                event.setEventDetail("add more detail");
+                Calendar now = Calendar.getInstance();
+                int month = now.get(Calendar.MONTH);
+                int date = now.get(Calendar.DATE);
+                String deadline =null;
+                deadline = String.format("%d月%d日",month+1,date);
+                event.setEventDeadLine(deadline);
+
+                eventContentActivity.actionStart(getActivity(),event.getEventName(),event.getEventDetail(),
+                        event.getEventDeadLine());
+
                 this.dismiss();
                 break;
             default:

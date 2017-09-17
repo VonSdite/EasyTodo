@@ -1,6 +1,5 @@
 package xyz.wendyltanpcy.myapplication;
-
-
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 
@@ -12,6 +11,11 @@ import android.view.MenuItem;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    private static Context context;
+    public static Context getAppContext() {
+        return MainActivity.context;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

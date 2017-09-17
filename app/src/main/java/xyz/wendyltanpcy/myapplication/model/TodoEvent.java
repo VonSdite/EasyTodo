@@ -11,14 +11,14 @@ public class TodoEvent {
     private String eventName;
     private String eventDetail;
     private boolean eventFinish;
-    private Calendar eventDeadLine;
+    private String eventDeadLine;
 
 
-    public Calendar getEventDeadLine() {
+    public String getEventDeadLine() {
         return eventDeadLine;
     }
 
-    public void setEventDeadLine(Calendar eventDeadLine) {
+    public void setEventDeadLine(String eventDeadLine) {
         this.eventDeadLine = eventDeadLine;
     }
 

@@ -21,10 +21,12 @@ public class eventContentFragment extends Fragment {
         return mView;
     }
 
-    public void refresh(String newsTitle, String newsContent){
+    public void refresh(String newsTitle, String newsContent,String eventDeadLine){
         TextView newsTitleText = mView.findViewById(R.id.event_name);
-        TextView newsContentText =  mView.findViewById(R.id.news_content);
+        TextView newsContentText =  mView.findViewById(R.id.event_detail);
+        TextView eventDeadLineText = mView.findViewById(R.id.event_deadline);
         newsTitleText.setText(newsTitle);
         newsContentText.setText(newsContent);
+        eventDeadLineText.setText(eventDeadLine);
     }
 }

@@ -61,7 +61,6 @@
 
 
                     <TextView
-                        android:id="@+id/mission"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="mission"
@@ -90,14 +89,13 @@
                     android:padding="10dp">
 
                     <TextView
-                        android:id="@+id/detail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="detail"
                         android:textSize="15sp"/>
 
                     <EditText
-                        android:id="@+id/news_content"
+                        android:id="@+id/event_detail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
                 </LinearLayout>
@@ -121,11 +119,10 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/currentDate"
+                        android:id="@+id/event_deadline"
                         android:layout_weight="1"
                         android:gravity="center_horizontal"
                         android:padding="10dp"
-                        android:text="9月15日"
                         android:textSize="20sp"/>
 
                     <ImageView
