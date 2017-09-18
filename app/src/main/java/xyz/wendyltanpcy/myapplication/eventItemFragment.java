@@ -28,13 +28,15 @@ import static android.R.id.list;
 public class eventItemFragment extends Fragment {
 
     private EventsAdapter MyAdapter;
+    private List<TodoEvent> eventList = getEvents();
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.event_list_frag,container,false);
-        RecyclerView newsTitleRecyclerView = view.findViewById(R.id.news_title_recycler_view);
+        RecyclerView eventNameRecyclerView = view.findViewById(R.id.news_title_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        newsTitleRecyclerView.setLayoutManager(layoutManager);
-        MyAdapter = new EventsAdapter(getEvents());
-        newsTitleRecyclerView.setAdapter(MyAdapter);
+        eventNameRecyclerView.setLayoutManager(layoutManager);
+        MyAdapter = new EventsAdapter(eventList);
+        eventNameRecyclerView.setAdapter(MyAdapter);
 
 
         return  view;
@@ -51,6 +53,10 @@ public class eventItemFragment extends Fragment {
         }
 
         return todoEventList;
+    }
+
+    private List<TodoEvent> getCurrentList(){
+        return eventList;
     }
 
     private String getRandomLengthContent(String content) {
@@ -94,7 +100,7 @@ public class eventItemFragment extends Fragment {
             holder.checkBoxSample.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    CheckBoxSample checkBoxSample = view.findViewById(R.id.event_finish);
+                    final CheckBoxSample checkBoxSample = view.findViewById(R.id.event_finish);
                     checkBoxSample.toggle();
                     final AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
                     dialog.setTitle("Are u sure you have finish this event?");
@@ -109,7 +115,12 @@ public class eventItemFragment extends Fragment {
                             MyAdapter.notifyItemRangeChanged(position, getItemCount());
                         }
                     });
-                    dialog.setNegativeButton("CANCEL", null);
+                    dialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            checkBoxSample.toggle();
+                        }
+                    });
                     dialog.show();
 
 

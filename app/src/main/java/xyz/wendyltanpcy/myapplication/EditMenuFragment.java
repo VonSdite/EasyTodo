@@ -20,8 +20,11 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by Wendy on 2017/9/16.
@@ -32,6 +35,11 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
     private ImageView calender;
     private EditText editEvent;
     private ImageView saveButton;
+    private ImageView shareButton;
+    private ImageView cameraButton;
+    private String date_return;
+    public static final String GET_DATE = "1";
+
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -52,10 +60,14 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
         editEvent = dialog.findViewById(R.id.edit_event);
         calender =  dialog.findViewById(R.id.pick_date);
         saveButton =  dialog.findViewById(R.id.save);
+        shareButton = dialog.findViewById(R.id.share);
+        cameraButton = dialog.findViewById(R.id.take_photo);
 
        editEvent.setOnClickListener(this);
         calender.setOnClickListener(this);
         saveButton.setOnClickListener(this);
+        shareButton.setOnClickListener(this);
+        cameraButton.setOnClickListener(this);
         return dialog;
     }
 
@@ -67,7 +79,13 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
         switch (view.getId()){
             case R.id.pick_date:
                 Intent i = new Intent(getActivity(),PickDateActvity.class);
-                startActivity(i);
+                startActivityForResult(i,1);
+                break;
+            case R.id.take_photo:
+                Toast.makeText(this.getActivity(),"taking photo!",Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.share:
+                Toast.makeText(this.getActivity(),"sharing!",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.save:
                 Toast.makeText(this.getActivity(),"text save!",Toast.LENGTH_SHORT).show();
@@ -75,13 +93,7 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
                 event.setEventName(editEvent.getText().toString());
                 event.setEventFinish(false);
                 event.setEventDetail("add more detail");
-                Calendar now = Calendar.getInstance();
-                int month = now.get(Calendar.MONTH);
-                int date = now.get(Calendar.DATE);
-                String deadline =null;
-                deadline = String.format("%d月%d日",month+1,date);
-                event.setEventDeadLine(deadline);
-
+                event.setEventDeadLine(date_return);
                 eventContentActivity.actionStart(getActivity(),event.getEventName(),event.getEventDetail(),
                         event.getEventDeadLine());
 
@@ -89,6 +101,17 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
                 break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode){
+            case 1:
+                if (resultCode==RESULT_OK) {
+                    date_return = data.getStringExtra("date_return");
+                }
+
         }
     }
 }
