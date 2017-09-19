@@ -23,7 +23,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
 {
     private  Context mContext;
-    private List<TodoEvent> mTodoEventList;
+    private List<TodoEvent> mTodoEventList ;
+    private boolean isFinish=false;
 
     class ViewHolder extends RecyclerView.ViewHolder{
         TextView eventNameText;
@@ -36,6 +37,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         }
 
     }
+
 
     public EventsAdapter(List<TodoEvent> todoEventList) {
         mTodoEventList=todoEventList;
@@ -66,7 +68,15 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             public void onClick(View view) {
 
                 TodoEvent todoEvent = mTodoEventList.get(pos);
-                eventContentActivity.actionStart(mContext, todoEvent.getEventName(), todoEvent.getEventDetail(), todoEvent.getEventDeadLine());
+
+                eventContentActivity.actionStart(mContext,todoEvent);
+                mTodoEventList.remove(pos);
+                isFinish = eventContentActivity.actionStatus();
+                if (isFinish) {
+                    mTodoEventList.add(pos, eventContentActivity.actionEnd());
+                    notifyItemChanged(pos);
+                }
+
             }
         });
         hd.checkBoxSample.setOnClickListener(new View.OnClickListener() {

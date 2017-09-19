@@ -38,7 +38,7 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
     private ImageView saveButton;
     private ImageView shareButton;
     private ImageView cameraButton;
-    private String date_return;
+    private String date_return=null;
     private String date=null;
     private List<TodoEvent> mTodoEventList;
     private EventsAdapter adapter;
@@ -109,7 +109,6 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
                             .append(day).append("日").append(" 前完成"));
                     event.setEventDeadLine(date);
                 }
-
                 mTodoEventList.add(event);
                 adapter.notifyItemInserted(adapter.getItemCount());
                 this.dismiss();

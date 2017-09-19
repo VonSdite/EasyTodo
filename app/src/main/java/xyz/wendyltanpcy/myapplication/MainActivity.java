@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
             todoEvent.setEventName("This is event name " + i);
             todoEvent.setEventDetail(getRandomLengthContent("This is todoEvent etail"+i+"."));
             todoEvent.setEventDeadLine("9月14日");
+            todoEvent.setEventFinish(false);
             eventList.add(todoEvent);
         }
 

@@ -2,6 +2,7 @@ package xyz.wendyltanpcy.myapplication.model;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by Wendy on 2017/9/6.
@@ -13,7 +14,6 @@ public class TodoEvent implements Serializable{
     private String eventDetail;
     private boolean eventFinish;
     private String eventDeadLine;
-
 
     public String getEventDeadLine() {
         return eventDeadLine;
