@@ -16,7 +16,7 @@ import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
 public class eventContentActivity extends AppCompatActivity {
 
-    private List<TodoEvent> eventListAppend;
+
     public static void actionStart(Context context, String eventName, String eventDetail,String eventDeadLine){
         Intent intent = new Intent(context,eventContentActivity.class);
         intent.putExtra("event_name",eventName);
@@ -42,15 +42,6 @@ public class eventContentActivity extends AppCompatActivity {
         eventContentFragment eventContentFragment = (eventContentFragment)
                 getSupportFragmentManager().findFragmentById(R.id.news_content_fragment);
         eventContentFragment.refresh(eventName,eventDetail,eventDeadLine);
-
-        FloatingActionButton saveDetailButton = (FloatingActionButton) findViewById(R.id.save_detail_button);
-        saveDetailButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(eventContentActivity.this,"Detail save!",Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        });
 
     }
 

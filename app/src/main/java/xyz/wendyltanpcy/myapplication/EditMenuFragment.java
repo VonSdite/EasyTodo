@@ -6,6 +6,7 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
@@ -38,7 +39,9 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
     private ImageView shareButton;
     private ImageView cameraButton;
     private String date_return;
-    public static final String GET_DATE = "1";
+    private String date=null;
+    private List<TodoEvent> mTodoEventList;
+    private EventsAdapter adapter;
 
 
     @Override
@@ -68,11 +71,11 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
         saveButton.setOnClickListener(this);
         shareButton.setOnClickListener(this);
         cameraButton.setOnClickListener(this);
+        Bundle bundle = getArguments();
+        mTodoEventList = (List<TodoEvent>) bundle.getSerializable("list");
+        adapter = (EventsAdapter) bundle.getSerializable("adapter");
         return dialog;
     }
-
-
-
 
     @Override
     public void onClick(View view) {
@@ -93,10 +96,22 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
                 event.setEventName(editEvent.getText().toString());
                 event.setEventFinish(false);
                 event.setEventDetail("add more detail");
-                event.setEventDeadLine(date_return);
-                eventContentActivity.actionStart(getActivity(),event.getEventName(),event.getEventDetail(),
-                        event.getEventDeadLine());
 
+                if (date_return!=null)
+                    event.setEventDeadLine(date_return);
+                else{
+                    Calendar now = Calendar.getInstance();
+                    int year = now.get(Calendar.YEAR);
+                    int month = now.get(Calendar.MONTH)+1;
+                    int day = now.get(Calendar.DAY_OF_MONTH);
+                    date = new String(new StringBuilder().append("在 ").append(year)
+                            .append("年").append(month).append("月")
+                            .append(day).append("日").append(" 前完成"));
+                    event.setEventDeadLine(date);
+                }
+
+                mTodoEventList.add(event);
+                adapter.notifyItemInserted(adapter.getItemCount());
                 this.dismiss();
                 break;
             default:

@@ -10,6 +10,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:android="http://schemas.android.com/apk/res/android"
         app:cardElevation="1dp"
+        android:id="@+id/event_item"
         app:cardMaxElevation="2dp"
         app:cardUseCompatPadding="true">
 

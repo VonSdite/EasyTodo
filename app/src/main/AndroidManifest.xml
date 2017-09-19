@@ -24,6 +24,7 @@
         <activity android:name=".EditMenuActivity">
         </activity>
         <activity android:name=".PickDateActvity"></activity>
+        <activity android:name=".eventItemActivity"></activity>
     </application>
 
 </manifest>

@@ -1,5 +1,6 @@
 package xyz.wendyltanpcy.myapplication.model;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Calendar;
  */
 //实体类里面有属性，和设置方法
 
-public class TodoEvent {
+public class TodoEvent implements Serializable{
     private String eventName;
     private String eventDetail;
     private boolean eventFinish;
