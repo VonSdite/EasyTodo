@@ -1,5 +1,7 @@
 package xyz.wendyltanpcy.myapplication.model;
 
+import org.litepal.crud.DataSupport;
+
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.List;
@@ -7,13 +9,23 @@ import java.util.List;
 /**
  * Created by Wendy on 2017/9/6.
  */
-//实体类里面有属性，和设置方法
 
-public class TodoEvent implements Serializable{
+public class TodoEvent extends DataSupport{
+
     private String eventName;
     private String eventDetail;
     private boolean eventFinish;
     private String eventDeadLine;
+    private long id;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
 
     public String getEventDeadLine() {
         return eventDeadLine;

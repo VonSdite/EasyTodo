@@ -12,8 +12,14 @@
     <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/news_title_fragment"
+        android:id="@+id/event_list_fragment"
         android:name="xyz.wendyltanpcy.myapplication.eventItemFragment"/>
+
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/no_event_frag"
+        android:name="xyz.wendyltanpcy.myapplication.NoEventFragment"/>
 
 
 </FrameLayout>

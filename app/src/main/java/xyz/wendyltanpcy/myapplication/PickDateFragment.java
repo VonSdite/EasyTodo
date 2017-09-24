@@ -3,7 +3,6 @@ package xyz.wendyltanpcy.myapplication;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.Fragment;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,6 +11,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +25,7 @@ import java.io.Serializable;
  * Created by Wendy on 2017/9/17.
  */
 
-public class PickDateFragment extends Fragment{
+public class PickDateFragment extends Fragment {
 
     private FloatingActionButton saveButton;
     private String date;
@@ -36,6 +36,8 @@ public class PickDateFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.pick_date_fragment,container,false);
+
+
         saveButton = view.findViewById(R.id.saveDate);
         mDatePicker = view.findViewById(R.id.datePicker);
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -64,8 +66,6 @@ public class PickDateFragment extends Fragment{
             }
 
         });
-
-
         return view;
     }
 }

@@ -1,19 +1,24 @@
 package xyz.wendyltanpcy.myapplication;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.litepal.crud.DataSupport;
+
 import java.util.List;
 
+import xyz.wendyltanpcy.myapplication.Adapter.EventsAdapter;
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
 public class eventContentActivity extends AppCompatActivity {
@@ -25,23 +30,19 @@ public class eventContentActivity extends AppCompatActivity {
     private TextView eventNameText ;
     private TextView eventDetailText ;
     private TextView eventDeadLineText ;
-    public static  TodoEvent event;
-    private static boolean action_status;
+    private static long position;
+    private static TodoEvent Event;
+    private static EventsAdapter.ViewHolder holder;
 
-    public static void actionStart(Context context,TodoEvent event){
+    public static void actionStart(Context context, TodoEvent event,EventsAdapter.ViewHolder hd){
         Intent intent = new Intent(context,eventContentActivity.class);
-        intent.putExtra("event",event);
+        position = event.getId()-1;
+        Event = event;
+        holder = hd;
         context.startActivity(intent);
-
     }
 
-    public static TodoEvent actionEnd(){
-        return event;
-    }
 
-    public static boolean actionStatus(){
-        return action_status;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,13 +53,10 @@ public class eventContentActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        event = (TodoEvent) getIntent().getSerializableExtra("event");
 
-        Toast.makeText(getApplicationContext(),event.getEventName(),Toast.LENGTH_LONG).show();
-
-        final eventContentFragment eventContentFragment = (eventContentFragment)
+        eventContentFragment eventContentFragment = (eventContentFragment)
                 getSupportFragmentManager().findFragmentById(R.id.news_content_fragment);
-        eventContentFragment.refresh(event);
+        eventContentFragment.refresh(Event);
 
         chooseDate = (ImageView) findViewById(R.id.choose_date);
         chooseAlarm = (ImageView) findViewById(R.id.choose_alarm);
@@ -78,11 +76,12 @@ public class eventContentActivity extends AppCompatActivity {
         saveDetailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                event.setEventName(eventNameText.getText().toString());
-                event.setEventDetail(eventDetailText.getText().toString());
-                event.setEventDeadLine(eventDeadLineText.getText().toString());
+                Event.setEventName(eventNameText.getText().toString());
+                Event.setEventDetail(eventDetailText.getText().toString());
+                Event.setEventDeadLine(eventDeadLineText.getText().toString());
+                Event.save();
+                holder.notify();
                 Toast.makeText(getApplicationContext(),"Detail save!",Toast.LENGTH_SHORT).show();
-                action_status = true;
                 finish();
 
             }

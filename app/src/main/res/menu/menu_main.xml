@@ -9,9 +9,9 @@
         android:title="@string/action_settings"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/item_delete"
+        android:id="@+id/delete"
         android:contentDescription="delete item"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/delete"
         android:title="Delete"
         app:showAsAction="never"/>
 

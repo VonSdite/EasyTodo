@@ -36,7 +36,6 @@ public class eventContentFragment extends Fragment {
     private TextView eventDeadLineText ;
 
 
-
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.events_content_frag,container,false);
 
@@ -46,9 +45,6 @@ public class eventContentFragment extends Fragment {
 
         return mView;
     }
-
-
-
 
     public void refresh(TodoEvent event){
         eventNameText.setText(event.getEventName());

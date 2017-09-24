@@ -2,27 +2,24 @@ package xyz.wendyltanpcy.myapplication;
 
 
 import android.app.Dialog;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 
-import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import org.litepal.crud.DataSupport;
+
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
+import xyz.wendyltanpcy.myapplication.Adapter.EventsAdapter;
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
 import static android.app.Activity.RESULT_OK;
@@ -38,9 +35,9 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
     private ImageView saveButton;
     private ImageView shareButton;
     private ImageView cameraButton;
-    private String date_return=null;
-    private String date=null;
-    private List<TodoEvent> mTodoEventList;
+
+    private String date_return;
+    private String date;
     private EventsAdapter adapter;
 
 
@@ -60,20 +57,24 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
         window.setAttributes(wlp);
         window.setWindowAnimations(R.style.Animation_Bottom);
 
-        editEvent = dialog.findViewById(R.id.edit_event);
+        //init other widget and set listener
+        editEvent =  dialog.findViewById(R.id.edit_event);
         calender =  dialog.findViewById(R.id.pick_date);
         saveButton =  dialog.findViewById(R.id.save);
-        shareButton = dialog.findViewById(R.id.share);
-        cameraButton = dialog.findViewById(R.id.take_photo);
+        shareButton =  dialog.findViewById(R.id.share);
+        cameraButton =  dialog.findViewById(R.id.take_photo);
 
-       editEvent.setOnClickListener(this);
+        editEvent.setOnClickListener(this);
         calender.setOnClickListener(this);
         saveButton.setOnClickListener(this);
         shareButton.setOnClickListener(this);
         cameraButton.setOnClickListener(this);
+
+
         Bundle bundle = getArguments();
-        mTodoEventList = (List<TodoEvent>) bundle.getSerializable("list");
         adapter = (EventsAdapter) bundle.getSerializable("adapter");
+
+
         return dialog;
     }
 
@@ -81,25 +82,30 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.pick_date:
-                Intent i = new Intent(getActivity(),PickDateActvity.class);
-                startActivityForResult(i,1);
+//                Intent i = new Intent(getContext(),PickDateActvity.class);
+//                startActivityForResult(i,1);
+                Toast.makeText(getContext(),"can't choose from here anymore",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.take_photo:
-                Toast.makeText(this.getActivity(),"taking photo!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"taking photo!",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.share:
-                Toast.makeText(this.getActivity(),"sharing!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"sharing!",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.save:
-                Toast.makeText(this.getActivity(),"text save!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"text save!",Toast.LENGTH_SHORT).show();
                 TodoEvent event = new TodoEvent();
                 event.setEventName(editEvent.getText().toString());
                 event.setEventFinish(false);
                 event.setEventDetail("add more detail");
-
-                if (date_return!=null)
+                event.setId(adapter.getItemCount());
+                if (date_return!=null){
+                    //set to specific date
                     event.setEventDeadLine(date_return);
+                    event.save();
+                }
                 else{
+                    //set to default date
                     Calendar now = Calendar.getInstance();
                     int year = now.get(Calendar.YEAR);
                     int month = now.get(Calendar.MONTH)+1;
@@ -108,9 +114,12 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
                             .append("年").append(month).append("月")
                             .append(day).append("日").append(" 前完成"));
                     event.setEventDeadLine(date);
+                    event.save();
                 }
-                mTodoEventList.add(event);
+                adapter.getTodoEventList().add(event);
                 adapter.notifyItemInserted(adapter.getItemCount());
+                View visibility = getActivity().findViewById(R.id.no_event_layout);
+                visibility.setVisibility(View.INVISIBLE);
                 this.dismiss();
                 break;
             default:
@@ -128,4 +137,6 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
 
         }
     }
+
+
 }

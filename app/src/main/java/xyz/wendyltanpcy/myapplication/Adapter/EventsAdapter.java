@@ -1,4 +1,4 @@
-package xyz.wendyltanpcy.myapplication;
+package xyz.wendyltanpcy.myapplication.Adapter;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,9 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+
+import org.litepal.crud.DataSupport;
+
 import java.io.Serializable;
 import java.util.List;
 
+import xyz.wendyltanpcy.myapplication.CheckBoxSample;
+import xyz.wendyltanpcy.myapplication.R;
+import xyz.wendyltanpcy.myapplication.eventContentActivity;
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
 /**
@@ -23,12 +29,12 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
 {
     private  Context mContext;
-    private List<TodoEvent> mTodoEventList ;
-    private boolean isFinish=false;
+    protected List<TodoEvent> mTodoEventList ;
 
-    class ViewHolder extends RecyclerView.ViewHolder{
-        TextView eventNameText;
-        CheckBoxSample checkBoxSample;
+
+    public class ViewHolder extends RecyclerView.ViewHolder{
+        protected TextView eventNameText;
+        protected  CheckBoxSample checkBoxSample;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -38,6 +44,9 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
     }
 
+    public List<TodoEvent> getTodoEventList() {
+        return mTodoEventList;
+    }
 
     public EventsAdapter(List<TodoEvent> todoEventList) {
         mTodoEventList=todoEventList;
@@ -58,25 +67,16 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
 
     @Override
-    public void onBindViewHolder(EventsAdapter.ViewHolder holder, int position) {
-        TodoEvent todoEvent = mTodoEventList.get(position);
+    public void onBindViewHolder(final EventsAdapter.ViewHolder holder, int position) {
+        final TodoEvent todoEvent = mTodoEventList.get(position);
+        todoEvent.setId(position+1);
         final EventsAdapter.ViewHolder hd = holder;
         hd.eventNameText.setText(todoEvent.getEventName());
         final int pos = position;
         hd.eventNameText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                TodoEvent todoEvent = mTodoEventList.get(pos);
-
-                eventContentActivity.actionStart(mContext,todoEvent);
-                mTodoEventList.remove(pos);
-                isFinish = eventContentActivity.actionStatus();
-                if (isFinish) {
-                    mTodoEventList.add(pos, eventContentActivity.actionEnd());
-                    notifyItemChanged(pos);
-                }
-
+                eventContentActivity.actionStart(mContext,todoEvent,hd);
             }
         });
         hd.checkBoxSample.setOnClickListener(new View.OnClickListener() {
@@ -91,6 +91,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                         TodoEvent todoEvent = mTodoEventList.get(pos);
                         todoEvent.setEventFinish(true);
                         mTodoEventList.remove(pos);
+                        todoEvent.delete();
                         notifyItemRemoved(pos);
                         notifyItemRangeChanged(pos, getItemCount());
                     }
