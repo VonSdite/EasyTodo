@@ -17,6 +17,16 @@ public class TodoEvent extends DataSupport{
     private boolean eventFinish;
     private String eventDeadLine;
     private long id;
+    private byte[] eventImageBitMap;
+
+    public byte[] getEventImageBitMap() {
+        return eventImageBitMap;
+    }
+
+    public void setEventImageBitMap(byte[] eventImageBitMap) {
+        this.eventImageBitMap = eventImageBitMap;
+    }
+
 
     public long getId() {
         return id;

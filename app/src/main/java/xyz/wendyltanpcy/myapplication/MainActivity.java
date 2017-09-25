@@ -1,4 +1,5 @@
 package xyz.wendyltanpcy.myapplication;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 
@@ -7,6 +8,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,14 +20,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xyz.wendyltanpcy.myapplication.Adapter.EventsAdapter;
+import xyz.wendyltanpcy.myapplication.helper.OnStartDragListener;
+import xyz.wendyltanpcy.myapplication.helper.SimpleItemTouchHelperCallback;
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnStartDragListener {
 
     private EventsAdapter MyAdapter;
     private List<TodoEvent> eventList = new ArrayList<>();
     private static boolean haveInit = false;
+    private ItemTouchHelper mItemTouchHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +65,14 @@ public class MainActivity extends AppCompatActivity {
 
         RecyclerView eventNameRecyclerView = (RecyclerView) findViewById(R.id.news_title_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        MyAdapter = new EventsAdapter(eventList);
+        MyAdapter = new EventsAdapter(eventList,this);
         eventNameRecyclerView.setLayoutManager(layoutManager);
         eventNameRecyclerView.setItemAnimator(new DefaultItemAnimator());
         eventNameRecyclerView.setAdapter(MyAdapter);
+
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(MyAdapter);
+        mItemTouchHelper = new ItemTouchHelper(callback);
+        mItemTouchHelper.attachToRecyclerView(eventNameRecyclerView);
     }
 
 
@@ -95,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.setting) {
-
+            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
         }else if (id == R.id.delete){
             eventList.clear();
             DataSupport.deleteAll(TodoEvent.class);
@@ -109,4 +118,8 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+        mItemTouchHelper.startDrag(viewHolder);
+    }
 }
