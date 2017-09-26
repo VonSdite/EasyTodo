@@ -41,18 +41,13 @@ import static android.app.Activity.RESULT_OK;
 
 public class EditMenuFragment extends DialogFragment implements View.OnClickListener{
 
-    private ImageView calender;
-    private EditText editEvent;
+
     private ImageView saveButton;
-    private ImageView shareButton;
-    private ImageView cameraButton;
 
     private String date_return;
     private String date;
     private EventsAdapter adapter;
-    private TodoEvent event_this;
-
-
+    private EditText editEvent;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -71,18 +66,9 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
         window.setWindowAnimations(R.style.Animation_Bottom);
 
         //init other widget and set listener
-        editEvent =  dialog.findViewById(R.id.edit_event);
-        calender =  dialog.findViewById(R.id.pick_date);
         saveButton =  dialog.findViewById(R.id.save);
-        shareButton =  dialog.findViewById(R.id.share);
-        cameraButton =  dialog.findViewById(R.id.take_photo);
-
-        editEvent.setOnClickListener(this);
-        calender.setOnClickListener(this);
+        editEvent = dialog.findViewById(R.id.edit_event);
         saveButton.setOnClickListener(this);
-        shareButton.setOnClickListener(this);
-        cameraButton.setOnClickListener(this);
-
 
         Bundle bundle = getArguments();
         adapter = (EventsAdapter) bundle.getSerializable("adapter");
@@ -94,29 +80,6 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-
-            case R.id.pick_date:
-                Toast.makeText(getContext(),"can't choose from here anymore",Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.take_photo:
-                Toast.makeText(getContext(),"taking photo!",Toast.LENGTH_SHORT).show();
-
-                break;
-            case R.id.share:
-
-                Intent i = new Intent(Intent.ACTION_SEND);//setting action
-                i.setType("text/plain");//setting intent data type
-                StringBuilder builder = new StringBuilder();
-                builder.append("You got an event from your friend!\n");
-                builder.append("event name: "+editEvent.getText().toString()+"\n");
-                builder.append("detail: none\n");
-                builder.append("is it finish: not yet");
-                String text = builder.toString();
-                i.putExtra(Intent.EXTRA_TEXT,text);
-                i.putExtra(Intent.EXTRA_SUBJECT,"an interesting event");//putting extra
-                i = Intent.createChooser(i,"share event");//creating chooser to choose an app to do the activity
-                startActivity(i); //start activity
-                break;
             case R.id.save:
                 Toast.makeText(getContext(),"text save!",Toast.LENGTH_SHORT).show();
                 TodoEvent event = new TodoEvent();

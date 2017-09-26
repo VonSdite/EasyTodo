@@ -13,10 +13,12 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Checkable;
 
+import java.io.Serializable;
+
 /**
  * Created by 李涛 on 16/4/6.
  */
-public class CheckBoxSample extends View implements Checkable {
+public class CheckBoxSample extends View implements Checkable{
 
     private final static float BOUNCE_VALUE = 0.2f;
 

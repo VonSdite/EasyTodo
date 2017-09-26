@@ -1,12 +1,9 @@
 package xyz.wendyltanpcy.myapplication;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -14,14 +11,14 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
-import android.os.Environment;
-import android.provider.DocumentsContract;
+
 import android.provider.MediaStore;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 
-import android.text.TextUtils;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,14 +27,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import org.litepal.crud.DataSupport;
+import com.bumptech.glide.Glide;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
 
 import kr.co.namee.permissiongen.PermissionFail;
 import kr.co.namee.permissiongen.PermissionGen;
@@ -57,6 +52,7 @@ public class eventContentActivity extends AppCompatActivity {
     private static TodoEvent Event;
     private ImageView eventImage;
     private static EventsAdapter.ViewHolder holder;
+    //deal with pics
     private static final int SUCCESSCODE = 100;
     private String mPublicPhotoPath;
     private static final int REQ_GALLERY = 333;
@@ -65,8 +61,8 @@ public class eventContentActivity extends AppCompatActivity {
 
     public static void actionStart(Context context, TodoEvent event,EventsAdapter.ViewHolder hd){
         Intent intent = new Intent(context,eventContentActivity.class);
-        Event = event;
         holder = hd;
+        Event = event;
         context.startActivity(intent);
     }
 
@@ -74,15 +70,23 @@ public class eventContentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.events_content);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout)findViewById(R.id.collapsing_toolbar);
         if(getSupportActionBar() != null){
             // Enable the Up button
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-
+        collapsingToolbar.setTitle(Event.getEventName());
+        Glide.with(this);
 
         eventContentFragment eventContentFragment = (eventContentFragment)
                 getSupportFragmentManager().findFragmentById(R.id.news_content_fragment);
         eventContentFragment.refresh(Event);
+
+
+
 
         chooseDate = (ImageView) findViewById(R.id.choose_date);
         chooseAlarm = (ImageView) findViewById(R.id.choose_alarm);

@@ -3,6 +3,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,10 +17,14 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.ImageView;
 
 import org.litepal.LitePal;
 import org.litepal.crud.DataSupport;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,29 +34,49 @@ import xyz.wendyltanpcy.myapplication.helper.SimpleItemTouchHelperCallback;
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
 
-public class MainActivity extends AppCompatActivity implements OnStartDragListener {
+public class MainActivity extends AppCompatActivity implements OnStartDragListener,Serializable {
 
     private EventsAdapter MyAdapter;
     private List<TodoEvent> eventList = new ArrayList<>();
     private static boolean haveInit = false;
-    private ItemTouchHelper mItemTouchHelper;
+    private transient ItemTouchHelper mItemTouchHelper;
+    private transient DrawerLayout mDrawerLayout;
+    private transient SwipeRefreshLayout swipeRefresh;
+    private transient ImageView homeImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(!haveInit){
-            initEvents();
-            haveInit=true;
-            eventList = DataSupport.findAll(TodoEvent.class);
-            if (eventList.isEmpty()){
-                View visibility = findViewById(R.id.no_event_layout);
-                visibility.setVisibility(View.VISIBLE);
+        showStartupAnimate();
+        baseInit();
+
+
+        swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+        swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                               doRefresh();
+                            }
+                        });
+                    }
+                }).start();
+
             }
-        }
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        });
 
 
         FloatingActionButton add = (FloatingActionButton) findViewById(R.id.add_event);
@@ -86,6 +115,73 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
         haveInit = false;
     }
 
+    private void baseInit(){
+        if(!haveInit){
+            initEvents();
+            haveInit=true;
+            eventList = DataSupport.findAll(TodoEvent.class);
+            if (eventList.isEmpty()){
+                View visibility = findViewById(R.id.no_event_layout);
+                visibility.setVisibility(View.VISIBLE);
+            }
+        }
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
+        }
+        navView.setCheckedItem(R.id.nav_task);
+        navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+                mDrawerLayout.closeDrawers();
+                return true;
+            }
+        });
+    }
+
+    private void doRefresh(){
+        eventList = MyAdapter.getTodoEventList();
+        showNoEvent();
+        MyAdapter.notifyDataSetChanged();
+        swipeRefresh.setRefreshing(false);
+    }
+
+    private void showStartupAnimate(){
+        homeImage = (ImageView) findViewById(R.id.startup);
+
+        AlphaAnimation alphaAnimation = new AlphaAnimation((float) 0.1, 1);
+        alphaAnimation.setDuration(1000);//设定动画时间
+        alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                homeImage.setVisibility(View.GONE);
+            }
+        });
+
+        homeImage.setAnimation(alphaAnimation);
+        homeImage.setVisibility(View.VISIBLE);
+    }
+
+    private void showNoEvent(){
+        if (eventList.isEmpty()){
+            View visibility = findViewById(R.id.no_event_layout);
+            visibility.setVisibility(View.VISIBLE);
+        }
+    }
+
 
 
     @Override
@@ -109,10 +205,9 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
             eventList.clear();
             DataSupport.deleteAll(TodoEvent.class);
             MyAdapter.notifyDataSetChanged();
-            if (eventList.isEmpty()){
-                View visibility = findViewById(R.id.no_event_layout);
-                visibility.setVisibility(View.VISIBLE);
-            }
+            showNoEvent();
+        }else if(id == android.R.id.home){
+            mDrawerLayout.openDrawer(GravityCompat.START);
         }
 
         return super.onOptionsItemSelected(item);

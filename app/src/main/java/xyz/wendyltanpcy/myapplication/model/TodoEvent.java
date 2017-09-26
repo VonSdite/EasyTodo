@@ -1,5 +1,8 @@
 package xyz.wendyltanpcy.myapplication.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.litepal.crud.DataSupport;
 
 import java.io.Serializable;
@@ -10,7 +13,7 @@ import java.util.List;
  * Created by Wendy on 2017/9/6.
  */
 
-public class TodoEvent extends DataSupport{
+public class TodoEvent extends DataSupport implements Serializable{
 
     private String eventName;
     private String eventDetail;
@@ -18,6 +21,7 @@ public class TodoEvent extends DataSupport{
     private String eventDeadLine;
     private long id;
     private byte[] eventImageBitMap;
+
 
     public byte[] getEventImageBitMap() {
         return eventImageBitMap;

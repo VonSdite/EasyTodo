@@ -24,7 +24,8 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".eventContentActivity">
+        <activity android:name=".eventContentActivity"
+            android:theme="@style/eventContentTheme">
         </activity>
         <activity android:name=".EditMenuActivity">
         </activity>

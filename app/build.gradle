@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.1"
     defaultConfig {
         applicationId "xyz.wendyltanpcy.myapplication"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -34,4 +34,6 @@ dependencies {
     compile 'org.litepal.android:core:1.4.1'
     compile 'com.lovedise:permissiongen:0.0.6'
     testCompile 'junit:junit:4.12'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
 }
