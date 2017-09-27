@@ -18,6 +18,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,7 +52,7 @@ public class eventContentActivity extends AppCompatActivity {
     private TextView eventDeadLineText ;
     private static TodoEvent Event;
     private ImageView eventImage;
-    private static EventsAdapter.ViewHolder holder;
+    private EventsAdapter.ViewHolder holder;
     //deal with pics
     private static final int SUCCESSCODE = 100;
     private String mPublicPhotoPath;
@@ -59,11 +60,18 @@ public class eventContentActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_PICK_IMAGE = 222;
 
 
-    public static void actionStart(Context context, TodoEvent event,EventsAdapter.ViewHolder hd){
+    public void actionStart(Context context, TodoEvent event){
         Intent intent = new Intent(context,eventContentActivity.class);
-        holder = hd;
         Event = event;
         context.startActivity(intent);
+    }
+
+    public eventContentActivity(){
+
+    }
+
+    public eventContentActivity(EventsAdapter.ViewHolder hd){
+        holder = hd;
     }
 
     @Override
@@ -257,6 +265,5 @@ public class eventContentActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 
 }

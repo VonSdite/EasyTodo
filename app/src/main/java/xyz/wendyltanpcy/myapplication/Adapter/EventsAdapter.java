@@ -62,7 +62,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements
+    public static class ViewHolder extends RecyclerView.ViewHolder implements
             ItemTouchHelperViewHolder{
              TextView eventNameText;
              CheckBoxSample checkBoxSample;
@@ -146,7 +146,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         hd.eventNameText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                eventContentActivity.actionStart(mContext,todoEvent,hd);
+                eventContentActivity eC = new eventContentActivity(hd);
+                eC.actionStart(mContext,todoEvent);
             }
         });
         hd.checkBoxSample.setOnClickListener(new View.OnClickListener() {

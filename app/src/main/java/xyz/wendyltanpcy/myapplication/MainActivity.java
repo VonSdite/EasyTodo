@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xyz.wendyltanpcy.myapplication.Adapter.EventsAdapter;
+import xyz.wendyltanpcy.myapplication.TodoBrowser.BrowserActivity;
 import xyz.wendyltanpcy.myapplication.helper.OnStartDragListener;
 import xyz.wendyltanpcy.myapplication.helper.SimpleItemTouchHelperCallback;
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
@@ -49,10 +50,7 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        showStartupAnimate();
         baseInit();
-
-
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -92,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
             }
         });
 
-        RecyclerView eventNameRecyclerView = (RecyclerView) findViewById(R.id.news_title_recycler_view);
+        RecyclerView eventNameRecyclerView = (RecyclerView) findViewById(R.id.event_name_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         MyAdapter = new EventsAdapter(eventList,this);
         eventNameRecyclerView.setLayoutManager(layoutManager);
@@ -118,7 +116,8 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
     private void baseInit(){
         if(!haveInit){
             initEvents();
-            haveInit=true;
+
+//            showStartupAnimate();
             eventList = DataSupport.findAll(TodoEvent.class);
             if (eventList.isEmpty()){
                 View visibility = findViewById(R.id.no_event_layout);
@@ -138,7 +137,14 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
         navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
-                mDrawerLayout.closeDrawers();
+                switch (item.getItemId()){
+                    case R.id.nav_finish:
+                        break;
+                    case R.id.nav_broswer:
+                        startActivity(new Intent(MainActivity.this,BrowserActivity.class));
+                        break;
+                    default:
+                }
                 return true;
             }
         });
@@ -152,6 +158,8 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
     }
 
     private void showStartupAnimate(){
+
+        haveInit=true;
         homeImage = (ImageView) findViewById(R.id.startup);
 
         AlphaAnimation alphaAnimation = new AlphaAnimation((float) 0.1, 1);
@@ -217,4 +225,6 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
         mItemTouchHelper.startDrag(viewHolder);
     }
+
+
 }

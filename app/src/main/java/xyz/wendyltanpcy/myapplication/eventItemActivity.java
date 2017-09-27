@@ -15,7 +15,6 @@ public class eventItemActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.event_list_activity);
-
     }
 
 }
