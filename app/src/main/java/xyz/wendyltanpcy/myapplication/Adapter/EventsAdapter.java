@@ -30,6 +30,7 @@ import xyz.wendyltanpcy.myapplication.TodoList.EventContentActivity;
 import xyz.wendyltanpcy.myapplication.helper.ItemTouchHelperAdapter;
 import xyz.wendyltanpcy.myapplication.helper.ItemTouchHelperViewHolder;
 import xyz.wendyltanpcy.myapplication.helper.OnStartDragListener;
+import xyz.wendyltanpcy.myapplication.model.FinishEvent;
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
 
@@ -44,16 +45,19 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     private final OnStartDragListener mDragStartListener;
 
 
+
     /**
      * 自定义ViewHolder并且实现了ItemTouchHelperViewHolder接口（若无必要可以去掉）
      * 控制事件拖拽。
      */
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements
+     public static class ViewHolder extends RecyclerView.ViewHolder implements
             ItemTouchHelperViewHolder{
-             TextView eventNameText;
-             CheckBoxSample checkBoxSample;
-             ImageView handleView;
+
+            private TextView eventNameText;
+            private CheckBoxSample checkBoxSample;
+            private ImageView handleView;
+
             public ViewHolder(View itemView) {
                     super(itemView);
                     eventNameText = itemView.findViewById(R.id.event_name);
@@ -94,14 +98,14 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             mContext = parent.getContext();
         }
 
-        View view = LayoutInflater.from(mContext).inflate(R.layout.event_item_finish,parent,false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.event_item,parent,false);
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }
 
 
     @Override
-    public void onBindViewHolder(final EventsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(EventsAdapter.ViewHolder holder, int position) {
         final TodoEvent todoEvent = mTodoEventList.get(position);
         final int pos = position;
         final EventsAdapter.ViewHolder hd = holder;
@@ -144,20 +148,28 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         hd.checkBoxSample.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                hd.checkBoxSample.toggle();
-                hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                if (!todoEvent.isEventFinish())
+                    hd.checkBoxSample.toggle();
+
                 final AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
                 dialog.setTitle("确定已经完成这个事件？");
                 dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         TodoEvent todoEvent = mTodoEventList.get(pos);
+                        FinishEvent finishEvent = new FinishEvent();
+                        finishEvent.setEventName(todoEvent.getEventName());
+                        finishEvent.setId(todoEvent.getId());
+                        finishEvent.setEventFinishDate(todoEvent.getEventDeadLine());
+                        finishEvent.save();
                         todoEvent.setEventFinish(true);
                         mTodoEventList.remove(pos);
                         todoEvent.delete();
                         notifyItemRemoved(pos);
                         notifyItemRangeChanged(pos, getItemCount());
                         Toast.makeText(mContext,"干得漂亮",Toast.LENGTH_SHORT).show();
+
+
 
                     }
                 });
@@ -178,7 +190,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (MotionEventCompat.getActionMasked(motionEvent) == MotionEvent.ACTION_DOWN) {
-                    mDragStartListener.onStartDrag(holder);
+                    mDragStartListener.onStartDrag(hd);
                 }
                 return false;
             }

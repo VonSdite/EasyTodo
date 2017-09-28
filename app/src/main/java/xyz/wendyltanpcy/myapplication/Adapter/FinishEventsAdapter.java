@@ -1,6 +1,7 @@
 package xyz.wendyltanpcy.myapplication.Adapter;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +40,8 @@ public class FinishEventsAdapter extends RecyclerView.Adapter<FinishEventsAdapte
     public void onBindViewHolder(FinishEventsAdapter.ViewHolder holder, int position) {
         FinishEvent finishEvent = mFinishEventsList.get(position);
         holder.eventNameText.setText(finishEvent.getEventName());
+        holder.eventNameText.setPaintFlags(holder.eventNameText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        holder.eventFinishDateText.setText(finishEvent.getEventFinishDate());
     }
 
     @Override
@@ -50,13 +53,19 @@ public class FinishEventsAdapter extends RecyclerView.Adapter<FinishEventsAdapte
         mFinishEventsList = finishEventsList;
     }
 
+    public List<FinishEvent> getFinishEventsList(){
+        return mFinishEventsList;
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder{
 
         private TextView eventNameText;
+        private TextView eventFinishDateText;
         private ImageView handleView;
         public ViewHolder(View itemView) {
             super(itemView);
             eventNameText = itemView.findViewById(R.id.event_name);
+            eventFinishDateText = itemView.findViewById(R.id.event_finish_date);
             handleView = itemView.findViewById(R.id.handle);
         }
     }

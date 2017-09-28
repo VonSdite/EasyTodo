@@ -93,7 +93,8 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
                     event.save();
                 }
                 adapter.getTodoEventList().add(event);
-                adapter.notifyItemInserted(adapter.getItemCount());
+//                adapter.notifyItemInserted(adapter.getItemCount());
+                adapter.notifyDataSetChanged();
                 View visibility = getActivity().findViewById(R.id.no_event_layout);
                 visibility.setVisibility(View.INVISIBLE);
                 this.dismiss();

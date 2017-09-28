@@ -12,6 +12,17 @@ public class FinishEvent extends DataSupport implements Serializable {
 
     private String eventName;
     private long id;
+    private String eventFinishDate;
+
+    public String getEventFinishDate() {
+        return eventFinishDate;
+    }
+
+    public void setEventFinishDate(String eventFinishDate) {
+        this.eventFinishDate = eventFinishDate;
+    }
+
+
 
     public long getId() {
         return id;

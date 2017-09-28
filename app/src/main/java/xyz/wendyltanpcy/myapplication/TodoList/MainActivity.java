@@ -131,10 +131,7 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
 
 //            showStartupAnimate();
             eventList = DataSupport.findAll(TodoEvent.class);
-            if (eventList.isEmpty()){
-                View visibility = findViewById(R.id.no_event_layout);
-                visibility.setVisibility(View.VISIBLE);
-            }
+            showNoEvent();
         }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

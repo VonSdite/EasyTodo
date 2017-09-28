@@ -3,6 +3,7 @@ package xyz.wendyltanpcy.myapplication.FinishList;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -26,10 +27,8 @@ import java.util.List;
 import xyz.wendyltanpcy.myapplication.Adapter.FinishEventsAdapter;
 import xyz.wendyltanpcy.myapplication.R;
 import xyz.wendyltanpcy.myapplication.TodoBrowser.BrowserActivity;
-import xyz.wendyltanpcy.myapplication.TodoList.MainActivity;
 import xyz.wendyltanpcy.myapplication.TodoList.SettingsActivity;
 import xyz.wendyltanpcy.myapplication.model.FinishEvent;
-import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
 /**
  * Created by Wendy on 2017/9/28.
@@ -50,7 +49,10 @@ public class FinishEventListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.finish_event_list_activity);
         baseInit();
-        initFakeData();
+        finishEventList = DataSupport.findAll(FinishEvent.class);
+        showNoEvent();
+
+
 
         RecyclerView eventNameRecyclerView = (RecyclerView) findViewById(R.id.event_name_recycler_view_finish);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -90,8 +92,16 @@ public class FinishEventListActivity extends AppCompatActivity {
 
     }
 
+    private void showNoEvent(){
+        if (finishEventList.isEmpty()){
+            View visibility = findViewById(R.id.no_event_layout);
+            visibility.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void doRefresh(){
-        Toast.makeText(FinishEventListActivity.this,"doing refresh!",Toast.LENGTH_SHORT).show();
+        finishEventList = MyAdapter.getFinishEventsList();
+        showNoEvent();
         MyAdapter.notifyDataSetChanged();
         swipeRefresh.setRefreshing(false);
     }
@@ -100,14 +110,6 @@ public class FinishEventListActivity extends AppCompatActivity {
         LitePal.getDatabase();
     }
 
-    private void initFakeData(){
-        for (int i =0;i<10;i++){
-            FinishEvent event = new FinishEvent();
-            event.setEventName("hello");
-            event.setId(i);
-            finishEventList.add(event);
-        }
-    }
 
     private void baseInit(){
 
@@ -116,10 +118,10 @@ public class FinishEventListActivity extends AppCompatActivity {
 
 //            showStartupAnimate();
             finishEventList = DataSupport.findAll(FinishEvent.class);
-//            if (finishEventList.isEmpty()){
-//                View visibility = findViewById(R.id.no_event_layout);
-//                visibility.setVisibility(View.VISIBLE);
-//            }
+            if (finishEventList.isEmpty()){
+                View visibility = findViewById(R.id.no_event_layout);
+                visibility.setVisibility(View.VISIBLE);
+            }
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.finsh_toolbar);
@@ -167,8 +169,9 @@ public class FinishEventListActivity extends AppCompatActivity {
             startActivity(new Intent(FinishEventListActivity.this, SettingsActivity.class));
         }else if (id == R.id.delete){
             finishEventList.clear();
-                DataSupport.deleteAll(FinishEvent.class);
+            DataSupport.deleteAll(FinishEvent.class);
             MyAdapter.notifyDataSetChanged();
+            Toast.makeText(this,"删除成功！",Toast.LENGTH_SHORT).show();
         }else if(id == android.R.id.home){
             mDrawerLayout.openDrawer(GravityCompat.START);
         }
