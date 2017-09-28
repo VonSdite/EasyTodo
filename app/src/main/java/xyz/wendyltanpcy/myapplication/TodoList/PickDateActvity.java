@@ -1,19 +1,14 @@
-package xyz.wendyltanpcy.myapplication;
+package xyz.wendyltanpcy.myapplication.TodoList;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.DatePicker;
-import android.widget.Toast;
+
+import xyz.wendyltanpcy.myapplication.R;
 
 /**
- * Created by Wendy on 2017/9/16.
+ * 选择日期界面
  */
 
 public class PickDateActvity extends AppCompatActivity{

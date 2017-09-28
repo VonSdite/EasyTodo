@@ -1,4 +1,4 @@
-package xyz.wendyltanpcy.myapplication;
+package xyz.wendyltanpcy.myapplication.helper;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -15,6 +15,10 @@ import android.view.ViewGroup;
 /**
  * A {@link android.preference.PreferenceActivity} which implements and proxies the necessary calls
  * to be used with AppCompat.
+ */
+
+/**
+ * 网上找的辅助类。此类辅助设置页面来用。
  */
 public abstract class AppCompatPreferenceActivity extends PreferenceActivity {
 

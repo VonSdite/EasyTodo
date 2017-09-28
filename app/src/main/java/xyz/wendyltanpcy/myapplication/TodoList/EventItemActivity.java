@@ -1,15 +1,17 @@
-package xyz.wendyltanpcy.myapplication;
+package xyz.wendyltanpcy.myapplication.TodoList;
 
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
+import xyz.wendyltanpcy.myapplication.R;
 
 
 /**
  * Created by Wendy on 2017/9/18.
  */
 
-public class eventItemActivity extends AppCompatActivity {
+public class EventItemActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

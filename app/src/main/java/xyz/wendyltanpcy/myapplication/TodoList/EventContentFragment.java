@@ -1,4 +1,4 @@
-package xyz.wendyltanpcy.myapplication;
+package xyz.wendyltanpcy.myapplication.TodoList;
 
 
 import android.app.Activity;
@@ -20,6 +20,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import xyz.wendyltanpcy.myapplication.R;
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
 import static android.app.Activity.RESULT_OK;
@@ -28,7 +29,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by Wendy on 2017/9/6.
  */
 
-public class eventContentFragment extends Fragment {
+public class EventContentFragment extends Fragment {
 
     private View mView;
 

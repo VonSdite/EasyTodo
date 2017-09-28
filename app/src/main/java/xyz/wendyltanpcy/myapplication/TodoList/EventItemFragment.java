@@ -1,4 +1,4 @@
-package xyz.wendyltanpcy.myapplication;
+package xyz.wendyltanpcy.myapplication.TodoList;
 
 
 import android.content.DialogInterface;
@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import xyz.wendyltanpcy.myapplication.R;
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
 import static android.R.id.list;
@@ -29,7 +30,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by Wendy on 2017/9/6.
  */
 
-public class eventItemFragment extends Fragment {
+public class EventItemFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.event_list_frag,container,false);

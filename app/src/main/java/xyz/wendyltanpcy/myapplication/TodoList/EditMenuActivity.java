@@ -1,4 +1,4 @@
-package xyz.wendyltanpcy.myapplication;
+package xyz.wendyltanpcy.myapplication.TodoList;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import xyz.wendyltanpcy.myapplication.Adapter.EventsAdapter;
+import xyz.wendyltanpcy.myapplication.R;
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
 /**

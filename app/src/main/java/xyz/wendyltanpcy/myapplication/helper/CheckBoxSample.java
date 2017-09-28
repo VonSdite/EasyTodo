@@ -1,4 +1,4 @@
-package xyz.wendyltanpcy.myapplication;
+package xyz.wendyltanpcy.myapplication.helper;
 
 import android.animation.ObjectAnimator;
 import android.content.Context;
@@ -15,8 +15,10 @@ import android.widget.Checkable;
 
 import java.io.Serializable;
 
+import xyz.wendyltanpcy.myapplication.R;
+
 /**
- * Created by 李涛 on 16/4/6.
+ * 自定义的Checkbox样式类型。
  */
 public class CheckBoxSample extends View implements Checkable{
 
@@ -202,6 +204,10 @@ public class CheckBoxSample extends View implements Checkable{
             setProgress(checked ? 1.0f : 0.0f);
         }
     }
+
+    /**
+     * 要实现默认的checkbox的点击功能，使用这个函数
+     */
 
 
     @Override

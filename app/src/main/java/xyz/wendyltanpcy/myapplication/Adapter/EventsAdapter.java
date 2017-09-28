@@ -5,8 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AlertDialog;
@@ -23,23 +21,21 @@ import android.widget.Toast;
 import org.litepal.crud.DataSupport;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import xyz.wendyltanpcy.myapplication.CheckBoxSample;
+import xyz.wendyltanpcy.myapplication.helper.CheckBoxSample;
 import xyz.wendyltanpcy.myapplication.R;
-import xyz.wendyltanpcy.myapplication.eventContentActivity;
+import xyz.wendyltanpcy.myapplication.TodoList.EventContentActivity;
 import xyz.wendyltanpcy.myapplication.helper.ItemTouchHelperAdapter;
 import xyz.wendyltanpcy.myapplication.helper.ItemTouchHelperViewHolder;
 import xyz.wendyltanpcy.myapplication.helper.OnStartDragListener;
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
-/**
- * Created by Wendy on 2017/9/19.
- */
 
-//适配器
+/**
+ * 事件适配器，用于主界面事件的显示处理逻辑
+ */
 public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> implements ItemTouchHelperAdapter,Serializable
 
 {
@@ -47,20 +43,11 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     private List<TodoEvent> mTodoEventList;
     private final OnStartDragListener mDragStartListener;
 
-    @Override
-    public boolean onItemMove(int fromPosition, int toPosition) {
-        Collections.swap(mTodoEventList, fromPosition, toPosition);
-        notifyItemMoved(fromPosition, toPosition);
-        return true;
-    }
 
-    @Override
-    public void onItemDismiss(int position) {
-        mTodoEventList.remove(position);
-        DataSupport.delete(TodoEvent.class,position);
-        notifyItemRemoved(position);
-    }
-
+    /**
+     * 自定义ViewHolder并且实现了ItemTouchHelperViewHolder接口（若无必要可以去掉）
+     * 控制事件拖拽。
+     */
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements
             ItemTouchHelperViewHolder{
@@ -86,9 +73,14 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         }
     }
 
+    /**
+     * 返回适配器内部的列表给外部
+     * @return
+     */
     public List<TodoEvent> getTodoEventList() {
         return mTodoEventList;
     }
+
 
     public EventsAdapter(List<TodoEvent> todoEventList,OnStartDragListener dragStartListener) {
         mTodoEventList=todoEventList;
@@ -106,7 +98,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }
-
 
 
     @Override
@@ -146,7 +137,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         hd.eventNameText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                eventContentActivity eC = new eventContentActivity(hd);
+                EventContentActivity eC = new EventContentActivity(hd);
                 eC.actionStart(mContext,todoEvent);
             }
         });
@@ -197,5 +188,26 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     @Override
     public int getItemCount() {
         return mTodoEventList.size();
+    }
+
+
+    /**
+     *
+     * @param fromPosition The start position of the moved item.
+     * @param toPosition   Then resolved position of the moved item.
+     * @return
+     */
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        Collections.swap(mTodoEventList, fromPosition, toPosition);
+        notifyItemMoved(fromPosition, toPosition);
+        return true;
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+        mTodoEventList.remove(position);
+        DataSupport.delete(TodoEvent.class,position);
+        notifyItemRemoved(position);
     }
 }

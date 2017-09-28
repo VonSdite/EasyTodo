@@ -10,7 +10,7 @@ import java.util.Calendar;
 import java.util.List;
 
 /**
- * Created by Wendy on 2017/9/6.
+ * 数据库表类事件主类
  */
 
 public class TodoEvent extends DataSupport implements Serializable{

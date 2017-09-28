@@ -3,6 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/edit_menu_fragment"
-    android:name="xyz.wendyltanpcy.myapplication.EditMenuFragment"
+    android:name="xyz.wendyltanpcy.myapplication.TodoList.EditMenuFragment"
     xmlns:android="http://schemas.android.com/apk/res/android"/>
 

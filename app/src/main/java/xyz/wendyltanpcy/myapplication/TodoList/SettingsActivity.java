@@ -1,4 +1,4 @@
-package xyz.wendyltanpcy.myapplication;
+package xyz.wendyltanpcy.myapplication.TodoList;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +18,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
+
+import xyz.wendyltanpcy.myapplication.R;
+import xyz.wendyltanpcy.myapplication.helper.AppCompatPreferenceActivity;
 
 public class SettingsActivity extends AppCompatPreferenceActivity {
 

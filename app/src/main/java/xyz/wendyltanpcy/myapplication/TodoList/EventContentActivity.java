@@ -1,4 +1,4 @@
-package xyz.wendyltanpcy.myapplication;
+package xyz.wendyltanpcy.myapplication.TodoList;
 
 import android.Manifest;
 import android.app.Activity;
@@ -18,7 +18,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,11 +38,13 @@ import kr.co.namee.permissiongen.PermissionFail;
 import kr.co.namee.permissiongen.PermissionGen;
 import kr.co.namee.permissiongen.PermissionSuccess;
 import xyz.wendyltanpcy.myapplication.Adapter.EventsAdapter;
+import xyz.wendyltanpcy.myapplication.R;
+import xyz.wendyltanpcy.myapplication.helper.PictureUtils;
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
-public class eventContentActivity extends AppCompatActivity {
+public class EventContentActivity extends AppCompatActivity {
 
-    private String date_return;
+    private String dateReturn;
     private FloatingActionButton saveDetailButton;
     private ImageView chooseDate;
     private ImageView chooseAlarm;
@@ -53,6 +54,7 @@ public class eventContentActivity extends AppCompatActivity {
     private static TodoEvent Event;
     private ImageView eventImage;
     private EventsAdapter.ViewHolder holder;
+
     //deal with pics
     private static final int SUCCESSCODE = 100;
     private String mPublicPhotoPath;
@@ -61,16 +63,22 @@ public class eventContentActivity extends AppCompatActivity {
 
 
     public void actionStart(Context context, TodoEvent event){
-        Intent intent = new Intent(context,eventContentActivity.class);
+        Intent intent = new Intent(context,EventContentActivity.class);
         Event = event;
         context.startActivity(intent);
     }
 
-    public eventContentActivity(){
+    /*
+    默认的构造器
+     */
+    public EventContentActivity(){
 
     }
 
-    public eventContentActivity(EventsAdapter.ViewHolder hd){
+    /*
+    构造的时候传入适配器
+     */
+    public EventContentActivity(EventsAdapter.ViewHolder hd){
         holder = hd;
     }
 
@@ -89,10 +97,9 @@ public class eventContentActivity extends AppCompatActivity {
         collapsingToolbar.setTitle(Event.getEventName());
         Glide.with(this);
 
-        eventContentFragment eventContentFragment = (eventContentFragment)
+        EventContentFragment EventContentFragment = (EventContentFragment)
                 getSupportFragmentManager().findFragmentById(R.id.news_content_fragment);
-        eventContentFragment.refresh(Event);
-
+        EventContentFragment.refresh(Event);
 
 
 
@@ -102,7 +109,11 @@ public class eventContentActivity extends AppCompatActivity {
         eventDetailText = (TextView) findViewById(R.id.event_detail);
         eventDeadLineText = (TextView) findViewById(R.id.event_deadline);
         eventImage = (ImageView) findViewById(R.id.event_content_image);
+        saveDetailButton = (FloatingActionButton) findViewById(R.id.save_detail_button);
 
+        /*
+        如果事件具有图片的字节属性，就设置事件图片
+         */
         if (Event.getEventImageBitMap()!=null){
             byte[]images=Event.getEventImageBitMap();
             Bitmap bitmap = BitmapFactory.decodeByteArray(images,0,images.length);
@@ -110,11 +121,11 @@ public class eventContentActivity extends AppCompatActivity {
         }
 
 
-        saveDetailButton = (FloatingActionButton) findViewById(R.id.save_detail_button);
+
         chooseDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(eventContentActivity.this,PickDateActvity.class);
+                Intent i = new Intent(EventContentActivity.this,PickDateActvity.class);
                 startActivityForResult(i,1);
             }
         });
@@ -134,9 +145,11 @@ public class eventContentActivity extends AppCompatActivity {
 
     }
 
-    //拍照的功能
+    /*
+    拍照的功能
+     */
     private void showTakePicture() {
-        PermissionGen.with(eventContentActivity.this)
+        PermissionGen.with(EventContentActivity.this)
                 .addRequestCode(SUCCESSCODE)
                 .permissions(
                         Manifest.permission.CAMERA,
@@ -146,6 +159,9 @@ public class eventContentActivity extends AppCompatActivity {
                 .request();
     }
 
+    /*
+    使用PermissionGen处理权限
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         PermissionGen.onRequestPermissionsResult(this, requestCode, permissions, grantResults);
@@ -160,9 +176,12 @@ public class eventContentActivity extends AppCompatActivity {
 
     @PermissionFail(requestCode = SUCCESSCODE)
     public void doFailSomething() {
-        Toast.makeText(eventContentActivity.this,"Ask for permission failed!",Toast.LENGTH_SHORT).show();
+        Toast.makeText(EventContentActivity.this,"Ask for permission failed!",Toast.LENGTH_SHORT).show();
     }
 
+    /*
+    将位图转换成字节数组
+     */
     private byte[]img(Bitmap bitmap){
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
@@ -207,8 +226,8 @@ public class eventContentActivity extends AppCompatActivity {
         switch (requestCode) {
             case 1:
                 if (resultCode==RESULT_OK) {
-                    date_return = data.getStringExtra("date_return");
-                    eventDeadLineText.setText(date_return);
+                    dateReturn = data.getStringExtra("dateReturn");
+                    eventDeadLineText.setText(dateReturn);
                 }
             //拍照
             case REQ_GALLERY:
@@ -224,9 +243,9 @@ public class eventContentActivity extends AppCompatActivity {
                 int sdkVersion = Integer.valueOf(Build.VERSION.SDK);
                 if (sdkVersion >= 19) {
                     path = this.uri.getPath();
-                    path = PictureUtils.getPath_above19(eventContentActivity.this, this.uri);
+                    path = PictureUtils.getPath_above19(EventContentActivity.this, this.uri);
                 } else {
-                    path = PictureUtils.getFilePath_below19(eventContentActivity.this, this.uri);
+                    path = PictureUtils.getFilePath_below19(EventContentActivity.this, this.uri);
                 }
                 break;
         }

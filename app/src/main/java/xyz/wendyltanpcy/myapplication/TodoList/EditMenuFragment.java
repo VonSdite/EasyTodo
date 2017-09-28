@@ -1,20 +1,11 @@
-package xyz.wendyltanpcy.myapplication;
+package xyz.wendyltanpcy.myapplication.TodoList;
 
 
-import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -23,20 +14,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import org.litepal.crud.DataSupport;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.Calendar;
-import java.util.List;
 
 import xyz.wendyltanpcy.myapplication.Adapter.EventsAdapter;
+import xyz.wendyltanpcy.myapplication.R;
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
 import static android.app.Activity.RESULT_OK;
 
 /**
- * Created by Wendy on 2017/9/16.
+ * 底部弹出式，用以输入将要生成的新事件标题
  */
 
 public class EditMenuFragment extends DialogFragment implements View.OnClickListener{
@@ -44,7 +31,7 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
 
     private ImageView saveButton;
 
-    private String date_return;
+    private String dateReturn;
     private String date;
     private EventsAdapter adapter;
     private EditText editEvent;
@@ -70,6 +57,7 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
         editEvent = dialog.findViewById(R.id.edit_event);
         saveButton.setOnClickListener(this);
 
+        //获得传入的适配器
         Bundle bundle = getArguments();
         adapter = (EventsAdapter) bundle.getSerializable("adapter");
 
@@ -87,9 +75,9 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
                 event.setEventFinish(false);
                 event.setEventDetail("add more detail");
                 event.setId(adapter.getItemCount());
-                if (date_return!=null){
+                if (dateReturn !=null){
                     //set to specific date
-                    event.setEventDeadLine(date_return);
+                    event.setEventDeadLine(dateReturn);
                     event.save();
                 }
                 else{
@@ -120,7 +108,7 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
         switch (requestCode){
             case 1:
                 if (resultCode==RESULT_OK) {
-                    date_return = data.getStringExtra("date_return");
+                    dateReturn = data.getStringExtra("dateReturn");
                 }
 
         }

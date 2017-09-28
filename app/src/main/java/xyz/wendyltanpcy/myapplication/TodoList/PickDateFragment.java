@@ -1,15 +1,10 @@
-package xyz.wendyltanpcy.myapplication;
+package xyz.wendyltanpcy.myapplication.TodoList;
 
 import android.app.Activity;
-import android.app.Dialog;
-import android.app.DialogFragment;
+
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 
-
-import android.os.Parcelable;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -18,7 +13,8 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
-import java.io.Serializable;
+
+import xyz.wendyltanpcy.myapplication.R;
 
 
 /**

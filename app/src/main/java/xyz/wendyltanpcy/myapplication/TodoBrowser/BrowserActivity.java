@@ -1,16 +1,12 @@
 package xyz.wendyltanpcy.myapplication.TodoBrowser;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
-import android.text.TextUtils;
-import android.util.Patterns;
 import android.view.KeyEvent;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.webkit.WebChromeClient;
@@ -22,7 +18,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import xyz.wendyltanpcy.myapplication.MainActivity;
 import xyz.wendyltanpcy.myapplication.R;
 
 public class BrowserActivity extends AppCompatActivity implements View.OnClickListener {
@@ -118,6 +113,9 @@ public class BrowserActivity extends AppCompatActivity implements View.OnClickLi
 //                return false;
 //            }
 //        });
+        /**
+         * 浏览器搜索框设置响应
+         */
 
         mSearchView.setOnKeyListener(new View.OnKeyListener() {
 
@@ -142,6 +140,11 @@ public class BrowserActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
     }
+
+    /**
+     * 加载页面
+     * @param url
+     */
 
     public void loadWeb(String url) {
         url = "http://" + url;      //补全url

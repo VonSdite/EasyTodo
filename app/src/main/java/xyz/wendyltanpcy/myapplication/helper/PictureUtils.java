@@ -1,4 +1,4 @@
-package xyz.wendyltanpcy.myapplication;
+package xyz.wendyltanpcy.myapplication.helper;
 
 import android.annotation.TargetApi;
 import android.content.ContentUris;
@@ -17,7 +17,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Created by Wendy on 2017/9/24.
+ * 图片处理辅助类
  */
 
 public class PictureUtils {

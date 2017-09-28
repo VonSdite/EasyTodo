@@ -1,4 +1,4 @@
-package xyz.wendyltanpcy.myapplication;
+package xyz.wendyltanpcy.myapplication.TodoList;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xyz.wendyltanpcy.myapplication.Adapter.EventsAdapter;
+import xyz.wendyltanpcy.myapplication.R;
 import xyz.wendyltanpcy.myapplication.TodoBrowser.BrowserActivity;
 import xyz.wendyltanpcy.myapplication.helper.OnStartDragListener;
 import xyz.wendyltanpcy.myapplication.helper.SimpleItemTouchHelperCallback;
@@ -51,6 +52,10 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
         setContentView(R.layout.activity_main);
 
         baseInit();
+
+        /*
+        设置刷新
+         */
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -76,7 +81,9 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
             }
         });
 
-
+        /*
+        添加事件按钮响应
+         */
         FloatingActionButton add = (FloatingActionButton) findViewById(R.id.add_event);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,6 +120,9 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
         haveInit = false;
     }
 
+    /**
+     * 视图上的初始化
+     */
     private void baseInit(){
         if(!haveInit){
             initEvents();
@@ -150,12 +160,19 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
         });
     }
 
+    /**
+     * 刷新具体要做什么？
+     */
     private void doRefresh(){
         eventList = MyAdapter.getTodoEventList();
         showNoEvent();
         MyAdapter.notifyDataSetChanged();
         swipeRefresh.setRefreshing(false);
     }
+
+    /**
+     * 开机启动动画，但是因为bug未修复暂时停用
+     */
 
     private void showStartupAnimate(){
 
