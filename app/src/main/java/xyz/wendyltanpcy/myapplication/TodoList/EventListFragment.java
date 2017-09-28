@@ -30,7 +30,7 @@ import static android.app.Activity.RESULT_OK;
  * Created by Wendy on 2017/9/6.
  */
 
-public class EventItemFragment extends Fragment {
+public class EventListFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.event_list_frag,container,false);

@@ -24,6 +24,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".FinishList.FinishEventListActivity"
+                  android:label="FinishEvent"
+                  android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
         <activity
             android:name=".TodoList.EventContentActivity"
             android:theme="@style/eventContentTheme">
@@ -31,7 +36,7 @@
         <activity android:name=".TodoList.EditMenuActivity">
         </activity>
         <activity android:name=".TodoList.PickDateActvity"/>
-        <activity android:name=".TodoList.EventItemActivity"/>
+        <activity android:name=".TodoList.EventListActivity"/>
         <activity android:name=".TodoList.SettingsActivity"/>
 
         <provider

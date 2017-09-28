@@ -14,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import xyz.wendyltanpcy.myapplication.Adapter.EventsAdapter;
+import xyz.wendyltanpcy.myapplication.FinishList.FinishEventListActivity;
 import xyz.wendyltanpcy.myapplication.R;
 import xyz.wendyltanpcy.myapplication.TodoBrowser.BrowserActivity;
 import xyz.wendyltanpcy.myapplication.helper.OnStartDragListener;
@@ -137,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
+        final NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -149,6 +151,8 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
             public boolean onNavigationItemSelected(MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.nav_finish:
+                        startActivity(new Intent(MainActivity.this,FinishEventListActivity.class));
+                        mDrawerLayout.closeDrawer(Gravity.START);
                         break;
                     case R.id.nav_broswer:
                         startActivity(new Intent(MainActivity.this,BrowserActivity.class));

@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/event_list_fragment"
-        android:name="xyz.wendyltanpcy.myapplication.TodoList.EventItemFragment"/>
+        android:name="xyz.wendyltanpcy.myapplication.TodoList.EventListFragment"/>
 
     <fragment
         android:layout_width="match_parent"
