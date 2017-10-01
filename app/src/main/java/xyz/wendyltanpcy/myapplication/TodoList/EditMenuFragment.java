@@ -2,9 +2,7 @@ package xyz.wendyltanpcy.myapplication.TodoList;
 
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
-
 import android.support.v4.app.DialogFragment;
 import android.view.Gravity;
 import android.view.View;
@@ -15,12 +13,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import xyz.wendyltanpcy.myapplication.Adapter.EventsAdapter;
 import xyz.wendyltanpcy.myapplication.R;
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * 底部弹出式，用以输入将要生成的新事件标题
@@ -31,8 +28,6 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
 
     private ImageView saveButton;
 
-    private String dateReturn;
-    private String date;
     private EventsAdapter adapter;
     private EditText editEvent;
 
@@ -75,23 +70,17 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
                 event.setEventFinish(false);
                 event.setEventDetail("add more detail");
                 event.setId(adapter.getItemCount());
-                if (dateReturn !=null){
-                    //set to specific date
-                    event.setEventDeadLine(dateReturn);
-                    event.save();
-                }
-                else{
-                    //set to default date
-                    Calendar now = Calendar.getInstance();
-                    int year = now.get(Calendar.YEAR);
-                    int month = now.get(Calendar.MONTH)+1;
-                    int day = now.get(Calendar.DAY_OF_MONTH);
-                    date = new String(new StringBuilder().append("在 ").append(year)
-                            .append("年").append(month).append("月")
-                            .append(day).append("日").append(" 前完成"));
-                    event.setEventDeadLine(date);
-                    event.save();
-                }
+
+                //set to default date
+                Calendar now = Calendar.getInstance();
+                Date date = new Date();
+                now.setTime(date);
+                event.setEventDeadLine(date);
+                event.setEventCalendar(now);
+                event.setEventDate();
+                event.setEventTime();
+                event.save();
+
                 adapter.getTodoEventList().add(event);
 //                adapter.notifyItemInserted(adapter.getItemCount());
                 adapter.notifyDataSetChanged();
@@ -104,16 +93,6 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode){
-            case 1:
-                if (resultCode==RESULT_OK) {
-                    dateReturn = data.getStringExtra("dateReturn");
-                }
-
-        }
-    }
 
 
 }

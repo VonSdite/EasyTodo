@@ -160,7 +160,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                         FinishEvent finishEvent = new FinishEvent();
                         finishEvent.setEventName(todoEvent.getEventName());
                         finishEvent.setId(todoEvent.getId());
-                        finishEvent.setEventFinishDate(todoEvent.getEventDeadLine());
+                        finishEvent.setEventFinishDate(todoEvent.getEventDate());
+                        finishEvent.setEventAlarmTime(todoEvent.getEventTime());
                         finishEvent.save();
                         todoEvent.setEventFinish(true);
                         mTodoEventList.remove(pos);

@@ -12,9 +12,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import xyz.wendyltanpcy.myapplication.R;
-import xyz.wendyltanpcy.myapplication.helper.CheckBoxSample;
 import xyz.wendyltanpcy.myapplication.model.FinishEvent;
-import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
 /**
  * Created by Wendy on 2017/9/28.

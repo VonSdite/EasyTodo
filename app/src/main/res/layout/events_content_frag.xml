@@ -22,13 +22,6 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:fitsSystemWindows="true">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_horizontal|center_vertical"
-                android:text="还没有事件图片\n   点击右上角拍照！"
-                android:textAppearance="@android:style/TextAppearance.DeviceDefault.DialogWindowTitle"
-                />
 
             <ImageView
                 android:id="@+id/event_content_image"
@@ -168,13 +161,12 @@
                     android:padding="10dp">
 
                     <TextView
+                        android:id="@+id/event_alram"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/currentAlarm"
                         android:layout_weight="0.79"
                         android:gravity="center_horizontal"
                         android:padding="10dp"
-                        android:text="9月15日"
                         android:textSize="20sp"/>
 
                     <ImageView

@@ -35,7 +35,6 @@
         </activity>
         <activity android:name=".TodoList.EditMenuActivity">
         </activity>
-        <activity android:name=".TodoList.PickDateActvity"/>
         <activity android:name=".TodoList.EventListActivity"/>
         <activity android:name=".TodoList.SettingsActivity"/>
 

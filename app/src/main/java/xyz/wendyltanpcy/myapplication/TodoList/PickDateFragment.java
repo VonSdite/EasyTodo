@@ -1,18 +1,19 @@
 package xyz.wendyltanpcy.myapplication.TodoList;
 
 import android.app.Activity;
-
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.DatePicker;
-import android.widget.Toast;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import xyz.wendyltanpcy.myapplication.R;
 
@@ -21,47 +22,69 @@ import xyz.wendyltanpcy.myapplication.R;
  * Created by Wendy on 2017/9/17.
  */
 
-public class PickDateFragment extends Fragment {
+public class PickDateFragment extends DialogFragment {
 
-    private FloatingActionButton saveButton;
-    private String date;
-    private int mYear;
-    private int mMonth;
-    private int mDay;
+
     private DatePicker mDatePicker;
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.pick_date_fragment,container,false);
 
+    public static final String EXTRA_DATE = "xyz.wendyltanpcy.myapplication.TodoList.date";
+    private static final String ARG_DATE = "date";
 
-        saveButton = view.findViewById(R.id.saveDate);
-        mDatePicker = view.findViewById(R.id.datePicker);
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getActivity(),"you save the date!",Toast.LENGTH_SHORT).show();
-                Intent i = getActivity().getIntent();
-                i.putExtra("date_return",date);
-                getActivity().setResult(Activity.RESULT_OK,i);
-                getActivity().finish();
-            }
-        });
+    public static PickDateFragment newInstance(Date date){
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_DATE,date);
 
-
-        mDatePicker.init( mDatePicker.getYear(), mDatePicker.getMonth(), mDatePicker.getDayOfMonth(),new  DatePicker.OnDateChangedListener() {
-            @Override
-
-            public void onDateChanged(DatePicker view, int year, int monthOfYear, int  dayOfMonth) {
-                mYear = year;
-                mMonth = monthOfYear+1;
-                mDay = dayOfMonth;
-                date = new String(new StringBuilder().append("在 ").append(mYear)
-                        .append("年").append(mMonth).append("月")// 得到的月份+1，因为从0开始
-                        .append(mDay).append("日").append(" 前完成"));
-
-            }
-
-        });
-        return view;
+        PickDateFragment fragment = new PickDateFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
+
+
+
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState){
+
+        Date date = (Date)getArguments().getSerializable(ARG_DATE);//得到的date参数用calendar处理，初始化
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        View v = LayoutInflater.from(getActivity()).inflate(R.layout.pick_date_fragment,null);
+
+        mDatePicker = v.findViewById(R.id.datePicker);
+        mDatePicker.init(year,month,day,null);
+
+        return new AlertDialog.Builder(getActivity()) //fluent interface
+                .setView(v)
+                .setTitle("选择日期")
+                .setPositiveButton(android.R.string.ok,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                int year = mDatePicker.getYear();
+                                int month = mDatePicker.getMonth();
+                                int day = mDatePicker.getDayOfMonth();
+                                Date date = new GregorianCalendar(year,month,day).getTime();
+
+                                Intent intent =  new Intent();
+                                intent.putExtra(EXTRA_DATE,date);
+                                sendResult(Activity.RESULT_OK,date);
+
+                            }//点击的时候使用sendResult回传数据。
+                        })
+                .create();
+    }
+
+    private void sendResult(int resultCode,Date date){
+
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_DATE,date);
+        getTargetFragment().onActivityResult(getTargetRequestCode(),resultCode,intent);
+    }
+
+
 }

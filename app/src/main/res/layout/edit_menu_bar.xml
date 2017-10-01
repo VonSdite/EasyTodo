@@ -4,8 +4,7 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:id="@+id/edit_menu_fragment"
-              android:background="@color/colorPrimary">
+              android:id="@+id/edit_menu_fragment">
 
     <EditText
         android:layout_width="match_parent"
@@ -19,7 +18,8 @@
         android:id="@+id/edit_menu_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:background="@color/colorPrimary">
 
 
         <View

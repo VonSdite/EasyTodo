@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import org.litepal.LitePal;
 import org.litepal.crud.DataSupport;
@@ -129,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
         if(!haveInit){
             initEvents();
 
-//            showStartupAnimate();
+            showStartupAnimate();
             eventList = DataSupport.findAll(TodoEvent.class);
             showNoEvent();
         }
@@ -169,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
         showNoEvent();
         MyAdapter.notifyDataSetChanged();
         swipeRefresh.setRefreshing(false);
+        Toast.makeText(MainActivity.this,"数据刷新成功",Toast.LENGTH_SHORT).show();
     }
 
     /**

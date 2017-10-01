@@ -3,7 +3,6 @@ package xyz.wendyltanpcy.myapplication.FinishList;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -94,8 +93,10 @@ public class FinishEventListActivity extends AppCompatActivity {
 
     private void showNoEvent(){
         if (finishEventList.isEmpty()){
-            View visibility = findViewById(R.id.no_event_layout);
+            View visibility = findViewById(R.id.no_finish_frag);
+            View vi_main = findViewById(R.id.finish_event_list_fragment);
             visibility.setVisibility(View.VISIBLE);
+            vi_main.setVisibility(View.GONE);
         }
     }
 
@@ -104,6 +105,7 @@ public class FinishEventListActivity extends AppCompatActivity {
         showNoEvent();
         MyAdapter.notifyDataSetChanged();
         swipeRefresh.setRefreshing(false);
+        Toast.makeText(FinishEventListActivity.this,"数据刷新成功",Toast.LENGTH_SHORT).show();
     }
 
     private  void initEvents(){
@@ -116,12 +118,8 @@ public class FinishEventListActivity extends AppCompatActivity {
         if(!haveInit){
             initEvents();
 
-//            showStartupAnimate();
             finishEventList = DataSupport.findAll(FinishEvent.class);
-            if (finishEventList.isEmpty()){
-                View visibility = findViewById(R.id.no_event_layout);
-                visibility.setVisibility(View.VISIBLE);
-            }
+            showNoEvent();
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.finsh_toolbar);

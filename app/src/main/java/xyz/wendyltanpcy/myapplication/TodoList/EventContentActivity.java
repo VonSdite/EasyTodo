@@ -6,18 +6,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
-
 import android.provider.MediaStore;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
-
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,13 +23,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.bumptech.glide.Glide;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-
 
 import kr.co.namee.permissiongen.PermissionFail;
 import kr.co.namee.permissiongen.PermissionGen;
@@ -44,7 +39,6 @@ import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
 public class EventContentActivity extends AppCompatActivity {
 
-    private String dateReturn;
     private FloatingActionButton saveDetailButton;
     private ImageView chooseDate;
     private ImageView chooseAlarm;
@@ -54,12 +48,18 @@ public class EventContentActivity extends AppCompatActivity {
     private static TodoEvent Event;
     private ImageView eventImage;
     private EventsAdapter.ViewHolder holder;
+    private static final int REQUEST_DATE = 0;
+    private static final int REQUEST_TIME = 1;
+    private static final String DIALOG_DATE = "DialogDate";
+    private static final String DIALOG_TIME = "DialogTime";
 
     //deal with pics
     private static final int SUCCESSCODE = 100;
     private String mPublicPhotoPath;
     private static final int REQ_GALLERY = 333;
     private static final int REQUEST_CODE_PICK_IMAGE = 222;
+    private EventContentFragment EventContentFragment;
+    public static final String INTENT_ALARM = "intent_alarm";
 
 
     public void actionStart(Context context, TodoEvent event){
@@ -97,7 +97,7 @@ public class EventContentActivity extends AppCompatActivity {
         collapsingToolbar.setTitle(Event.getEventName());
         Glide.with(this);
 
-        EventContentFragment EventContentFragment = (EventContentFragment)
+        EventContentFragment = (EventContentFragment)
                 getSupportFragmentManager().findFragmentById(R.id.news_content_fragment);
         EventContentFragment.refresh(Event);
 
@@ -125,19 +125,37 @@ public class EventContentActivity extends AppCompatActivity {
         chooseDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(EventContentActivity.this,PickDateActvity.class);
-                startActivityForResult(i,1);
+                FragmentManager manager = EventContentFragment.getFragmentManager();
+                PickDateFragment dialog = PickDateFragment.newInstance(Event.getEventDeadLine());
+                dialog.setTargetFragment(EventContentFragment,REQUEST_DATE);
+                dialog.show(manager,DIALOG_DATE);
             }
         });
+
+        chooseAlarm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager manager = EventContentFragment.getFragmentManager();
+                PickTimeFragment dialog = PickTimeFragment.newInstance(Event.getEventDeadLine());
+                dialog.setTargetFragment(EventContentFragment,REQUEST_TIME);
+                dialog.show(manager,DIALOG_TIME);
+
+//                Intent intent = new Intent(INTENT_ALARM);
+//                intent.putExtra("name",Event.getEventName());
+//                intent.putExtra("detail",Event.getEventDetail());
+//                PendingIntent pi = PendingIntent.getBroadcast(EventContentActivity.this, 0, intent, 0);
+//
+//                AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+//                am.set(AlarmManager.RTC_WAKEUP, Event.getEventCalendar().getTimeInMillis(), pi);
+            }
+        });
+
         saveDetailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Event.setEventName(eventNameText.getText().toString());
                 Event.setEventDetail(eventDetailText.getText().toString());
-                Event.setEventDeadLine(eventDeadLineText.getText().toString());
                 Event.save();
-                holder.notify();
-                Toast.makeText(getApplicationContext(),"Detail save!",Toast.LENGTH_SHORT).show();
                 finish();
 
             }
@@ -219,16 +237,10 @@ public class EventContentActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
         mTargetW = eventImage.getWidth();
         mTargetH = eventImage.getHeight();
 
         switch (requestCode) {
-            case 1:
-                if (resultCode==RESULT_OK) {
-                    dateReturn = data.getStringExtra("dateReturn");
-                    eventDeadLineText.setText(dateReturn);
-                }
             //拍照
             case REQ_GALLERY:
                 if (resultCode != Activity.RESULT_OK) return;
