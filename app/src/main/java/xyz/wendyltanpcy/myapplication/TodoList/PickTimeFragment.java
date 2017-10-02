@@ -7,27 +7,28 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TimePicker;
-import android.support.v4.app.DialogFragment;
+
 import java.util.Calendar;
 import java.util.Date;
 
 import xyz.wendyltanpcy.myapplication.R;
 
 /**
- * Created by Wendy on 2017/10/1.
+ * 设置时间
  */
-
 public class PickTimeFragment extends DialogFragment {
 
 
     private TimePicker mTimePicker;
 
     public static final String EXTRA_TIME = "xyz.wendyltanpcy.myapplication.TodoList.time";
-    private static final String ARG_TIME = "time";
+    public static final String ARG_TIME = "time";
+
 
     public static PickTimeFragment newInstance(Date date){
         Bundle args = new Bundle();
@@ -59,6 +60,7 @@ public class PickTimeFragment extends DialogFragment {
                             @RequiresApi(api = Build.VERSION_CODES.M)
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+
                                 int hour = mTimePicker.getHour();
                                 int min = mTimePicker.getMinute();
                                 Calendar calendar = Calendar.getInstance();
@@ -68,6 +70,7 @@ public class PickTimeFragment extends DialogFragment {
                                 Intent intent =  new Intent();
                                 intent.putExtra(EXTRA_TIME,calendar);
                                 sendResult(Activity.RESULT_OK,calendar);
+
 
                             }//点击的时候使用sendResult回传数据。
                         })

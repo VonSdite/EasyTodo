@@ -19,7 +19,7 @@ import xyz.wendyltanpcy.myapplication.R;
 
 
 /**
- * Created by Wendy on 2017/9/17.
+ * 设置日期
  */
 
 public class PickDateFragment extends DialogFragment {

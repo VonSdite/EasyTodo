@@ -20,7 +20,6 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
@@ -32,6 +31,7 @@
         <activity
             android:name=".TodoList.EventContentActivity"
             android:theme="@style/eventContentTheme">
+
         </activity>
         <activity android:name=".TodoList.EditMenuActivity">
         </activity>
@@ -50,6 +50,12 @@
 
         <activity android:name=".TodoBrowser.BrowserActivity">
         </activity>
+
+        <receiver android:name=".Receiver.AlarmReceiver">
+            <intent-filter>
+                <action android:name="intent_alarm"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

@@ -59,8 +59,11 @@ public class TodoEvent extends DataSupport implements Serializable{
         Calendar newC = Calendar.getInstance();
 
         newC.setTime(this.eventDeadLine);
+        calendar.set(Calendar.SECOND,0);
         newC.set(newC.get(Calendar.YEAR),newC.get(Calendar.MONTH),newC.get(Calendar.DAY_OF_MONTH),
-                calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE));
+                calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),
+                calendar.get(Calendar.SECOND));
+        newC.set(Calendar.MILLISECOND,0);
 
         this.eventCalendar = newC;
     }
@@ -71,7 +74,7 @@ public class TodoEvent extends DataSupport implements Serializable{
         int month = eventCalendar.get(Calendar.MONTH);
         int day = eventCalendar.get(Calendar.DAY_OF_MONTH);
         StringBuilder builder = new StringBuilder().append(year)
-                .append("年").append(month+1).append("月").append(day).append("日");
+                .append("年").append(month).append("月").append(day).append("日");
         this.eventDate = builder.toString();
     }
 

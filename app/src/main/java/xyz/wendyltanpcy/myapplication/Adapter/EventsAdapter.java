@@ -123,10 +123,10 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                                 Intent i = new Intent(Intent.ACTION_SEND);//setting action
                                 i.setType("text/plain");//setting intent data type
                                 StringBuilder builder = new StringBuilder();
-                                builder.append("You got an event from your friend!\n");
-                                builder.append("event name: "+todoEvent.getEventName()+"\n");
-                                builder.append("detail: " + todoEvent.getEventDetail()+ "\n");
-                                builder.append("is it finish: " + todoEvent.isEventFinish() + "\n");
+                                builder.append("你的朋友通过ToDoList给你分享他的事件！\n");
+                                builder.append("标题: "+todoEvent.getEventName()+"\n");
+                                builder.append("详情: " + todoEvent.getEventDetail()+ "\n");
+                                builder.append("是否已经完成: " + todoEvent.isEventFinish() + "\n");
                                 String text = builder.toString();
                                 i.putExtra(Intent.EXTRA_TEXT,text);
                                 i.putExtra(Intent.EXTRA_SUBJECT,"an interesting event");//putting extra
@@ -150,6 +150,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             public void onClick(View view) {
                 if (!todoEvent.isEventFinish())
                     hd.checkBoxSample.toggle();
+                hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 
                 final AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
                 dialog.setTitle("确定已经完成这个事件？");
@@ -158,11 +159,19 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                     public void onClick(DialogInterface dialogInterface, int i) {
                         TodoEvent todoEvent = mTodoEventList.get(pos);
                         FinishEvent finishEvent = new FinishEvent();
+
+                        /*
+                        对完成事件信息设置
+                         */
                         finishEvent.setEventName(todoEvent.getEventName());
                         finishEvent.setId(todoEvent.getId());
                         finishEvent.setEventFinishDate(todoEvent.getEventDate());
                         finishEvent.setEventAlarmTime(todoEvent.getEventTime());
                         finishEvent.save();
+
+                        /*
+                        删掉此条未完成事件
+                         */
                         todoEvent.setEventFinish(true);
                         mTodoEventList.remove(pos);
                         todoEvent.delete();

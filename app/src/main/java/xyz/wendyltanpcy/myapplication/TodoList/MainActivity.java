@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
     }
 
     /**
-     * 刷新具体要做什么？
+     * 刷新具体要做什么
      */
     private void doRefresh(){
         eventList = MyAdapter.getTodoEventList();
@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
     }
 
     /**
-     * 开机启动动画，但是因为bug未修复暂时停用
+     * 开机启动动画
      */
 
     private void showStartupAnimate(){

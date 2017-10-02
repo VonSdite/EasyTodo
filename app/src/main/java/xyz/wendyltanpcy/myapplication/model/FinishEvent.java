@@ -5,7 +5,7 @@ import org.litepal.crud.DataSupport;
 import java.io.Serializable;
 
 /**
- * Created by Wendy on 2017/9/28.
+ * 完成事件主类
  */
 
 public class FinishEvent extends DataSupport implements Serializable {

@@ -53,13 +53,14 @@ public class EventContentActivity extends AppCompatActivity {
     private static final String DIALOG_DATE = "DialogDate";
     private static final String DIALOG_TIME = "DialogTime";
 
+
     //deal with pics
     private static final int SUCCESSCODE = 100;
     private String mPublicPhotoPath;
     private static final int REQ_GALLERY = 333;
     private static final int REQUEST_CODE_PICK_IMAGE = 222;
     private EventContentFragment EventContentFragment;
-    public static final String INTENT_ALARM = "intent_alarm";
+
 
 
     public void actionStart(Context context, TodoEvent event){
@@ -140,13 +141,6 @@ public class EventContentActivity extends AppCompatActivity {
                 dialog.setTargetFragment(EventContentFragment,REQUEST_TIME);
                 dialog.show(manager,DIALOG_TIME);
 
-//                Intent intent = new Intent(INTENT_ALARM);
-//                intent.putExtra("name",Event.getEventName());
-//                intent.putExtra("detail",Event.getEventDetail());
-//                PendingIntent pi = PendingIntent.getBroadcast(EventContentActivity.this, 0, intent, 0);
-//
-//                AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-//                am.set(AlarmManager.RTC_WAKEUP, Event.getEventCalendar().getTimeInMillis(), pi);
             }
         });
 
