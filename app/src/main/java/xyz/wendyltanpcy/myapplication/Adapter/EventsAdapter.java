@@ -3,33 +3,25 @@ package xyz.wendyltanpcy.myapplication.Adapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-import org.litepal.crud.DataSupport;
-
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.List;
 
-import xyz.wendyltanpcy.myapplication.helper.CheckBoxSample;
 import xyz.wendyltanpcy.myapplication.R;
 import xyz.wendyltanpcy.myapplication.TodoList.EventContentActivity;
-import xyz.wendyltanpcy.myapplication.helper.ItemTouchHelperAdapter;
-import xyz.wendyltanpcy.myapplication.helper.ItemTouchHelperViewHolder;
-import xyz.wendyltanpcy.myapplication.helper.OnStartDragListener;
+import xyz.wendyltanpcy.myapplication.helper.CheckBoxSample;
+import xyz.wendyltanpcy.myapplication.helper.RecyclerViewClickListener;
 import xyz.wendyltanpcy.myapplication.model.FinishEvent;
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
@@ -37,12 +29,20 @@ import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 /**
  * 事件适配器，用于主界面事件的显示处理逻辑
  */
-public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> implements ItemTouchHelperAdapter,Serializable
+public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> implements Serializable
 
 {
     private transient Context mContext;
     private List<TodoEvent> mTodoEventList;
-    private final OnStartDragListener mDragStartListener;
+    private int position;
+
+    public  int getThisPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
 
 
 
@@ -51,30 +51,47 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
      * 控制事件拖拽。
      */
 
-     public static class ViewHolder extends RecyclerView.ViewHolder implements
-            ItemTouchHelperViewHolder{
+     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener, View.OnClickListener, View.OnLongClickListener{
 
             private TextView eventNameText;
             private CheckBoxSample checkBoxSample;
             private ImageView handleView;
+            private RecyclerViewClickListener mRecyclerViewClickListener;
 
             public ViewHolder(View itemView) {
                     super(itemView);
                     eventNameText = itemView.findViewById(R.id.event_name);
                     checkBoxSample = itemView.findViewById(R.id.event_finish);
                     handleView = itemView.findViewById(R.id.handle);
+                    itemView.setOnCreateContextMenuListener(this);
+                    itemView.setOnLongClickListener(this);
+
             }
 
 
         @Override
-        public void onItemSelected() {
-            itemView.setBackgroundColor(Color.LTGRAY);
+        public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+            //menuInfo is null
+            menu.add(0, 1, 0, "删除");
+            menu.add(0, 2, 0, "优先级");
         }
 
         @Override
-        public void onItemClear() {
-            itemView.setBackgroundColor(0);
+        public void onClick(View view) {
+
         }
+
+        @Override
+        public boolean onLongClick(View view) {
+            mRecyclerViewClickListener.recyclerViewListClicked(this.getPosition());
+            return true;
+        }
+    }
+
+    @Override
+    public void onViewRecycled(ViewHolder holder) {
+        holder.itemView.setOnLongClickListener(null);
+        super.onViewRecycled(holder);
     }
 
     /**
@@ -86,9 +103,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     }
 
 
-    public EventsAdapter(List<TodoEvent> todoEventList,OnStartDragListener dragStartListener) {
+    public EventsAdapter(List<TodoEvent> todoEventList) {
         mTodoEventList=todoEventList;
-        mDragStartListener = dragStartListener;
     }
 
 
@@ -100,6 +116,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
         View view = LayoutInflater.from(mContext).inflate(R.layout.event_item,parent,false);
         ViewHolder holder = new ViewHolder(view);
+
         return holder;
     }
 
@@ -109,7 +126,16 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         final TodoEvent todoEvent = mTodoEventList.get(position);
         final int pos = position;
         final EventsAdapter.ViewHolder hd = holder;
-        todoEvent.setId(position+1);
+        todoEvent.setId(position);
+
+        hd.handleView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                setPosition(hd.getPosition());
+                return false;
+            }
+        });
+
 
         hd.eventNameText.setText(todoEvent.getEventName());
 
@@ -195,16 +221,15 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
             }
         });
-
-        hd.handleView.setOnTouchListener(new View.OnTouchListener() {
+        hd.handleView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (MotionEventCompat.getActionMasked(motionEvent) == MotionEvent.ACTION_DOWN) {
-                    mDragStartListener.onStartDrag(hd);
-                }
-                return false;
+            public void onClick(View view) {
+                view.showContextMenu();
             }
         });
+
+
+
     }
 
     @Override
@@ -213,23 +238,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     }
 
 
-    /**
-     *
-     * @param fromPosition The start position of the moved item.
-     * @param toPosition   Then resolved position of the moved item.
-     * @return
-     */
-    @Override
-    public boolean onItemMove(int fromPosition, int toPosition) {
-        Collections.swap(mTodoEventList, fromPosition, toPosition);
-        notifyItemMoved(fromPosition, toPosition);
-        return true;
-    }
 
-    @Override
-    public void onItemDismiss(int position) {
-        mTodoEventList.remove(position);
-        DataSupport.delete(TodoEvent.class,position);
-        notifyItemRemoved(position);
-    }
+
 }

@@ -55,7 +55,7 @@ public class EventContentActivity extends AppCompatActivity {
 
 
     //deal with pics
-    private static final int SUCCESSCODE = 100;
+    private static final int SUCCESSCODE = 111;
     private String mPublicPhotoPath;
     private static final int REQ_GALLERY = 333;
     private static final int REQUEST_CODE_PICK_IMAGE = 222;
@@ -149,6 +149,7 @@ public class EventContentActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Event.setEventName(eventNameText.getText().toString());
                 Event.setEventDetail(eventDetailText.getText().toString());
+                Event.setEventPriority();
                 Event.save();
                 finish();
 

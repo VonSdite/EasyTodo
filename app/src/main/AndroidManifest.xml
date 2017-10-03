@@ -54,6 +54,7 @@
         <receiver android:name=".Receiver.AlarmReceiver">
             <intent-filter>
                 <action android:name="intent_alarm"/>
+                <action android:name="intent_event"/>
             </intent-filter>
         </receiver>
     </application>

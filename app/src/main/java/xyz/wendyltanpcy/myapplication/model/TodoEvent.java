@@ -1,5 +1,6 @@
 package xyz.wendyltanpcy.myapplication.model;
 
+import org.litepal.annotation.Column;
 import org.litepal.crud.DataSupport;
 
 import java.io.Serializable;
@@ -15,8 +16,12 @@ public class TodoEvent extends DataSupport implements Serializable{
     /*
     basic info
      */
+    @Column(unique = true)
     private long id;
+
+    @Column(nullable = false)
     private String eventName;
+
     private String eventDetail;
     private boolean eventFinish;
 
@@ -29,10 +34,42 @@ public class TodoEvent extends DataSupport implements Serializable{
     private String eventDate;
 
     /*
+    priority
+     */
+    private int eventDateNum;
+    private String eventPriority;
+
+    /*
     image info
      */
     private byte[] eventImageBitMap;
 
+    public void setEventPriority() {
+        Calendar calendar = Calendar.getInstance();
+        int year =calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH)+1;
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        StringBuilder builder2 = new StringBuilder().append(year).append(month).append(day);
+        int eventNum = Integer.parseInt(builder2.toString());
+        if (eventDateNum==eventNum){
+            eventPriority = "高";
+        }else if (eventDateNum>eventNum&&eventDateNum<=eventNum+3){
+            eventPriority = "中";
+        }else if (eventDateNum>eventNum+3){
+            eventPriority = "低";
+        }
+
+
+
+    }
+
+    public String getEventPriority() {
+        return eventPriority;
+    }
+
+    public int getEventDateNum() {
+        return eventDateNum;
+    }
 
     public byte[] getEventImageBitMap() {
         return eventImageBitMap;
@@ -71,11 +108,14 @@ public class TodoEvent extends DataSupport implements Serializable{
 
     public void setEventDate() {
         int year = eventCalendar.get(Calendar.YEAR);
-        int month = eventCalendar.get(Calendar.MONTH);
+        int month = eventCalendar.get(Calendar.MONTH)+1;
         int day = eventCalendar.get(Calendar.DAY_OF_MONTH);
-        StringBuilder builder = new StringBuilder().append(year)
+        StringBuilder builder1 = new StringBuilder().append(year)
                 .append("年").append(month).append("月").append(day).append("日");
-        this.eventDate = builder.toString();
+
+        this.eventDate = builder1.toString();
+        StringBuilder builder2 = new StringBuilder().append(year).append(month).append(day);
+        eventDateNum = Integer.parseInt(builder2.toString());
     }
 
     public String getEventDate() {

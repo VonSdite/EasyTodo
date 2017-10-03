@@ -1,8 +1,10 @@
 package xyz.wendyltanpcy.myapplication.TodoList;
+
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -13,11 +15,10 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Gravity;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
@@ -28,26 +29,29 @@ import org.litepal.crud.DataSupport;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import xyz.wendyltanpcy.myapplication.Adapter.EventsAdapter;
 import xyz.wendyltanpcy.myapplication.FinishList.FinishEventListActivity;
 import xyz.wendyltanpcy.myapplication.R;
 import xyz.wendyltanpcy.myapplication.TodoBrowser.BrowserActivity;
-import xyz.wendyltanpcy.myapplication.helper.OnStartDragListener;
-import xyz.wendyltanpcy.myapplication.helper.SimpleItemTouchHelperCallback;
+import xyz.wendyltanpcy.myapplication.helper.RecyclerViewClickListener;
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
 
-public class MainActivity extends AppCompatActivity implements OnStartDragListener,Serializable {
+public class MainActivity extends AppCompatActivity implements Serializable,RecyclerViewClickListener {
 
     private EventsAdapter MyAdapter;
     private List<TodoEvent> eventList = new ArrayList<>();
     private static boolean haveInit = false;
-    private transient ItemTouchHelper mItemTouchHelper;
     private transient DrawerLayout mDrawerLayout;
     private transient SwipeRefreshLayout swipeRefresh;
     private transient ImageView homeImage;
+    public static final String INTENT_EVENT= "intent_event";
+    private int globalPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
         setContentView(R.layout.activity_main);
 
         baseInit();
+        addEvent();
 
         /*
         设置刷新
@@ -84,7 +89,22 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
             }
         });
 
-        /*
+
+
+        RecyclerView eventNameRecyclerView = (RecyclerView) findViewById(R.id.event_name_recycler_view);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        MyAdapter = new EventsAdapter(eventList);
+        eventNameRecyclerView.setLayoutManager(layoutManager);
+        eventNameRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        eventNameRecyclerView.setAdapter(MyAdapter);
+        registerForContextMenu(eventNameRecyclerView);
+
+
+
+    }
+
+    private void addEvent(){
+         /*
         添加事件按钮响应
          */
         FloatingActionButton add = (FloatingActionButton) findViewById(R.id.add_event);
@@ -99,17 +119,6 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
 
             }
         });
-
-        RecyclerView eventNameRecyclerView = (RecyclerView) findViewById(R.id.event_name_recycler_view);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        MyAdapter = new EventsAdapter(eventList,this);
-        eventNameRecyclerView.setLayoutManager(layoutManager);
-        eventNameRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        eventNameRecyclerView.setAdapter(MyAdapter);
-
-        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(MyAdapter);
-        mItemTouchHelper = new ItemTouchHelper(callback);
-        mItemTouchHelper.attachToRecyclerView(eventNameRecyclerView);
     }
 
 
@@ -133,7 +142,11 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
             showStartupAnimate();
             eventList = DataSupport.findAll(TodoEvent.class);
             showNoEvent();
+            eventList = sortEventList(eventList);
         }
+
+        sendNotification(eventList);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -163,11 +176,46 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
     }
 
     /**
+     * 按优先级排序列表(根据日期）
+     */
+
+    private List<TodoEvent> sortEventList(List<TodoEvent> todoEventList){
+        Collections.sort(todoEventList, new Comparator<TodoEvent>(){
+            public int compare(TodoEvent event1, TodoEvent event2) {
+                 return Integer.valueOf(event1.getEventDateNum()).compareTo(event2.getEventDateNum());
+        }});
+        return  todoEventList;
+    }
+
+    /**
+     * 发送通知
+     */
+    private void sendNotification(List<TodoEvent> todoEventList){
+        Calendar calendar = Calendar.getInstance();
+        int eventCount = 0;
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        StringBuilder builder = new StringBuilder().append(year).append("年").append(month+1)
+                .append("月").append(day).append("日");
+        for(TodoEvent event:todoEventList){
+            if (event.getEventDate().equals(builder.toString())){
+                eventCount++;
+            }
+        }
+        Intent i = new Intent(INTENT_EVENT);
+        i.putExtra("event_num",eventCount);
+        PendingIntent pi = PendingIntent.getBroadcast(this, 777, i, 0);
+        AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
+        am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pi);
+    }
+    /**
      * 刷新具体要做什么
      */
     private void doRefresh(){
         eventList = MyAdapter.getTodoEventList();
         showNoEvent();
+        eventList = sortEventList(eventList);
         MyAdapter.notifyDataSetChanged();
         swipeRefresh.setRefreshing(false);
         Toast.makeText(MainActivity.this,"数据刷新成功",Toast.LENGTH_SHORT).show();
@@ -210,6 +258,35 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
         }
     }
 
+    @Override
+    public int recyclerViewListClicked(int position) {
+        globalPosition = position;
+        return position;
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        // TODO Auto-generated method stub
+        TodoEvent event = eventList.get(globalPosition);
+        switch (item.getItemId()) {
+            case 1:
+                event.delete();
+                eventList.remove(globalPosition);
+                MyAdapter.notifyDataSetChanged();
+
+                Toast.makeText(this, "你删掉了这条项目", Toast.LENGTH_LONG).show();
+                break;
+            case 2:
+                String prioriy = event.getEventPriority();
+                Toast.makeText(this, "优先级: "+prioriy , Toast.LENGTH_LONG).show();
+                break;
+            default:
+                break;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+
 
 
     @Override
@@ -239,11 +316,6 @@ public class MainActivity extends AppCompatActivity implements OnStartDragListen
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
-        mItemTouchHelper.startDrag(viewHolder);
     }
 
 

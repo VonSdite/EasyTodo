@@ -13,6 +13,7 @@ import android.support.v4.app.NotificationCompat;
 import xyz.wendyltanpcy.myapplication.R;
 import xyz.wendyltanpcy.myapplication.TodoList.EventContentActivity;
 import xyz.wendyltanpcy.myapplication.TodoList.EventContentFragment;
+import xyz.wendyltanpcy.myapplication.TodoList.MainActivity;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
@@ -31,10 +32,9 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
-        String name = intent.getStringExtra("name");
-        String detail = intent.getStringExtra("detail");
         if (action == EventContentFragment.INTENT_ALARM) {
-
+            String name = intent.getStringExtra("name");
+            String detail = intent.getStringExtra("detail");
             Intent i = new Intent(context, EventContentActivity.class);
             PendingIntent pi = PendingIntent.getActivity(context,666,i,0);
 
@@ -42,6 +42,26 @@ public class AlarmReceiver extends BroadcastReceiver {
             Notification notification = new NotificationCompat.Builder(context)
                     .setContentTitle("今日要完成的事件:  " + name)
                     .setContentText("详情: " + detail)
+                    .setSmallIcon(R.mipmap.icon2)
+                    .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),R.mipmap.icon2))
+                    .setContentIntent(pi)
+                    .setAutoCancel(true)
+//                        .setVibrate(new long[]{0,1000,1000,1000})
+//                        .setSound(Uri.fromFile(new File("/system/media/audio/ringtones/Luna.ogg")))
+                    .setLights(Color.GREEN,1000,1000)
+                    .setDefaults(NotificationCompat.DEFAULT_ALL)
+                    .setPriority(NotificationCompat.PRIORITY_MAX)
+                    .build();
+            manager.notify(1,notification);
+        }
+        if (action == MainActivity.INTENT_EVENT) {
+            int num = intent.getIntExtra("event_num",0);
+            PendingIntent pi = PendingIntent.getActivity(context,777,intent,0);
+
+            NotificationManager manager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
+            Notification notification = new NotificationCompat.Builder(context)
+                    .setContentTitle("今日要完成的事件数:  " + num)
+                    .setContentText("记得完成哦！")
                     .setSmallIcon(R.mipmap.icon2)
                     .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),R.mipmap.icon2))
                     .setContentIntent(pi)
