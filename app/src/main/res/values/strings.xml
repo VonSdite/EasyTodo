@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">EasyTodo</string>
-    <string name="title_activity_settings">设置</string>
     <string name="pref_title_ringtone">铃声</string>
     <string name="pref_ringtone_silent">静音</string>
     <string name="delete_all">全部删除</string>
+    <string name="title_activity_settings">设置</string>
 
     <string name="default_gallery_storage">一只小猫</string>
     <string name="title_auto_upload">自动上传</string>

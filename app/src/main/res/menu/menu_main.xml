@@ -4,11 +4,6 @@
       tools:context="xyz.wendyltanpcy.myapplication.TodoList.MainActivity">
 
     <item
-        android:id="@+id/setting"
-        android:orderInCategory="100"
-        android:title="@string/title_activity_settings"
-        app:showAsAction="never"/>
-    <item
         android:id="@+id/delete"
         android:contentDescription="delete item"
         android:icon="@drawable/delete"

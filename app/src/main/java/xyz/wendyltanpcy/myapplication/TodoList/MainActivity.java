@@ -38,11 +38,10 @@ import xyz.wendyltanpcy.myapplication.Adapter.EventsAdapter;
 import xyz.wendyltanpcy.myapplication.FinishList.FinishEventListActivity;
 import xyz.wendyltanpcy.myapplication.R;
 import xyz.wendyltanpcy.myapplication.TodoBrowser.BrowserActivity;
-import xyz.wendyltanpcy.myapplication.helper.RecyclerViewClickListener;
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
 
-public class MainActivity extends AppCompatActivity implements Serializable,RecyclerViewClickListener {
+public class MainActivity extends AppCompatActivity implements Serializable{
 
     private EventsAdapter MyAdapter;
     private List<TodoEvent> eventList = new ArrayList<>();
@@ -51,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements Serializable,Recy
     private transient SwipeRefreshLayout swipeRefresh;
     private transient ImageView homeImage;
     public static final String INTENT_EVENT= "intent_event";
-    private int globalPosition;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,6 +167,9 @@ public class MainActivity extends AppCompatActivity implements Serializable,Recy
                     case R.id.nav_broswer:
                         startActivity(new Intent(MainActivity.this,BrowserActivity.class));
                         break;
+                    case R.id.nav_setting:
+                        startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                        break;
                     default:
                 }
                 return true;
@@ -258,27 +260,22 @@ public class MainActivity extends AppCompatActivity implements Serializable,Recy
         }
     }
 
-    @Override
-    public int recyclerViewListClicked(int position) {
-        globalPosition = position;
-        return position;
-    }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         // TODO Auto-generated method stub
-        TodoEvent event = eventList.get(globalPosition);
+        int clickedItemPosition = item.getOrder();
+        TodoEvent event = eventList.get(clickedItemPosition);
         switch (item.getItemId()) {
             case 1:
                 event.delete();
-                eventList.remove(globalPosition);
+                eventList.remove(clickedItemPosition);
                 MyAdapter.notifyDataSetChanged();
-
                 Toast.makeText(this, "你删掉了这条项目", Toast.LENGTH_LONG).show();
                 break;
             case 2:
                 String prioriy = event.getEventPriority();
-                Toast.makeText(this, "优先级: "+prioriy , Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "优先级: "+prioriy+" 完成日期: "+event.getEventDate() , Toast.LENGTH_LONG).show();
                 break;
             default:
                 break;
@@ -304,9 +301,7 @@ public class MainActivity extends AppCompatActivity implements Serializable,Recy
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.setting) {
-            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-        }else if (id == R.id.delete){
+         if (id == R.id.delete){
             eventList.clear();
             DataSupport.deleteAll(TodoEvent.class);
             MyAdapter.notifyDataSetChanged();

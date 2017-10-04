@@ -36,7 +36,8 @@
         <activity android:name=".TodoList.EditMenuActivity">
         </activity>
         <activity android:name=".TodoList.EventListActivity"/>
-        <activity android:name=".TodoList.SettingsActivity"/>
+        <activity android:name=".TodoList.SettingsActivity"
+            android:theme="@style/Theme.Settings"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"

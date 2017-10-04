@@ -21,7 +21,6 @@ import java.util.List;
 import xyz.wendyltanpcy.myapplication.R;
 import xyz.wendyltanpcy.myapplication.TodoList.EventContentActivity;
 import xyz.wendyltanpcy.myapplication.helper.CheckBoxSample;
-import xyz.wendyltanpcy.myapplication.helper.RecyclerViewClickListener;
 import xyz.wendyltanpcy.myapplication.model.FinishEvent;
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
@@ -51,12 +50,11 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
      * 控制事件拖拽。
      */
 
-     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener, View.OnClickListener, View.OnLongClickListener{
+     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener{
 
             private TextView eventNameText;
             private CheckBoxSample checkBoxSample;
             private ImageView handleView;
-            private RecyclerViewClickListener mRecyclerViewClickListener;
 
             public ViewHolder(View itemView) {
                     super(itemView);
@@ -64,7 +62,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                     checkBoxSample = itemView.findViewById(R.id.event_finish);
                     handleView = itemView.findViewById(R.id.handle);
                     itemView.setOnCreateContextMenuListener(this);
-                    itemView.setOnLongClickListener(this);
 
             }
 
@@ -72,20 +69,10 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         @Override
         public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
             //menuInfo is null
-            menu.add(0, 1, 0, "删除");
-            menu.add(0, 2, 0, "优先级");
+            menu.add(0, 1, getAdapterPosition(), "删除");
+            menu.add(0, 2, getAdapterPosition(), "优先级");
         }
 
-        @Override
-        public void onClick(View view) {
-
-        }
-
-        @Override
-        public boolean onLongClick(View view) {
-            mRecyclerViewClickListener.recyclerViewListClicked(this.getPosition());
-            return true;
-        }
     }
 
     @Override
