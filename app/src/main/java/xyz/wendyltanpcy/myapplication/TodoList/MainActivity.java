@@ -3,7 +3,9 @@ package xyz.wendyltanpcy.myapplication.TodoList;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -38,6 +40,7 @@ import xyz.wendyltanpcy.myapplication.Adapter.EventsAdapter;
 import xyz.wendyltanpcy.myapplication.FinishList.FinishEventListActivity;
 import xyz.wendyltanpcy.myapplication.R;
 import xyz.wendyltanpcy.myapplication.TodoBrowser.BrowserActivity;
+import xyz.wendyltanpcy.myapplication.model.Consts;
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
 
@@ -193,23 +196,32 @@ public class MainActivity extends AppCompatActivity implements Serializable{
      * 发送通知
      */
     private void sendNotification(List<TodoEvent> todoEventList){
-        Calendar calendar = Calendar.getInstance();
-        int eventCount = 0;
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        StringBuilder builder = new StringBuilder().append(year).append("年").append(month+1)
-                .append("月").append(day).append("日");
-        for(TodoEvent event:todoEventList){
-            if (event.getEventDate().equals(builder.toString())){
-                eventCount++;
+        SharedPreferences setting = PreferenceManager.getDefaultSharedPreferences(this);
+        if (setting.getBoolean(Consts.NOTIFICATION_KEY,false)){
+            Calendar calendar = Calendar.getInstance();
+            int eventCount = 0;
+            boolean vibrate = setting.getBoolean(Consts.VIBRATE_KEY,false);
+            String ringtoneName = setting.getString("ringtoneName","");
+            Toast.makeText(this,ringtoneName,Toast.LENGTH_LONG).show();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            StringBuilder builder = new StringBuilder().append(year).append("年").append(month+1)
+                    .append("月").append(day).append("日");
+            for(TodoEvent event:todoEventList){
+                if (event.getEventDate().equals(builder.toString())){
+                    eventCount++;
+                }
             }
+            Intent i = new Intent(INTENT_EVENT);
+            i.putExtra("event_num",eventCount);
+            i.putExtra("vibrate",vibrate);
+            i.putExtra("ringtoneName",ringtoneName);
+            PendingIntent pi = PendingIntent.getBroadcast(this, 777, i, 0);
+            AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
+            am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pi);
         }
-        Intent i = new Intent(INTENT_EVENT);
-        i.putExtra("event_num",eventCount);
-        PendingIntent pi = PendingIntent.getBroadcast(this, 777, i, 0);
-        AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
-        am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pi);
+
     }
     /**
      * 刷新具体要做什么

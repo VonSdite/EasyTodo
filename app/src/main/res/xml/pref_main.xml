@@ -7,20 +7,6 @@
             android:summary="@string/default_gallery_storage"
             android:title="@string/title_gallery_storage" />
 
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="@string/key_upload_over_wifi"
-            android:summary="@string/summary_upload_over_wifi"
-            android:title="@string/title_auto_upload" />
-
-        <ListPreference
-            android:defaultValue="3"
-            android:dialogTitle="@string/title_upload_quality"
-            android:entries="@array/pref_upload_quality_entries"
-            android:entryValues="@array/pref_upload_quality_values"
-            android:key="@string/key_upload_quality"
-            android:summary="@string/summary_upload_video_quality"
-            android:title="@string/title_upload_quality" />
 
     </PreferenceCategory>
 
