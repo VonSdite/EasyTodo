@@ -26,7 +26,6 @@ import java.util.List;
 import xyz.wendyltanpcy.myapplication.Adapter.FinishEventsAdapter;
 import xyz.wendyltanpcy.myapplication.R;
 import xyz.wendyltanpcy.myapplication.TodoBrowser.BrowserActivity;
-import xyz.wendyltanpcy.myapplication.TodoList.SettingsActivity;
 import xyz.wendyltanpcy.myapplication.model.FinishEvent;
 
 /**
@@ -163,9 +162,8 @@ public class FinishEventListActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if(id == R.id.setting) {
-            startActivity(new Intent(FinishEventListActivity.this, SettingsActivity.class));
-        }else if (id == R.id.delete){
+
+        if (id == R.id.delete){
             finishEventList.clear();
             DataSupport.deleteAll(FinishEvent.class);
             MyAdapter.notifyDataSetChanged();

@@ -42,6 +42,7 @@ import xyz.wendyltanpcy.myapplication.R;
 import xyz.wendyltanpcy.myapplication.TodoBrowser.BrowserActivity;
 import xyz.wendyltanpcy.myapplication.helper.ColorManager;
 import xyz.wendyltanpcy.myapplication.model.Consts;
+import xyz.wendyltanpcy.myapplication.model.ThemeColor;
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
 
@@ -135,6 +136,12 @@ public class MainActivity extends AppCompatActivity implements Serializable{
         haveInit = false;
     }
 
+    public void checkExpired(List<TodoEvent> todoEventList){
+        for (TodoEvent event:todoEventList){
+            event.setEventPriority();
+        }
+    }
+
     /**
      * 视图上的初始化
      */
@@ -150,6 +157,10 @@ public class MainActivity extends AppCompatActivity implements Serializable{
         }
 
         sendNotification(eventList);
+        checkExpired(eventList);
+        initThemeColor();
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -191,6 +202,21 @@ public class MainActivity extends AppCompatActivity implements Serializable{
                  return Integer.valueOf(event1.getEventDateNum()).compareTo(event2.getEventDateNum());
         }});
         return  todoEventList;
+    }
+
+    /**
+     * 初始化主题颜色
+     */
+    public void initThemeColor(){
+        ThemeColor color = DataSupport.find(ThemeColor.class,1);
+        if (color!=null)
+            ColorManager.getInstance().notifyColorChanged(color.getColor());
+        else{
+            color = new ThemeColor();
+            color.setColor(ColorManager.DEFAULT_COLOR);
+            color.save();
+            ColorManager.getInstance().notifyColorChanged(color.getColor());
+        }
     }
 
     /**

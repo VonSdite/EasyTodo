@@ -9,6 +9,5 @@ public class Consts {
     public final static String  NOTIFICATION_KEY = "notifications_new_message";
     public final static String VIBRATE_KEY = "key_vibrate";
     public final static String  RINGTONE_KEY = "key_notifications_new_message_ringtone";
-    public static int THEME_COLOR = 0xFF525B8D;
 
 }

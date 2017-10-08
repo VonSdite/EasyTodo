@@ -98,6 +98,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                         .setLargeIcon(BitmapFactory.decodeResource(context.getResources(),R.mipmap.icon2))
                         .setContentIntent(pi)
                         .setAutoCancel(true)
+                        .setSound(Uri.fromFile(new File(ringtoneName)))
                         .setPriority(NotificationCompat.PRIORITY_MAX)
                         .build();
                 manager.notify(1,notification);

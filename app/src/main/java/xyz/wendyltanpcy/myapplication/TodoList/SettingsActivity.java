@@ -22,9 +22,12 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
+import org.litepal.crud.DataSupport;
+
 import xyz.wendyltanpcy.myapplication.R;
 import xyz.wendyltanpcy.myapplication.helper.ColorManager;
 import xyz.wendyltanpcy.myapplication.model.Consts;
+import xyz.wendyltanpcy.myapplication.model.ThemeColor;
 
 public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -48,7 +51,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         addPreferencesFromResource(R.xml.pref_main);
 
         toolbar.setTitleTextColor(Color.WHITE);
-        toolbar.setBackgroundColor(ColorManager.getInstance().getStoreColor());
+        getThemeColor();
         ActionBar actionBar = getActionBar();
         if (actionBar!=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -80,6 +83,21 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         });
 
 
+    }
+
+    /**
+     * 初始化主题颜色
+     */
+    private void getThemeColor(){
+        ThemeColor color = DataSupport.find(ThemeColor.class,1);
+        if (color!=null)
+            toolbar.setBackgroundColor(color.getColor());
+        else{
+            color = new ThemeColor();
+            color.setColor(ColorManager.DEFAULT_COLOR);
+            color.save();
+            toolbar.setBackgroundColor(color.getColor());
+        }
     }
 
     @Override
@@ -229,8 +247,8 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         }
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("message/rfc822");
-        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"contact@androidhive.info"});
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Query from android app");
+        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"youlinai233@gmail.com"});
+        intent.putExtra(Intent.EXTRA_SUBJECT, "发送自你的安卓设备");
         intent.putExtra(Intent.EXTRA_TEXT, body);
         context.startActivity(Intent.createChooser(intent, context.getString(R.string.choose_email_client)));
     }

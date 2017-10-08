@@ -12,16 +12,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import org.litepal.LitePal;
+import org.litepal.crud.DataSupport;
+
+import java.util.List;
+
 import xyz.wendyltanpcy.myapplication.R;
 import xyz.wendyltanpcy.myapplication.helper.ColorManager;
 import xyz.wendyltanpcy.myapplication.helper.MyApplication;
+import xyz.wendyltanpcy.myapplication.model.ThemeColor;
 
 
 public class MotiveActivity extends AppCompatActivity {
 
     private final int[] layouts = { R.id.skin_01, R.id.skin_02, R.id.skin_03,
             R.id.skin_04, R.id.skin_05 };
-
 
 
     @Override
@@ -35,6 +40,7 @@ public class MotiveActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.title_back);
         }
+
         initView();
     }
 
@@ -72,6 +78,20 @@ public class MotiveActivity extends AppCompatActivity {
             this.position = position;
         }
 
+        public void storeAndSaveColor(){
+            LitePal.getDatabase();
+            List<ThemeColor> colorList = DataSupport.findAll(ThemeColor.class);
+            ThemeColor color = colorList.get(0);
+            if (color!=null){
+                color.setColor(ColorManager.getInstance().getStoreColor());
+                color.save();
+            }else{
+                color = new ThemeColor();
+                color.setColor(ColorManager.getInstance().getStoreColor());
+                color.save();
+            }
+        }
+
         @Override
         public void onClick(View v) {
             for (int i = 0; i < layouts.length; i++) {
@@ -80,6 +100,9 @@ public class MotiveActivity extends AppCompatActivity {
                 selected.setVisibility(i == position ? View.VISIBLE : View.GONE);
                 ColorManager.getInstance().setSkinColor(MotiveActivity.this,
                         position);
+                storeAndSaveColor();
+
+
             }
         }
     }

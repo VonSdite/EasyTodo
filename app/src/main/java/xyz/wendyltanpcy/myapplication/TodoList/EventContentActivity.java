@@ -25,6 +25,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import org.litepal.crud.DataSupport;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -36,6 +38,7 @@ import xyz.wendyltanpcy.myapplication.Adapter.EventsAdapter;
 import xyz.wendyltanpcy.myapplication.R;
 import xyz.wendyltanpcy.myapplication.helper.ColorManager;
 import xyz.wendyltanpcy.myapplication.helper.PictureUtils;
+import xyz.wendyltanpcy.myapplication.model.ThemeColor;
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
 public class EventContentActivity extends AppCompatActivity {
@@ -91,13 +94,10 @@ public class EventContentActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        /*
-        设置成主题颜色
-         */
-        toolbar.setBackgroundColor(ColorManager.getInstance().getStoreColor());
+        getThemeColor(toolbar);
 
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout)findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setBackgroundColor(ColorManager.getInstance().getStoreColor());
+        getThemeColorForCollapse(collapsingToolbar);
         if(getSupportActionBar() != null){
             // Enable the Up button
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -163,6 +163,35 @@ public class EventContentActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    /**
+     * 初始化主题颜色
+     */
+
+    private void getThemeColorForCollapse(CollapsingToolbarLayout collapsingToolbar) {
+        ThemeColor color = DataSupport.find(ThemeColor.class,1);
+        if (color!=null)
+            collapsingToolbar.setBackgroundColor(color.getColor());
+        else{
+            color = new ThemeColor();
+            color.setColor(ColorManager.DEFAULT_COLOR);
+            color.save();
+            collapsingToolbar.setBackgroundColor(color.getColor());
+        }
+    }
+
+
+    private void getThemeColor(Toolbar toolbar){
+        ThemeColor color = DataSupport.find(ThemeColor.class,1);
+        if (color!=null)
+            toolbar.setBackgroundColor(color.getColor());
+        else{
+            color = new ThemeColor();
+            color.setColor(ColorManager.DEFAULT_COLOR);
+            color.save();
+            toolbar.setBackgroundColor(color.getColor());
+        }
     }
 
     /*
