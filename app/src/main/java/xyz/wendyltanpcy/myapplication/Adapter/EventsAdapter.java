@@ -55,12 +55,15 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             private TextView eventNameText;
             private CheckBoxSample checkBoxSample;
             private ImageView handleView;
+            private TextView expiredText;
 
             public ViewHolder(View itemView) {
                     super(itemView);
                     eventNameText = itemView.findViewById(R.id.event_name);
                     checkBoxSample = itemView.findViewById(R.id.event_finish);
                     handleView = itemView.findViewById(R.id.handle);
+                    expiredText = itemView.findViewById(R.id.expired_text);
+
                     itemView.setOnCreateContextMenuListener(this);
 
             }
@@ -113,6 +116,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         final TodoEvent todoEvent = mTodoEventList.get(position);
         final int pos = position;
         final EventsAdapter.ViewHolder hd = holder;
+
         todoEvent.setId(position);
 
         hd.handleView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -125,6 +129,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
 
         hd.eventNameText.setText(todoEvent.getEventName());
+        if (todoEvent.isEventExpired())
+            hd.expiredText.setVisibility(View.VISIBLE);
 
         hd.eventNameText.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -217,12 +223,16 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
 
 
+
+
     }
+
 
     @Override
     public int getItemCount() {
         return mTodoEventList.size();
     }
+
 
 
 

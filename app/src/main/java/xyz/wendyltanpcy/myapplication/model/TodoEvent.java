@@ -38,6 +38,7 @@ public class TodoEvent extends DataSupport implements Serializable{
      */
     private int eventDateNum;
     private String eventPriority;
+    private boolean eventExpired;
 
     /*
     image info
@@ -57,10 +58,21 @@ public class TodoEvent extends DataSupport implements Serializable{
             eventPriority = "中";
         }else if (eventDateNum>eventNum+3){
             eventPriority = "低";
+        }else if (eventDateNum<eventNum){
+            eventPriority = "已过期";
+            setEventExpired(true);
         }
 
 
 
+    }
+
+    public void setEventExpired(boolean eventExpired) {
+        this.eventExpired = eventExpired;
+    }
+
+    public boolean isEventExpired() {
+        return eventExpired;
     }
 
     public String getEventPriority() {

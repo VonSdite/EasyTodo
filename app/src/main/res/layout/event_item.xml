@@ -38,7 +38,15 @@
             android:layout_weight="1"
             android:maxLines="1"
             android:padding="12dp"
-            android:textSize="15sp"/>
+            android:textSize="17sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/expired_text"
+            android:text="已过期"
+            android:visibility="gone"
+            android:textColor="@color/theme4"
+            android:textSize="10sp"/>
 
         <ImageView
             android:id="@+id/handle"

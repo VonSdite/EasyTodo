@@ -40,6 +40,7 @@ import xyz.wendyltanpcy.myapplication.Adapter.EventsAdapter;
 import xyz.wendyltanpcy.myapplication.FinishList.FinishEventListActivity;
 import xyz.wendyltanpcy.myapplication.R;
 import xyz.wendyltanpcy.myapplication.TodoBrowser.BrowserActivity;
+import xyz.wendyltanpcy.myapplication.helper.ColorManager;
 import xyz.wendyltanpcy.myapplication.model.Consts;
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements Serializable{
         设置刷新
          */
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
-        swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
+        swipeRefresh.setColorSchemeColors(ColorManager.getInstance().getStoreColor());
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -145,10 +146,10 @@ public class MainActivity extends AppCompatActivity implements Serializable{
             eventList = DataSupport.findAll(TodoEvent.class);
             showNoEvent();
             eventList = sortEventList(eventList);
+
         }
 
         sendNotification(eventList);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -273,6 +274,9 @@ public class MainActivity extends AppCompatActivity implements Serializable{
     }
 
 
+
+
+
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         // TODO Auto-generated method stub
@@ -286,6 +290,7 @@ public class MainActivity extends AppCompatActivity implements Serializable{
                 Toast.makeText(this, "你删掉了这条项目", Toast.LENGTH_LONG).show();
                 break;
             case 2:
+                event.setEventPriority();
                 String prioriy = event.getEventPriority();
                 Toast.makeText(this, "优先级: "+prioriy+" 完成日期: "+event.getEventDate() , Toast.LENGTH_LONG).show();
                 break;

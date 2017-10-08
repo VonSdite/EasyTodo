@@ -80,6 +80,7 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
                 event.setEventDate();
                 event.setEventTime();
                 event.setEventPriority();
+                event.setEventExpired(false);
                 event.save();
 
                 adapter.getTodoEventList().add(event);
