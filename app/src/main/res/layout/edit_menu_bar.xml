@@ -14,12 +14,11 @@
         android:windowSoftInputMode="stateVisible"
         android:singleLine="true"/>
 
-    <LinearLayout
+    <xyz.wendyltanpcy.myapplication.helper.ColorLinearLayout
         android:id="@+id/edit_menu_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/colorPrimary">
+        android:orientation="horizontal">
 
 
         <View
@@ -45,6 +44,6 @@
             app:srcCompat="@android:drawable/ic_menu_send"/>
 
 
-    </LinearLayout>
+    </xyz.wendyltanpcy.myapplication.helper.ColorLinearLayout>
 
 </LinearLayout>

@@ -34,6 +34,7 @@ import kr.co.namee.permissiongen.PermissionGen;
 import kr.co.namee.permissiongen.PermissionSuccess;
 import xyz.wendyltanpcy.myapplication.Adapter.EventsAdapter;
 import xyz.wendyltanpcy.myapplication.R;
+import xyz.wendyltanpcy.myapplication.helper.ColorManager;
 import xyz.wendyltanpcy.myapplication.helper.PictureUtils;
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
@@ -90,7 +91,13 @@ public class EventContentActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        /*
+        设置成主题颜色
+         */
+        toolbar.setBackgroundColor(ColorManager.getInstance().getStoreColor());
+
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout)findViewById(R.id.collapsing_toolbar);
+        collapsingToolbar.setBackgroundColor(ColorManager.getInstance().getStoreColor());
         if(getSupportActionBar() != null){
             // Enable the Up button
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);

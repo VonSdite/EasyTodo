@@ -52,6 +52,8 @@
         <activity android:name=".TodoBrowser.BrowserActivity">
         </activity>
 
+        <activity android:name=".TodoList.MotiveActivity"/>
+
         <receiver android:name=".Receiver.AlarmReceiver">
             <intent-filter>
                 <action android:name="intent_alarm"/>

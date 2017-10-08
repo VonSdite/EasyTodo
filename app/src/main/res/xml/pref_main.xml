@@ -7,6 +7,11 @@
             android:summary="@string/default_gallery_storage"
             android:title="@string/title_gallery_storage" />
 
+        <Preference
+            android:key="change_theme_color"
+            android:summary="点击更改"
+            android:title="更改主题颜色"/>
+
 
     </PreferenceCategory>
 

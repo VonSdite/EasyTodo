@@ -1,9 +1,11 @@
 package xyz.wendyltanpcy.myapplication.TodoList;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -18,9 +20,10 @@ import android.preference.SwitchPreference;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.View;
+import android.view.MenuItem;
 
 import xyz.wendyltanpcy.myapplication.R;
+import xyz.wendyltanpcy.myapplication.helper.ColorManager;
 import xyz.wendyltanpcy.myapplication.model.Consts;
 
 public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -39,17 +42,18 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         getDelegate().onCreate(savedInstanceState);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
-        toolbar=  findViewById(R.id.toolbar_setting);
+        toolbar = findViewById(R.id.toolbar_setting);
         setSupportActionBar(toolbar);
 
         addPreferencesFromResource(R.xml.pref_main);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setBackgroundColor(ColorManager.getInstance().getStoreColor());
+        ActionBar actionBar = getActionBar();
+        if (actionBar!=null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.title_back);
+        }
         initPreference();
 
         bindPreferenceSummaryToValue(mNamePreference);
@@ -64,7 +68,28 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         });
 
+        Preference myTheme = findPreference("change_theme_color");
+        myTheme.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent i = new Intent(SettingsActivity.this,MotiveActivity.class);
+                startActivity(i);
+                finish();
+                return true;
+            }
+        });
 
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return false;
     }
 
     private void initPreference(){

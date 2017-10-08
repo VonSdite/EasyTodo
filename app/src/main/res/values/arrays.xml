@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="pref_upload_quality_entries">
-        <item>360p</item>
-        <item>480p</item>
-        <item>720p</item>
-        <item>1080p</item>
-        <item>Original</item>
-    </string-array>
-    <string-array name="pref_upload_quality_values">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-    </string-array>
+    <integer-array name="default_color_array">
+        <item>@color/colorPrimary</item>
+        <item>@color/theme1</item>
+        <item>@color/theme2</item>
+        <item>@color/theme3</item>
+        <item>@color/theme4</item>
+    </integer-array>
 </resources>
