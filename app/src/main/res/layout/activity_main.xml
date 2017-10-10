@@ -9,7 +9,7 @@
         android:id="@+id/startup"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/startup2"
+        android:src="@drawable/startup3"
         android:scaleType="fitXY"
         android:visibility="gone"/>
 

@@ -19,6 +19,7 @@ public class ColorManager {
     private int mCurrentColor = DEFAULT_COLOR;
     private int mStoreColor = DEFAULT_COLOR;
     private static ColorManager instance;
+    public static boolean IS_COLOR_CHANGE = false;
 
     public static ColorManager getInstance() {
         if (instance == null) {
@@ -48,6 +49,7 @@ public class ColorManager {
         for (OnColorChangedListener listener : this.listeners) {
             if (listener != null) {
                 listener.onColorChanged(color);
+                IS_COLOR_CHANGE = true;
             }
         }
     }

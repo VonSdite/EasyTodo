@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements Serializable{
     private transient DrawerLayout mDrawerLayout;
     private transient SwipeRefreshLayout swipeRefresh;
     private transient ImageView homeImage;
+    private FloatingActionButton add;
     public static final String INTENT_EVENT= "intent_event";
 
 
@@ -61,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements Serializable{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        add = (FloatingActionButton) findViewById(R.id.add_event);
 
         baseInit();
         addEvent();
@@ -111,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements Serializable{
          /*
         添加事件按钮响应
          */
-        FloatingActionButton add = (FloatingActionButton) findViewById(R.id.add_event);
+
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -181,9 +184,11 @@ public class MainActivity extends AppCompatActivity implements Serializable{
                         break;
                     case R.id.nav_broswer:
                         startActivity(new Intent(MainActivity.this,BrowserActivity.class));
+                        mDrawerLayout.closeDrawer(Gravity.START);
                         break;
                     case R.id.nav_setting:
                         startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                        mDrawerLayout.closeDrawer(Gravity.START);
                         break;
                     default:
                 }
@@ -209,15 +214,20 @@ public class MainActivity extends AppCompatActivity implements Serializable{
      */
     public void initThemeColor(){
         ThemeColor color = DataSupport.find(ThemeColor.class,1);
-        if (color!=null)
+        if (color!=null) {
             ColorManager.getInstance().notifyColorChanged(color.getColor());
+            add.setBackgroundTintList(ColorStateList.valueOf(color.getColor()));
+        }
         else{
             color = new ThemeColor();
             color.setColor(ColorManager.DEFAULT_COLOR);
             color.save();
             ColorManager.getInstance().notifyColorChanged(color.getColor());
+            add.setBackgroundTintList(ColorStateList.valueOf(color.getColor()));
         }
     }
+
+
 
     /**
      * 发送通知
@@ -229,7 +239,6 @@ public class MainActivity extends AppCompatActivity implements Serializable{
             int eventCount = 0;
             boolean vibrate = setting.getBoolean(Consts.VIBRATE_KEY,false);
             String ringtoneName = setting.getString("ringtoneName","");
-            Toast.makeText(this,ringtoneName,Toast.LENGTH_LONG).show();
             int year = calendar.get(Calendar.YEAR);
             int month = calendar.get(Calendar.MONTH);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -259,7 +268,6 @@ public class MainActivity extends AppCompatActivity implements Serializable{
         eventList = sortEventList(eventList);
         MyAdapter.notifyDataSetChanged();
         swipeRefresh.setRefreshing(false);
-        Toast.makeText(MainActivity.this,"数据刷新成功",Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -272,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements Serializable{
         homeImage = (ImageView) findViewById(R.id.startup);
 
         AlphaAnimation alphaAnimation = new AlphaAnimation((float) 0.1, 1);
-        alphaAnimation.setDuration(1000);//设定动画时间
+        alphaAnimation.setDuration(4000);//设定动画时间
         alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -292,11 +300,32 @@ public class MainActivity extends AppCompatActivity implements Serializable{
         homeImage.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * 显示没有事件时候
+     */
+
     private void showNoEvent(){
         if (eventList.isEmpty()){
             View visibility = findViewById(R.id.no_event_layout);
             visibility.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        doRefresh();
+        if (ColorManager.IS_COLOR_CHANGE){
+            syncButtonColor();
+        }
+    }
+
+    /**
+     * when onResume,'init' all theme color again
+     */
+
+    private void syncButtonColor(){
+        initThemeColor();
     }
 
 

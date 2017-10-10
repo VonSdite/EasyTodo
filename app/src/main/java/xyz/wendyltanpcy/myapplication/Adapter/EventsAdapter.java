@@ -131,6 +131,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         hd.eventNameText.setText(todoEvent.getEventName());
         if (todoEvent.isEventExpired())
             hd.expiredText.setVisibility(View.VISIBLE);
+        else
+            hd.expiredText.setVisibility(View.GONE);
 
         hd.eventNameText.setOnLongClickListener(new View.OnLongClickListener() {
             @Override

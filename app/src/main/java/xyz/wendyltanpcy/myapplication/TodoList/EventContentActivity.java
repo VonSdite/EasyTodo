@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -93,6 +94,8 @@ public class EventContentActivity extends AppCompatActivity {
         setContentView(R.layout.events_content);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        saveDetailButton = (FloatingActionButton) findViewById(R.id.save_detail_button);
+
         setSupportActionBar(toolbar);
         getThemeColor(toolbar);
 
@@ -117,7 +120,7 @@ public class EventContentActivity extends AppCompatActivity {
         eventDetailText = (TextView) findViewById(R.id.event_detail);
         eventDeadLineText = (TextView) findViewById(R.id.event_deadline);
         eventImage = (ImageView) findViewById(R.id.event_content_image);
-        saveDetailButton = (FloatingActionButton) findViewById(R.id.save_detail_button);
+
 
         /*
         如果事件具有图片的字节属性，就设置事件图片
@@ -171,26 +174,32 @@ public class EventContentActivity extends AppCompatActivity {
 
     private void getThemeColorForCollapse(CollapsingToolbarLayout collapsingToolbar) {
         ThemeColor color = DataSupport.find(ThemeColor.class,1);
-        if (color!=null)
+        if (color!=null) {
             collapsingToolbar.setBackgroundColor(color.getColor());
+//            collapsingToolbar.setContentScrimColor(color.getColor());
+        }
         else{
             color = new ThemeColor();
             color.setColor(ColorManager.DEFAULT_COLOR);
             color.save();
             collapsingToolbar.setBackgroundColor(color.getColor());
+//            collapsingToolbar.setContentScrimColor(color.getColor());
         }
     }
 
 
     private void getThemeColor(Toolbar toolbar){
         ThemeColor color = DataSupport.find(ThemeColor.class,1);
-        if (color!=null)
+        if (color!=null) {
             toolbar.setBackgroundColor(color.getColor());
+            saveDetailButton.setBackgroundTintList(ColorStateList.valueOf(color.getColor()));
+        }
         else{
             color = new ThemeColor();
             color.setColor(ColorManager.DEFAULT_COLOR);
             color.save();
             toolbar.setBackgroundColor(color.getColor());
+            saveDetailButton.setBackgroundTintList(ColorStateList.valueOf(color.getColor()));
         }
     }
 

@@ -4,8 +4,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
 
@@ -13,7 +12,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
+        <xyz.wendyltanpcy.myapplication.helper.ColorLinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -21,17 +20,17 @@
 
             <ImageView
                 android:id="@+id/ib_refresh"
-                android:layout_width="wrap_content"
+                android:layout_width="40dp"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
-                android:background="@color/colorPrimary"
                 android:scaleType="centerInside"
-                android:src="@android:drawable/ic_menu_rotate"/>
+                android:src="@drawable/ic_refresh_white_24dp"/>
 
             <android.support.v7.widget.SearchView
                 android:id="@+id/et_url"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/search_bar"
                 android:layout_weight="1"/>
 
 
@@ -39,12 +38,24 @@
                 android:id="@+id/ib_go"
                 android:layout_width="40dp"
                 android:layout_height="match_parent"
-                android:background="@color/colorPrimary"
-                android:scaleType="fitCenter"
-                android:src="@android:drawable/ic_menu_compass"/>
+                android:rotation="180"
+                android:scaleType="centerInside"
+                android:src="@drawable/title_back"/>
 
 
-        </LinearLayout>
+
+
+            <ImageView
+                android:id="@+id/ib_star"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_star_white_24dp"/>
+
+
+
+
+        </xyz.wendyltanpcy.myapplication.helper.ColorLinearLayout>
 
         <ProgressBar
             android:id="@+id/pb_load"
@@ -60,11 +71,10 @@
 
         </WebView>
 
-        <LinearLayout
+        <xyz.wendyltanpcy.myapplication.helper.ColorLinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@color/colorPrimary">
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/ib_back"
@@ -77,10 +87,10 @@
             <ImageView
                 android:id="@+id/ib_home"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:scaleType="centerInside"
-                android:src="@mipmap/ic_camera_white_24dp"/>
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_home_white_24dp"/>
 
             <ImageView
                 android:id="@+id/ib_next"
@@ -90,16 +100,84 @@
                 android:src="@drawable/ic_chevron_right_white_24dp"/>
 
 
-        </LinearLayout>
+        </xyz.wendyltanpcy.myapplication.helper.ColorLinearLayout>
 
 
     </LinearLayout>
 
     <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:layout_gravity="end"
-        app:headerLayout="@layout/nav_browser_header"
-        app:menu="@menu/nav_menu"/>
+        android:id="@+id/nav_broswer_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <xyz.wendyltanpcy.myapplication.helper.ColorLinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:padding="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/starOpen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:src="@drawable/ic_star_white_24dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:paddingLeft="20dp"
+                        android:text="收藏夹"
+                        android:textColor="#ffffff"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:id="@+id/openText"
+                        android:text="关"
+                        android:layout_marginLeft="10dp"
+                        android:textSize="12sp"
+                        android:textColor="#ffffff"/>
+                </LinearLayout>
+
+
+
+
+            </xyz.wendyltanpcy.myapplication.helper.ColorLinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <fragment
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/page_list_fragment"
+                    android:layout_gravity="bottom"
+                    android:name="xyz.wendyltanpcy.myapplication.TodoBrowser.PageListFragment"/>
+            </LinearLayout>
+        </LinearLayout>
+
+
+
+    </android.support.design.widget.NavigationView>
+
+
+
+
+
 </android.support.v4.widget.DrawerLayout>

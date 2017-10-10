@@ -35,35 +35,40 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:orientation="horizontal" >
+            android:orientation="vertical" >
 
-            <include
-                android:id="@+id/skin_01"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                layout="@layout/activity_motive_item" />
+                android:orientation="horizontal">
 
-            <include
-                android:id="@+id/skin_02"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                layout="@layout/activity_motive_item" />
+                <include
+                    android:id="@+id/skin_01"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    layout="@layout/activity_motive_item" />
 
-            <include
-                android:id="@+id/skin_03"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                layout="@layout/activity_motive_item" />
+                <include
+                    android:id="@+id/skin_02"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    layout="@layout/activity_motive_item" />
 
-            <include
-                android:id="@+id/skin_04"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                layout="@layout/activity_motive_item" />
+                <include
+                    android:id="@+id/skin_03"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    layout="@layout/activity_motive_item" />
+
+                <include
+                    android:id="@+id/skin_04"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    layout="@layout/activity_motive_item" />
 
             <include
                 android:id="@+id/skin_05"
@@ -71,6 +76,50 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 layout="@layout/activity_motive_item" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="冷淡蓝"
+                    android:textColor="@color/colorPrimary"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="魅惑紫"
+                    android:textColor="@color/theme1"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="抹茶绿"
+                    android:textColor="@color/theme2"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="活力橙"
+                    android:textColor="@color/theme3"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:text="血色红"
+                    android:textColor="@color/theme4"/>
+
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

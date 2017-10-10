@@ -82,6 +82,7 @@ public class EventContentFragment extends Fragment {
                 calendar_date.setTime(date);
                 Event.setEventCalendar(calendar_date);
                 Event.setEventDate();
+                Event.setEventPriority();
                 Event.save();
                 eventDeadLineText.setText(Event.getEventDate());
                 break;

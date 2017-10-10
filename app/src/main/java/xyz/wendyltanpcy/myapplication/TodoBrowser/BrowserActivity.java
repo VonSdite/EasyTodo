@@ -1,10 +1,14 @@
 package xyz.wendyltanpcy.myapplication.TodoBrowser;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.view.KeyEvent;
 import android.view.View;
@@ -12,25 +16,35 @@ import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import org.litepal.LitePal;
+import org.litepal.crud.DataSupport;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import xyz.wendyltanpcy.myapplication.Adapter.WebPageAdapter;
 import xyz.wendyltanpcy.myapplication.R;
+import xyz.wendyltanpcy.myapplication.model.WebPage;
 
 public class BrowserActivity extends AppCompatActivity implements View.OnClickListener {
     private WebView mWebView;
-    private ImageView mBack, mHome, mNext, mRefresh,mGoTo;
+    private ImageView mBack, mHome, mNext, mRefresh,mGoTo,mStar;
     private SearchView mSearchView;
     private ProgressBar mProgressBar;
-    private ListView mListView;
-    private ArrayAdapter mAdapter;
     private DrawerLayout mDrawerLayout;
-    private String [] data = {"www.360.com","study.jnu.edu.cn","www.google.com","www.jikexueyuan.com",
-            "wendyltanpcy.xyz","Python","PHP","JavaScript"};
     private String homeUrl = "www.baidu.com";
+    private WebPageAdapter MyAdapter;
+    private ImageView mStarOpen;
+    private NavigationView navView;
+    private boolean isStar = false;
+    private List<WebPage> pageInfoList = new ArrayList<>();
+    private TextView openText;
+    private int isCreated = 1;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -39,31 +53,43 @@ public class BrowserActivity extends AppCompatActivity implements View.OnClickLi
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_browser);
 
+
         mWebView = (WebView) findViewById(R.id.wb_test_web);
         mBack = (ImageView) findViewById(R.id.ib_back);   //返回按钮
         mHome = (ImageView) findViewById(R.id.ib_home);   //主页按钮
         mNext = (ImageView) findViewById(R.id.ib_next);   //前进按钮
         mGoTo = (ImageView) findViewById(R.id.ib_go);   //确认
+        mStarOpen = (ImageView) findViewById(R.id.starOpen);
         mRefresh = (ImageView) findViewById(R.id.ib_refresh);     //刷新按钮
         mSearchView = (SearchView) findViewById(R.id.et_url);   //网址输入框
-//        mListView = (ListView) findViewById(R.id.search_list);
         mProgressBar = (ProgressBar) findViewById(R.id.pb_load);    //网页加载进度条
+        mStar = (ImageView) findViewById(R.id.ib_star);
+        openText = (TextView) findViewById(R.id.openText);
 
         /*设置监听事件*/
         mBack.setOnClickListener(this);
         mHome.setOnClickListener(this);
         mNext.setOnClickListener(this);
         mGoTo.setOnClickListener(this);
+        mStar.setOnClickListener(this);
         mRefresh.setOnClickListener(this);
         mSearchView.setOnClickListener(this);
-//
-//        mAdapter = new ArrayAdapter(BrowserActivity.this, android.R.layout.simple_list_item_1, data);
-//        mListView.setAdapter(mAdapter);
-//        mListView.setTextFilterEnabled(true);
+        mStarOpen.setOnClickListener(this);
+
+        LitePal.getDatabase();
+        pageInfoList = DataSupport.findAll(WebPage.class);
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
-        navView.setCheckedItem(R.id.nav_broswer);
+
+        navView = (NavigationView) findViewById(R.id.nav_broswer_view);
+
+
+        RecyclerView webPageRecyclerView = (RecyclerView) findViewById(R.id.web_page_recycler_view);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        MyAdapter = new WebPageAdapter(pageInfoList);
+        webPageRecyclerView.setLayoutManager(layoutManager);
+        webPageRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        webPageRecyclerView.setAdapter(MyAdapter);
 
         /*WebView的基本设置*/
         mWebView.getSettings().setJavaScriptEnabled(true);
@@ -95,24 +121,10 @@ public class BrowserActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
+
+
         /*加载主页*/
         loadWeb(homeUrl);
-
-//        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                return false;
-//            }
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                if (!TextUtils.isEmpty(newText)){
-//                    mAdapter.getFilter().filter(newText);
-//                }else{
-//                    mListView.clearTextFilter();
-//                }
-//                return false;
-//            }
-//        });
         /**
          * 浏览器搜索框设置响应
          */
@@ -151,6 +163,8 @@ public class BrowserActivity extends AppCompatActivity implements View.OnClickLi
         mWebView.loadUrl(url);      //加载页面
     }
 
+
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -163,18 +177,67 @@ public class BrowserActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.ib_go:
                 loadWeb(mSearchView.getQuery().toString());
                 break;
+            case R.id.ib_star:
+                saveUrl(mWebView.getUrl(),mSearchView.getQueryHint().toString());
+                break;
             case R.id.ib_next:
                 mWebView.goForward();
                 break;
             case R.id.ib_refresh:
-                mWebView.reload();      //重新加载
+                if (MyAdapter.getCurrentPosition()!=-1){
+                    loadUrlWithStar(pageInfoList.get(MyAdapter.getCurrentPosition()).getUrl());
+                }
+                else
+                    mWebView.reload();      //重新加载
                 break;
             case R.id.et_url:
                 mSearchView.setQuery("",true);  //输入网站
                 mSearchView.setQueryHint("请输入网址");
                 break;
+            case R.id.starOpen:
+                View pageList = navView.findViewById(R.id.page_list_fragment);
+                View visibility = pageList.findViewById(R.id.web_page_recycler_view);
+                if (visibility.getVisibility()==View.VISIBLE){
+                    isStar = false;
+                    mStarOpen.setImageResource(R.drawable.ic_star_white_24dp);
+                    openText.setText("关");
+                    openText.setTextColor(Color.WHITE);
+                    visibility.setVisibility(View.GONE);
+                }else{
+                    isStar = true;
+                    mStarOpen.setImageResource(R.drawable.ic_star_black_24dp);
+                    openText.setText("开");
+                    openText.setTextColor(Color.BLACK);
+                    visibility.setVisibility(View.VISIBLE);
+                }
+
+                break;
             default:
                 break;
         }
+    }
+
+    private void saveUrl(String purl,String pageTitle) {
+        String url =  purl ;
+        WebPage webpage;
+        webpage = new WebPage();
+        webpage.setPageName(pageTitle);
+        webpage.setUrl(url);
+        webpage.save();
+        pageInfoList.add(webpage);
+        Toast.makeText(BrowserActivity.this,"已收藏！",Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isCreated>1)
+            loadUrlWithStar(pageInfoList.get(MyAdapter.getCurrentPosition()).getUrl());
+        isCreated = 2;
+    }
+
+    private void loadUrlWithStar(String url){
+        mWebView.loadUrl(url);
     }
 }

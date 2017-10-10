@@ -12,6 +12,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +27,7 @@ import java.util.List;
 import xyz.wendyltanpcy.myapplication.Adapter.FinishEventsAdapter;
 import xyz.wendyltanpcy.myapplication.R;
 import xyz.wendyltanpcy.myapplication.TodoBrowser.BrowserActivity;
+import xyz.wendyltanpcy.myapplication.TodoList.SettingsActivity;
 import xyz.wendyltanpcy.myapplication.model.FinishEvent;
 
 /**
@@ -138,8 +140,13 @@ public class FinishEventListActivity extends AppCompatActivity {
                     case R.id.nav_task:
                         finish();
                         break;
+                    case R.id.nav_setting:
+                        startActivity(new Intent(FinishEventListActivity.this, SettingsActivity.class));
+                        mDrawerLayout.closeDrawer(Gravity.START);
+                        break;
                     case R.id.nav_broswer:
                         startActivity(new Intent(FinishEventListActivity.this,BrowserActivity.class));
+                        mDrawerLayout.closeDrawer(Gravity.START);
                         break;
                     default:
                 }

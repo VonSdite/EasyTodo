@@ -54,10 +54,13 @@ public class TodoEvent extends DataSupport implements Serializable{
         int eventNum = Integer.parseInt(builder2.toString());
         if (eventDateNum==eventNum){
             eventPriority = "高";
+            setEventExpired(false);
         }else if (eventDateNum>eventNum&&eventDateNum<=eventNum+3){
             eventPriority = "中";
+            setEventExpired(false);
         }else if (eventDateNum>eventNum+3){
             eventPriority = "低";
+            setEventExpired(false);
         }else if (eventDateNum<eventNum){
             eventPriority = "已过期";
             setEventExpired(true);
