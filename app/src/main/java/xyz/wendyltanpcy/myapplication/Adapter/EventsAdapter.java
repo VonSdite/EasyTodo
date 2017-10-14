@@ -35,9 +35,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     private List<TodoEvent> mTodoEventList;
     private int position;
 
-    public  int getThisPosition() {
-        return position;
-    }
 
     public void setPosition(int position) {
         this.position = position;
@@ -194,10 +191,9 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                         删掉此条未完成事件
                          */
                         todoEvent.setEventFinish(true);
-                        mTodoEventList.remove(pos);
                         todoEvent.delete();
-                        notifyItemRemoved(pos);
-                        notifyItemRangeChanged(pos, getItemCount());
+                        mTodoEventList.remove(pos);
+                        notifyDataSetChanged();
                         Toast.makeText(mContext,"干得漂亮",Toast.LENGTH_SHORT).show();
 
 

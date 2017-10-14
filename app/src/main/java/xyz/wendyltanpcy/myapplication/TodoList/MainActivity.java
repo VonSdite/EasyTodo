@@ -108,6 +108,8 @@ public class MainActivity extends AppCompatActivity implements Serializable{
 
 
 
+
+
     }
 
     private void addEvent(){
@@ -162,6 +164,8 @@ public class MainActivity extends AppCompatActivity implements Serializable{
         sendNotification(eventList);
         checkExpired(eventList);
         initThemeColor();
+
+
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -234,6 +238,10 @@ public class MainActivity extends AppCompatActivity implements Serializable{
      */
     private void sendNotification(List<TodoEvent> todoEventList){
         SharedPreferences setting = PreferenceManager.getDefaultSharedPreferences(this);
+
+
+
+
         if (setting.getBoolean(Consts.NOTIFICATION_KEY,false)){
             Calendar calendar = Calendar.getInstance();
             int eventCount = 0;
@@ -280,7 +288,7 @@ public class MainActivity extends AppCompatActivity implements Serializable{
         homeImage = (ImageView) findViewById(R.id.startup);
 
         AlphaAnimation alphaAnimation = new AlphaAnimation((float) 0.1, 1);
-        alphaAnimation.setDuration(4000);//设定动画时间
+        alphaAnimation.setDuration(2000);//设定动画时间
         alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {

@@ -54,12 +54,25 @@
 
         <activity android:name=".TodoList.MotiveActivity"/>
 
+
+        <service android:name=".Service.AlarmService"
+                 android:enabled="true"
+                 android:exported="true"
+                 android:persistent="true"
+                 android:priority="1000"
+                 android:process=":remoteService">
+        </service>
+
+        <service android:name=".Service.LocalService" >
+        </service>
+
         <receiver android:name=".Receiver.AlarmReceiver">
             <intent-filter>
                 <action android:name="intent_alarm"/>
                 <action android:name="intent_event"/>
             </intent-filter>
         </receiver>
+
     </application>
 
 </manifest>
