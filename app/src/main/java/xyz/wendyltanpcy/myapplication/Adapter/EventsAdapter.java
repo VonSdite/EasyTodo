@@ -115,7 +115,15 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         final EventsAdapter.ViewHolder hd = holder;
 
         todoEvent.setId(position);
+        todoEvent.save();
 
+        //seting defaul style or the viewholder don't know what to do
+        hd.checkBoxSample.setChecked(false);
+        hd.eventNameText.setPaintFlags( hd.eventNameText.getPaintFlags()&(~Paint.STRIKE_THRU_TEXT_FLAG));
+
+
+
+        //setting click listener
         hd.handleView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -126,6 +134,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
 
         hd.eventNameText.setText(todoEvent.getEventName());
+
         if (todoEvent.isEventExpired())
             hd.expiredText.setVisibility(View.VISIBLE);
         else
@@ -166,9 +175,11 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         hd.checkBoxSample.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!todoEvent.isEventFinish())
-                    hd.checkBoxSample.toggle();
-                hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                if (!todoEvent.isEventFinish()){
+                    hd.checkBoxSample.setChecked(true);
+                    hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                }
+
 
                 final AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
                 dialog.setTitle("确定已经完成这个事件？");
@@ -203,8 +214,10 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                 dialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        hd.checkBoxSample.toggle();
+
+                        hd.checkBoxSample.setChecked(false);
                         hd.eventNameText.setPaintFlags( hd.eventNameText.getPaintFlags()&(~Paint.STRIKE_THRU_TEXT_FLAG));
+
                     }
                 });
                 dialog.setCancelable(false);
