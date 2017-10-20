@@ -267,6 +267,34 @@ public class MainActivity extends AppCompatActivity implements Serializable{
         }
 
     }
+
+
+    /**
+     * 一键自动推迟到今天
+     * @param list
+     * @return
+     */
+    public List<TodoEvent> autoDelayOne(List<TodoEvent> list){
+        for (TodoEvent event:list){
+            if (event.isEventExpired())
+            {
+
+                Calendar newC = Calendar.getInstance();
+                event.setEventDeadLine(newC.getTime());
+                event.setEventCalendar(newC);
+                event.setEventDate();
+                event.setEventTime();
+                event.setEventPriority();
+                event.setEventExpired(false);
+                event.save();
+
+            }
+        }
+        doRefresh();
+        Toast.makeText(this,"已将事件推迟到今天！ ",Toast.LENGTH_SHORT).show();
+        return list;
+    }
+
     /**
      * 刷新具体要做什么
      */
@@ -388,7 +416,9 @@ public class MainActivity extends AppCompatActivity implements Serializable{
             showNoEvent();
         }else if(id == android.R.id.home){
             mDrawerLayout.openDrawer(GravityCompat.START);
-        }
+        }else if(id == R.id.delay){
+             eventList = autoDelayOne(eventList);
+         }
 
         return super.onOptionsItemSelected(item);
     }

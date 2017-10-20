@@ -31,6 +31,7 @@ import org.litepal.crud.DataSupport;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import kr.co.namee.permissiongen.PermissionFail;
 import kr.co.namee.permissiongen.PermissionGen;
@@ -186,6 +187,13 @@ public class EventContentActivity extends AppCompatActivity {
 //            collapsingToolbar.setContentScrimColor(color.getColor());
         }
     }
+
+
+
+    /**
+     *  获得主题的颜色
+     * @param toolbar
+     */
 
 
     private void getThemeColor(Toolbar toolbar){
