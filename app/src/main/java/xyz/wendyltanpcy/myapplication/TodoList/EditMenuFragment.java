@@ -70,6 +70,7 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
                 event.setEventFinish(false);
                 event.setEventDetail("add more detail");
                 event.setId(adapter.getItemCount());
+                event.setDelay(false);
 
                 //set to default date
                 Calendar now = Calendar.getInstance();

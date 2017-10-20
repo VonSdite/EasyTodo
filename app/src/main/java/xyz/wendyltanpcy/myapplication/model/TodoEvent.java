@@ -39,6 +39,7 @@ public class TodoEvent extends DataSupport implements Serializable{
     private int eventDateNum;
     private String eventPriority;
     private boolean eventExpired;
+    private boolean isDelay;
 
     /*
     image info
@@ -68,6 +69,14 @@ public class TodoEvent extends DataSupport implements Serializable{
 
 
 
+    }
+
+    public void setDelay(boolean delay) {
+        isDelay = delay;
+    }
+
+    public boolean isDelay() {
+        return isDelay;
     }
 
     public void setEventExpired(boolean eventExpired) {
@@ -183,6 +192,7 @@ public class TodoEvent extends DataSupport implements Serializable{
     public String getEventName() {
         return eventName;
     }
+
 
 
 }

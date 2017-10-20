@@ -3,9 +3,8 @@ package xyz.wendyltanpcy.myapplication.model;
 import org.litepal.crud.DataSupport;
 
 /**
- * Created by Wendy on 2017/10/8.
+ * 存储主题颜色类
  */
-
 public class ThemeColor extends DataSupport {
     private int Color;
 

@@ -3,7 +3,7 @@ package xyz.wendyltanpcy.myapplication.model;
 import org.litepal.crud.DataSupport;
 
 /**
- * Created by Wendy on 2017/10/10.
+ * 存储网页信息类
  */
 
 public class WebPage extends DataSupport {

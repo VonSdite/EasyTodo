@@ -2,6 +2,7 @@ package xyz.wendyltanpcy.myapplication.TodoList;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -35,7 +37,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import xyz.wendyltanpcy.myapplication.Adapter.EventsAdapter;
 import xyz.wendyltanpcy.myapplication.FinishList.FinishEventListActivity;
@@ -47,16 +51,17 @@ import xyz.wendyltanpcy.myapplication.model.ThemeColor;
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
 
-public class MainActivity extends AppCompatActivity implements Serializable{
+public class MainActivity extends AppCompatActivity implements Serializable,DialogInterface.OnDismissListener{
 
     private EventsAdapter MyAdapter;
     private List<TodoEvent> eventList = new ArrayList<>();
     private static boolean haveInit = false;
-    private transient DrawerLayout mDrawerLayout;
-    private transient SwipeRefreshLayout swipeRefresh;
-    private transient ImageView homeImage;
+    private  DrawerLayout mDrawerLayout;
+    private  SwipeRefreshLayout swipeRefresh;
+    private  ImageView homeImage;
     private FloatingActionButton add;
     public static final String INTENT_EVENT= "intent_event";
+    private static List<Integer> DelayList = new ArrayList<>();
 
 
     @Override
@@ -274,11 +279,9 @@ public class MainActivity extends AppCompatActivity implements Serializable{
      * @param list
      * @return
      */
-    public List<TodoEvent> autoDelayOne(List<TodoEvent> list){
-        for (TodoEvent event:list){
-            if (event.isEventExpired())
-            {
-
+    public List<TodoEvent> autoDelayOne(List<TodoEvent> list,List<Integer> callbackList){
+        for(Integer num : callbackList){
+                TodoEvent event = list.get(num.intValue());
                 Calendar newC = Calendar.getInstance();
                 event.setEventDeadLine(newC.getTime());
                 event.setEventCalendar(newC);
@@ -288,7 +291,6 @@ public class MainActivity extends AppCompatActivity implements Serializable{
                 event.setEventExpired(false);
                 event.save();
 
-            }
         }
         doRefresh();
         Toast.makeText(this,"已将事件推迟到今天！ ",Toast.LENGTH_SHORT).show();
@@ -303,6 +305,7 @@ public class MainActivity extends AppCompatActivity implements Serializable{
         showNoEvent();
         eventList = sortEventList(eventList);
         MyAdapter.notifyDataSetChanged();
+
         swipeRefresh.setRefreshing(false);
     }
 
@@ -350,10 +353,13 @@ public class MainActivity extends AppCompatActivity implements Serializable{
     @Override
     protected void onResume() {
         super.onResume();
+
         doRefresh();
         if (ColorManager.IS_COLOR_CHANGE){
             syncButtonColor();
         }
+
+
     }
 
     /**
@@ -391,8 +397,37 @@ public class MainActivity extends AppCompatActivity implements Serializable{
         return super.onContextItemSelected(item);
     }
 
+    /**
+     * showing delay dialog
+     */
+
+    public void showDelayDialog(){
+        List<Map<String, Object>> list = new ArrayList<>();
+
+        for (TodoEvent event:eventList){
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("title",event.getEventName());
+            map.put("date",event.getEventDate());
+            map.put("delay",event.isDelay());
+            list.add(map);
+        }
+
+        FragmentManager manager = getSupportFragmentManager();
+        DelayFragment dialog = DelayFragment.newInstance(list);
+        dialog.show(manager,"DelayDialog");
+    }
+
+    public static void getDelayPosList(List<Integer> list){
+        DelayList = list;
+    }
 
 
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -417,11 +452,19 @@ public class MainActivity extends AppCompatActivity implements Serializable{
         }else if(id == android.R.id.home){
             mDrawerLayout.openDrawer(GravityCompat.START);
         }else if(id == R.id.delay){
-             eventList = autoDelayOne(eventList);
+             DelayList.clear();
+             showDelayDialog();
+
+
          }
 
         return super.onOptionsItemSelected(item);
     }
 
 
+    @Override
+    public void onDismiss(DialogInterface dialogInterface) {
+        if (!DelayList.isEmpty())
+            eventList = autoDelayOne(eventList,DelayList);
+    }
 }
