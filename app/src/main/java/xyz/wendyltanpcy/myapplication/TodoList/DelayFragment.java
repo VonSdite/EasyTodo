@@ -74,7 +74,7 @@ public class DelayFragment extends DialogFragment {
                 CheckBox btn = (CheckBox) view.findViewById(R.id.delay_check);
                 if (btn.isChecked()) {
                     btn.setChecked(false);
-                    callBackList.remove(position);
+                    callBackList.remove(callBackList.size()-1);
                 } else {
                     btn.setChecked(true);
                     Integer a = new Integer(position);

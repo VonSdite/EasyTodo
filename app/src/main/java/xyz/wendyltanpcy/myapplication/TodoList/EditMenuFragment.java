@@ -113,13 +113,17 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
                 View visibility = getActivity().findViewById(R.id.no_event_layout);
                 visibility.setVisibility(View.INVISIBLE);
                 this.dismiss();
-                getActivity().findViewById(R.id.add_event).setVisibility(View.VISIBLE); // 显示加号按钮
+                //getActivity().findViewById(R.id.add_event).setVisibility(View.VISIBLE); // 显示加号按钮
                 break;
             default:
                 break;
         }
+
     }
 
-
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        getActivity().findViewById(R.id.add_event).setVisibility(View.VISIBLE); // 显示加号按钮
+    }
 }
