@@ -11,8 +11,7 @@
         android:layout_height="wrap_content"
         android:hint="输入事件名称"
         android:id="@+id/edit_event"
-        android:windowSoftInputMode="stateVisible"
-        android:singleLine="true"/>
+        android:maxLines="1"/>
 
     <xyz.wendyltanpcy.myapplication.helper.ColorLinearLayout
         android:id="@+id/edit_menu_bar"

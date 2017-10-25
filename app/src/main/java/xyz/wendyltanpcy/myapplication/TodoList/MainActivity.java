@@ -2,6 +2,7 @@ package xyz.wendyltanpcy.myapplication.TodoList;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,15 +16,18 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
@@ -69,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements Serializable,Dial
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         add = (FloatingActionButton) findViewById(R.id.add_event);
-
         baseInit();
         addEvent();
 
@@ -101,8 +104,6 @@ public class MainActivity extends AppCompatActivity implements Serializable,Dial
             }
         });
 
-
-
         RecyclerView eventNameRecyclerView = (RecyclerView) findViewById(R.id.event_name_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         MyAdapter = new EventsAdapter(eventList);
@@ -110,11 +111,6 @@ public class MainActivity extends AppCompatActivity implements Serializable,Dial
         eventNameRecyclerView.setItemAnimator(new DefaultItemAnimator());
         eventNameRecyclerView.setAdapter(MyAdapter);
         registerForContextMenu(eventNameRecyclerView);
-
-
-
-
-
     }
 
     private void addEvent(){
@@ -130,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements Serializable,Dial
                 bundle.putSerializable("adapter", MyAdapter);
                 dialog.setArguments(bundle);
                 dialog.show(getSupportFragmentManager(), "edit bar");
-
+                view.setVisibility(View.GONE); // 隐藏加号按钮
             }
         });
     }
@@ -445,22 +441,35 @@ public class MainActivity extends AppCompatActivity implements Serializable,Dial
 
         //noinspection SimplifiableIfStatement
          if (id == R.id.delete){
-            eventList.clear();
-            DataSupport.deleteAll(TodoEvent.class);
-            MyAdapter.notifyDataSetChanged();
-            showNoEvent();
+             AlertDialog.Builder deleteAlert = new AlertDialog.Builder(MainActivity.this);
+             deleteAlert.setTitle("你确定要全部删除吗? o(╥﹏╥)o");
+             deleteAlert.setCancelable(false);
+             deleteAlert.setPositiveButton("全部删除", new DialogInterface.OnClickListener() {
+                 @Override
+                 public void onClick(DialogInterface dialogInterface, int i) {
+                     eventList.clear();
+                     DataSupport.deleteAll(TodoEvent.class);
+                     MyAdapter.notifyDataSetChanged();
+                     showNoEvent();
+                 }
+             });
+            deleteAlert.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            });
+             deleteAlert.show();
+
         }else if(id == android.R.id.home){
             mDrawerLayout.openDrawer(GravityCompat.START);
         }else if(id == R.id.delay){
              DelayList.clear();
              showDelayDialog();
-
-
          }
 
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     public void onDismiss(DialogInterface dialogInterface) {
