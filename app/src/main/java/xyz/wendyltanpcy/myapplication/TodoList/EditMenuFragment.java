@@ -2,12 +2,16 @@ package xyz.wendyltanpcy.myapplication.TodoList;
 
 
 import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -25,11 +29,10 @@ import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
 public class EditMenuFragment extends DialogFragment implements View.OnClickListener{
 
-
     private ImageView saveButton;
-
     private EventsAdapter adapter;
-    private EditText editEvent;
+    private FloatingActionButton add;
+    public EditText editEvent;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -50,13 +53,31 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
         //init other widget and set listener
         saveButton =  dialog.findViewById(R.id.save);
         editEvent = dialog.findViewById(R.id.edit_event);
+
         saveButton.setOnClickListener(this);
 
         //获得传入的适配器
         Bundle bundle = getArguments();
         adapter = (EventsAdapter) bundle.getSerializable("adapter");
 
+        // 设置editText获取焦点并自动弹出键盘
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                if(editEvent!=null){
+                    //设置可获得焦点
+                    editEvent.setFocusable(true);
+                    editEvent.setFocusableInTouchMode(true);
+                    //请求获得焦点
+                    editEvent.requestFocus();
+                    //调用系统输入法
+                    InputMethodManager inputManager = (InputMethodManager) editEvent.getContext().
+                            getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputManager.showSoftInput(editEvent, InputMethodManager.SHOW_IMPLICIT);
+                }
 
+            }
+        });
         return dialog;
     }
 
@@ -92,6 +113,7 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
                 View visibility = getActivity().findViewById(R.id.no_event_layout);
                 visibility.setVisibility(View.INVISIBLE);
                 this.dismiss();
+                getActivity().findViewById(R.id.add_event).setVisibility(View.VISIBLE); // 显示加号按钮
                 break;
             default:
                 break;
