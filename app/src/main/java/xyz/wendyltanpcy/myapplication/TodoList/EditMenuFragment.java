@@ -8,12 +8,14 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Calendar;
@@ -32,7 +34,7 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
     private ImageView saveButton;
     private EventsAdapter adapter;
     private FloatingActionButton add;
-    public EditText editEvent;
+    private EditText editEvent;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -60,6 +62,20 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
         Bundle bundle = getArguments();
         adapter = (EventsAdapter) bundle.getSerializable("adapter");
 
+        // 当点击软件盘确定按钮时， 保存文本
+        editEvent.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if(!editEvent.getText().toString().isEmpty()) {
+                    saveButton.performClick();
+                }
+                else{
+                    return true;
+                }
+                return false;
+            }
+        });
+
         // 设置editText获取焦点并自动弹出键盘
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
@@ -85,35 +101,36 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.save:
-                Toast.makeText(getContext(),"text save!",Toast.LENGTH_SHORT).show();
-                TodoEvent event = new TodoEvent();
-                event.setEventName(editEvent.getText().toString());
-                event.setEventFinish(false);
-                event.setEventDetail("add more detail");
-                event.setId(adapter.getItemCount());
-                event.setDelay(false);
+                if (!editEvent.getText().toString().isEmpty()) {
+                    Toast.makeText(getContext(), "text save!", Toast.LENGTH_SHORT).show();
+                    TodoEvent event = new TodoEvent();
+                    event.setEventName(editEvent.getText().toString());
+                    event.setEventFinish(false);
+                    event.setEventDetail("add more detail");
+                    event.setId(adapter.getItemCount());
+                    event.setDelay(false);
 
-                //set to default date
-                Calendar now = Calendar.getInstance();
-                Date date = new Date();
-                now.setTime(date);
-                event.setEventDeadLine(date);
-                event.setEventCalendar(now);
-                event.setEventDate();
-                event.setEventTime();
-                event.setEventPriority();
-                event.setEventExpired(false);
-                event.save();
+                    //set to default date
+                    Calendar now = Calendar.getInstance();
+                    Date date = new Date();
+                    now.setTime(date);
+                    event.setEventDeadLine(date);
+                    event.setEventCalendar(now);
+                    event.setEventDate();
+                    event.setEventTime();
+                    event.setEventPriority();
+                    event.setEventExpired(false);
+                    event.save();
 
 
-                int newItempos = adapter.getItemCount();
-                adapter.getTodoEventList().add(event);
-                adapter.notifyItemInserted(newItempos);
+                    int newItempos = adapter.getItemCount();
+                    adapter.getTodoEventList().add(event);
+                    adapter.notifyItemInserted(newItempos);
 
-                View visibility = getActivity().findViewById(R.id.no_event_layout);
-                visibility.setVisibility(View.INVISIBLE);
-                this.dismiss();
-                //getActivity().findViewById(R.id.add_event).setVisibility(View.VISIBLE); // 显示加号按钮
+                    View visibility = getActivity().findViewById(R.id.no_event_layout);
+                    visibility.setVisibility(View.INVISIBLE);
+                    this.dismiss();
+                }
                 break;
             default:
                 break;

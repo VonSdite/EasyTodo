@@ -11,7 +11,9 @@
         android:layout_height="wrap_content"
         android:hint="输入事件名称"
         android:id="@+id/edit_event"
-        android:maxLines="1"/>
+        android:maxLines="1"
+        android:inputType="text"
+        />
 
     <xyz.wendyltanpcy.myapplication.helper.ColorLinearLayout
         android:id="@+id/edit_menu_bar"
