@@ -206,18 +206,13 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                         mTodoEventList.remove(pos);
                         notifyDataSetChanged();
                         Toast.makeText(mContext,"干得漂亮",Toast.LENGTH_SHORT).show();
-
-
-
                     }
                 });
                 dialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
                         hd.checkBoxSample.setChecked(false);
                         hd.eventNameText.setPaintFlags( hd.eventNameText.getPaintFlags()&(~Paint.STRIKE_THRU_TEXT_FLAG));
-
                     }
                 });
                 dialog.setCancelable(false);
@@ -231,11 +226,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                 view.showContextMenu();
             }
         });
-
-
-
-
-
     }
 
 
@@ -243,9 +233,5 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     public int getItemCount() {
         return mTodoEventList.size();
     }
-
-
-
-
 
 }
