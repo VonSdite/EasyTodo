@@ -15,11 +15,10 @@
 
 
     <LinearLayout
-
+        android:id="@+id/item_event"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-
 
         <xyz.wendyltanpcy.myapplication.helper.CheckBoxSample
             android:id="@+id/event_finish"
@@ -56,6 +55,30 @@
             android:scaleType="center"
             android:src="@mipmap/ic_reorder_grey_500_24dp"/>
     </LinearLayout>
+
+    <!--<FrameLayout-->
+        <!--android:layout_marginStart="@+id/item_event"-->
+        <!--android:layout_width="100dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!---->
+        <!--android:background="#f33213">-->
+
+        <!--<ImageView-->
+            <!--android:id="@+id/iv_img"-->
+            <!--android:layout_width="50dp"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:src="@drawable/ic_rubbish"-->
+            <!--android:visibility="invisible"/>-->
+        <!--<TextView-->
+            <!--android:id="@+id/tv_text"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="左滑删除"-->
+            <!--android:textSize="18sp"-->
+            <!--android:textColor="#ffffff"-->
+            <!--android:layout_gravity="center"/>-->
+    <!--</FrameLayout>-->
 
 </android.support.v7.widget.CardView>
 

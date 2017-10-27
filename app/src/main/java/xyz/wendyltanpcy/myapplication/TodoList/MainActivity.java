@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -21,6 +22,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,26 +54,39 @@ import xyz.wendyltanpcy.myapplication.model.ThemeColor;
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
 
-public class MainActivity extends AppCompatActivity implements Serializable,DialogInterface.OnDismissListener{
+public class MainActivity extends AppCompatActivity implements Serializable, DialogInterface
+        .OnDismissListener {
 
     private EventsAdapter MyAdapter;
     private List<TodoEvent> eventList = new ArrayList<>();
     private static boolean haveInit = false;
-    private  DrawerLayout mDrawerLayout;
-    private  SwipeRefreshLayout swipeRefresh;
-    private  ImageView homeImage;
+    private DrawerLayout mDrawerLayout;
+    private SwipeRefreshLayout swipeRefresh;
+    private ImageView homeImage;
     private FloatingActionButton add;
-    public static final String INTENT_EVENT= "intent_event";
+    public static final String INTENT_EVENT = "intent_event";
     private static List<Integer> DelayList = new ArrayList<>();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // add Button的设置
         add = (FloatingActionButton) findViewById(R.id.add_event);
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditMenuFragment dialog = new EditMenuFragment();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("adapter", MyAdapter);
+                dialog.setArguments(bundle);
+                dialog.show(getSupportFragmentManager(), "edit bar");
+                view.setVisibility(View.GONE); // 隐藏加号按钮
+            }
+        });
+
         baseInit();
-        addEvent();
 
         /*
         设置刷新
@@ -92,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements Serializable,Dial
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                               doRefresh();
+                                doRefresh();
                             }
                         });
                     }
@@ -101,35 +116,82 @@ public class MainActivity extends AppCompatActivity implements Serializable,Dial
             }
         });
 
-        RecyclerView eventNameRecyclerView = (RecyclerView) findViewById(R.id.event_name_recycler_view);
+        RecyclerView eventNameRecyclerView = (RecyclerView) findViewById(R.id
+                .event_name_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         MyAdapter = new EventsAdapter(eventList);
+
         eventNameRecyclerView.setLayoutManager(layoutManager);
         eventNameRecyclerView.setItemAnimator(new DefaultItemAnimator());
         eventNameRecyclerView.setAdapter(MyAdapter);
         registerForContextMenu(eventNameRecyclerView);
-    }
 
-    private void addEvent(){
-         /*
-        添加事件按钮响应
-         */
-
-        add.setOnClickListener(new View.OnClickListener() {
+        // 拖拽换位 滑动删除实现
+        ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
             @Override
-            public void onClick(View view) {
-                EditMenuFragment dialog = new EditMenuFragment();
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("adapter", MyAdapter);
-                dialog.setArguments(bundle);
-                dialog.show(getSupportFragmentManager(), "edit bar");
-                view.setVisibility(View.GONE); // 隐藏加号按钮
+            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder
+                    viewHolder) {
+                //首先回调的方法 返回int表示是否监听该方向
+                int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;//拖拽
+
+                //START  右向左
+                int swipeFlags = ItemTouchHelper.START; //侧滑删除
+                return makeMovementFlags(dragFlags, swipeFlags);
+            }
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                                  RecyclerView.ViewHolder target) {
+                // 拖拽换位
+                Collections.swap(eventList,viewHolder.getAdapterPosition(),target.getAdapterPosition());
+                MyAdapter.notifyItemMoved(viewHolder.getAdapterPosition(),target.getAdapterPosition());
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                // 侧滑删除事件
+                eventList.get(viewHolder.getAdapterPosition()).delete();
+                eventList.remove(viewHolder.getAdapterPosition());
+                MyAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public boolean isLongPressDragEnabled() {
+                // 是否可拖拽
+                return true;
+            }
+
+            @Override
+            public boolean isItemViewSwipeEnabled() {
+                // 是否可滑动
+                return true;
+            }
+
+            @Override
+            public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int actionState) {
+                if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+                    viewHolder.itemView.setBackgroundColor(Color.LTGRAY);
+                }
+                super.onSelectedChanged(viewHolder, actionState);
+            }
+
+            /**
+             * 手指松开的时候还原
+             * @param recyclerView
+             * @param viewHolder
+             */
+            @Override
+            public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                super.clearView(recyclerView, viewHolder);
+                viewHolder.itemView.setBackgroundColor(0);
             }
         });
+
+        mItemTouchHelper.attachToRecyclerView(eventNameRecyclerView);
     }
 
-
-    public  void initEvents(){
+    public void initEvents() {
         LitePal.getDatabase();
     }
 
@@ -139,8 +201,8 @@ public class MainActivity extends AppCompatActivity implements Serializable,Dial
         haveInit = false;
     }
 
-    public void checkExpired(List<TodoEvent> todoEventList){
-        for (TodoEvent event:todoEventList){
+    public void checkExpired(List<TodoEvent> todoEventList) {
+        for (TodoEvent event : todoEventList) {
             event.setEventPriority();
         }
     }
@@ -148,23 +210,20 @@ public class MainActivity extends AppCompatActivity implements Serializable,Dial
     /**
      * 视图上的初始化
      */
-    private void baseInit(){
-        if(!haveInit){
-            initEvents();
+    private void baseInit() {
+        if (!haveInit) {
+            initEvents();           // 获取数据库 或 创建数据库
 
-            showStartupAnimate();
-            eventList = DataSupport.findAll(TodoEvent.class);
+            showStartupAnimate();   // 显示启动动画
+
+            eventList = DataSupport.findAll(TodoEvent.class); // 获取 待办事项数据库
             showNoEvent();
-            eventList = sortEventList(eventList);
-
+            //eventList = sortEventList(eventList);
         }
 
         sendNotification(eventList);
         checkExpired(eventList);
         initThemeColor();
-
-
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -176,16 +235,17 @@ public class MainActivity extends AppCompatActivity implements Serializable,Dial
             actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
         }
         navView.setCheckedItem(R.id.nav_task);
-        navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        navView.setNavigationItemSelectedListener(new NavigationView
+                .OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.nav_finish:
-                        startActivity(new Intent(MainActivity.this,FinishEventListActivity.class));
+                        startActivity(new Intent(MainActivity.this, FinishEventListActivity.class));
                         mDrawerLayout.closeDrawer(Gravity.START);
                         break;
                     case R.id.nav_broswer:
-                        startActivity(new Intent(MainActivity.this,BrowserActivity.class));
+                        startActivity(new Intent(MainActivity.this, BrowserActivity.class));
                         mDrawerLayout.closeDrawer(Gravity.START);
                         break;
                     case R.id.nav_setting:
@@ -203,24 +263,25 @@ public class MainActivity extends AppCompatActivity implements Serializable,Dial
      * 按优先级排序列表(根据日期）
      */
 
-    private List<TodoEvent> sortEventList(List<TodoEvent> todoEventList){
-        Collections.sort(todoEventList, new Comparator<TodoEvent>(){
+    private List<TodoEvent> sortEventList(List<TodoEvent> todoEventList) {
+        Collections.sort(todoEventList, new Comparator<TodoEvent>() {
             public int compare(TodoEvent event1, TodoEvent event2) {
-                 return Integer.valueOf(event1.getEventDateNum()).compareTo(event2.getEventDateNum());
-        }});
-        return  todoEventList;
+                return Integer.valueOf(event1.getEventDateNum()).compareTo(event2.getEventDateNum
+                        ());
+            }
+        });
+        return todoEventList;
     }
 
     /**
      * 初始化主题颜色
      */
-    public void initThemeColor(){
-        ThemeColor color = DataSupport.find(ThemeColor.class,1);
-        if (color!=null) {
+    public void initThemeColor() {
+        ThemeColor color = DataSupport.find(ThemeColor.class, 1);
+        if (color != null) {
             ColorManager.getInstance().notifyColorChanged(color.getColor());
             add.setBackgroundTintList(ColorStateList.valueOf(color.getColor()));
-        }
-        else{
+        } else {
             color = new ThemeColor();
             color.setColor(ColorManager.DEFAULT_COLOR);
             color.save();
@@ -230,37 +291,34 @@ public class MainActivity extends AppCompatActivity implements Serializable,Dial
     }
 
 
-
     /**
      * 发送通知
      */
-    private void sendNotification(List<TodoEvent> todoEventList){
+    private void sendNotification(List<TodoEvent> todoEventList) {
         SharedPreferences setting = PreferenceManager.getDefaultSharedPreferences(this);
 
 
-
-
-        if (setting.getBoolean(Consts.NOTIFICATION_KEY,false)){
+        if (setting.getBoolean(Consts.NOTIFICATION_KEY, false)) {
             Calendar calendar = Calendar.getInstance();
             int eventCount = 0;
-            boolean vibrate = setting.getBoolean(Consts.VIBRATE_KEY,false);
-            String ringtoneName = setting.getString("ringtoneName","");
+            boolean vibrate = setting.getBoolean(Consts.VIBRATE_KEY, false);
+            String ringtoneName = setting.getString("ringtoneName", "");
             int year = calendar.get(Calendar.YEAR);
             int month = calendar.get(Calendar.MONTH);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
-            StringBuilder builder = new StringBuilder().append(year).append("年").append(month+1)
+            StringBuilder builder = new StringBuilder().append(year).append("年").append(month + 1)
                     .append("月").append(day).append("日");
-            for(TodoEvent event:todoEventList){
-                if (event.getEventDate().equals(builder.toString())){
+            for (TodoEvent event : todoEventList) {
+                if (event.getEventDate().equals(builder.toString())) {
                     eventCount++;
                 }
             }
             Intent i = new Intent(INTENT_EVENT);
-            i.putExtra("event_num",eventCount);
-            i.putExtra("vibrate",vibrate);
-            i.putExtra("ringtoneName",ringtoneName);
+            i.putExtra("event_num", eventCount);
+            i.putExtra("vibrate", vibrate);
+            i.putExtra("ringtoneName", ringtoneName);
             PendingIntent pi = PendingIntent.getBroadcast(this, 777, i, 0);
-            AlarmManager am = (AlarmManager)getSystemService(ALARM_SERVICE);
+            AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
             am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pi);
         }
 
@@ -269,35 +327,36 @@ public class MainActivity extends AppCompatActivity implements Serializable,Dial
 
     /**
      * 一键自动推迟到今天
+     *
      * @param list
      * @return
      */
-    public List<TodoEvent> autoDelayOne(List<TodoEvent> list,List<Integer> callbackList){
-        for(Integer num : callbackList){
-                TodoEvent event = list.get(num.intValue());
-                Calendar newC = Calendar.getInstance();
-                event.setEventDeadLine(newC.getTime());
-                event.setEventCalendar(newC);
-                event.setEventDate();
-                event.setEventTime();
-                event.setEventPriority();
-                event.setEventExpired(false);
-                event.save();
+    public List<TodoEvent> autoDelayOne(List<TodoEvent> list, List<Integer> callbackList) {
+        for (Integer num : callbackList) {
+            TodoEvent event = list.get(num.intValue());
+            Calendar newC = Calendar.getInstance();
+            event.setEventDeadLine(newC.getTime());
+            event.setEventCalendar(newC);
+            event.setEventDate();
+            event.setEventTime();
+            event.setEventPriority();
+            event.setEventExpired(false);
+            event.save();
 
         }
         doRefresh();
-        Toast.makeText(this,"已将事件推迟到今天！ ",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "已将事件推迟到今天！ ", Toast.LENGTH_SHORT).show();
         return list;
     }
 
     /**
      * 刷新具体要做什么
      */
-    private void doRefresh(){
-        eventList = MyAdapter.getTodoEventList();
-        showNoEvent();
-        eventList = sortEventList(eventList);
-        MyAdapter.notifyDataSetChanged();
+    private void doRefresh() {
+        //eventList = MyAdapter.getTodoEventList();
+        //showNoEvent();
+        //eventList = sortEventList(eventList);
+        //MyAdapter.notifyDataSetChanged();
 
         swipeRefresh.setRefreshing(false);
     }
@@ -306,9 +365,9 @@ public class MainActivity extends AppCompatActivity implements Serializable,Dial
      * 开机启动动画
      */
 
-    private void showStartupAnimate(){
+    private void showStartupAnimate() {
 
-        haveInit=true;
+        haveInit = true;
         homeImage = (ImageView) findViewById(R.id.startup);
 
         AlphaAnimation alphaAnimation = new AlphaAnimation((float) 0.1, 1);
@@ -336,8 +395,8 @@ public class MainActivity extends AppCompatActivity implements Serializable,Dial
      * 显示没有事件时候
      */
 
-    private void showNoEvent(){
-        if (eventList.isEmpty()){
+    private void showNoEvent() {
+        if (eventList.isEmpty()) {
             View visibility = findViewById(R.id.no_event_layout);
             visibility.setVisibility(View.VISIBLE);
         }
@@ -348,7 +407,7 @@ public class MainActivity extends AppCompatActivity implements Serializable,Dial
         super.onResume();
 
         doRefresh();
-        if (ColorManager.IS_COLOR_CHANGE){
+        if (ColorManager.IS_COLOR_CHANGE) {
             syncButtonColor();
         }
 
@@ -359,13 +418,9 @@ public class MainActivity extends AppCompatActivity implements Serializable,Dial
      * when onResume,'init' all theme color again
      */
 
-    private void syncButtonColor(){
+    private void syncButtonColor() {
         initThemeColor();
     }
-
-
-
-
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
@@ -382,7 +437,8 @@ public class MainActivity extends AppCompatActivity implements Serializable,Dial
             case 2:
                 event.setEventPriority();
                 String prioriy = event.getEventPriority();
-                Toast.makeText(this, "优先级: "+prioriy+" 完成日期: "+event.getEventDate() , Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "优先级: " + prioriy + " 完成日期: " + event.getEventDate(), Toast
+                        .LENGTH_LONG).show();
                 break;
             default:
                 break;
@@ -394,27 +450,25 @@ public class MainActivity extends AppCompatActivity implements Serializable,Dial
      * showing delay dialog
      */
 
-    public void showDelayDialog(){
+    public void showDelayDialog() {
         List<Map<String, Object>> list = new ArrayList<>();
 
-        for (TodoEvent event:eventList){
+        for (TodoEvent event : eventList) {
             Map<String, Object> map = new HashMap<String, Object>();
-            map.put("title",event.getEventName());
-            map.put("date",event.getEventDate());
-            map.put("delay",event.isDelay());
+            map.put("title", event.getEventName());
+            map.put("date", event.getEventDate());
+            map.put("delay", event.isDelay());
             list.add(map);
         }
 
         FragmentManager manager = getSupportFragmentManager();
         DelayFragment dialog = DelayFragment.newInstance(list);
-        dialog.show(manager,"DelayDialog");
+        dialog.show(manager, "DelayDialog");
     }
 
-    public static void getDelayPosList(List<Integer> list){
+    public static void getDelayPosList(List<Integer> list) {
         DelayList = list;
     }
-
-
 
 
     @Override
@@ -437,33 +491,33 @@ public class MainActivity extends AppCompatActivity implements Serializable,Dial
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-         if (id == R.id.delete){
-             AlertDialog.Builder deleteAlert = new AlertDialog.Builder(MainActivity.this);
-             deleteAlert.setTitle("你确定要全部删除吗?");
-             deleteAlert.setCancelable(false);
-             deleteAlert.setPositiveButton("全部删除", new DialogInterface.OnClickListener() {
-                 @Override
-                 public void onClick(DialogInterface dialogInterface, int i) {
-                     eventList.clear();
-                     DataSupport.deleteAll(TodoEvent.class);
-                     MyAdapter.notifyDataSetChanged();
-                     showNoEvent();
-                 }
-             });
+        if (id == R.id.delete) {
+            AlertDialog.Builder deleteAlert = new AlertDialog.Builder(MainActivity.this);
+            deleteAlert.setTitle("你确定要全部删除吗?");
+            deleteAlert.setCancelable(false);
+            deleteAlert.setPositiveButton("全部删除", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    eventList.clear();
+                    DataSupport.deleteAll(TodoEvent.class);
+                    MyAdapter.notifyDataSetChanged();
+                    showNoEvent();
+                }
+            });
             deleteAlert.setNegativeButton("取消", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
 
                 }
             });
-             deleteAlert.show();
+            deleteAlert.show();
 
-        }else if(id == android.R.id.home){
+        } else if (id == android.R.id.home) {
             mDrawerLayout.openDrawer(GravityCompat.START);
-        }else if(id == R.id.delay){
-             DelayList.clear();
-             showDelayDialog();
-         }
+        } else if (id == R.id.delay) {
+            DelayList.clear();
+            showDelayDialog();
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -471,6 +525,8 @@ public class MainActivity extends AppCompatActivity implements Serializable,Dial
     @Override
     public void onDismiss(DialogInterface dialogInterface) {
         if (!DelayList.isEmpty())
-            eventList = autoDelayOne(eventList,DelayList);
+            eventList = autoDelayOne(eventList, DelayList);
     }
+
 }
+
