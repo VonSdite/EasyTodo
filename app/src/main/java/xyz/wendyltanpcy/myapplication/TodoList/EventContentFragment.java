@@ -93,6 +93,7 @@ public class EventContentFragment extends Fragment {
                 Intent service = new Intent(getContext(),LocalService.class);
                 getContext().startService(service);
                 Intent remoteService = new Intent(getContext(),AlarmService.class);
+
                 remoteService.putExtra("event",Event);
                 getContext().startService(remoteService);
 

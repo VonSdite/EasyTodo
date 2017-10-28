@@ -7,20 +7,27 @@ import android.graphics.Paint;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
+
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 import xyz.wendyltanpcy.myapplication.R;
 import xyz.wendyltanpcy.myapplication.TodoList.EventContentActivity;
 import xyz.wendyltanpcy.myapplication.helper.CheckBoxSample;
+import xyz.wendyltanpcy.myapplication.helper.ItemTouchHelperAdapter;
 import xyz.wendyltanpcy.myapplication.model.FinishEvent;
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
@@ -28,18 +35,23 @@ import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 /**
  * 事件适配器，用于主界面事件的显示处理逻辑
  */
-public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> implements Serializable
+public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> implements
+        Serializable
 
 {
     private transient Context mContext;
     private List<TodoEvent> mTodoEventList;
     private int position;
+    private ViewHolder holder;
+    public SwipeMenuRecyclerView menuRecyclerView;
 
+    public ViewHolder getHolder() {
+        return holder;
+    }
 
     public void setPosition(int position) {
         this.position = position;
     }
-
 
 
     /**
@@ -47,31 +59,36 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
      * 控制事件拖拽。
      */
 
-     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
-            private TextView eventNameText;
-            private CheckBoxSample checkBoxSample;
-            private ImageView handleView;
-            private TextView expiredText;
+        private TextView eventNameText;
+        private CheckBoxSample checkBoxSample;
+        private ImageView handleView;
+        private TextView expiredText;
 
-            public ViewHolder(View itemView) {
-                    super(itemView);
-                    eventNameText = itemView.findViewById(R.id.event_name);
-                    checkBoxSample = itemView.findViewById(R.id.event_finish);
-                    handleView = itemView.findViewById(R.id.handle);
-                    expiredText = itemView.findViewById(R.id.expired_text);
-
-                    itemView.setOnCreateContextMenuListener(this);
-
-            }
-
-
-        @Override
-        public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
-            //menuInfo is null
-            menu.add(0, 1, getAdapterPosition(), "删除");
-            menu.add(0, 2, getAdapterPosition(), "优先级");
+        public TextView getEventNameText() {
+            return eventNameText;
         }
+
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            eventNameText = itemView.findViewById(R.id.event_name);
+            checkBoxSample = itemView.findViewById(R.id.event_finish);
+            handleView = itemView.findViewById(R.id.handle);
+            expiredText = itemView.findViewById(R.id.expired_text);
+//            itemView.setOnCreateContextMenuListener(this);
+        }
+
+
+        // 不使用这个菜单了
+//        @Override
+//        public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo
+//                contextMenuInfo) {
+//            //menuInfo is null
+//            menu.add(0, 1, getAdapterPosition(), "删除");
+//            menu.add(0, 2, getAdapterPosition(), "优先级");
+//        }
 
     }
 
@@ -83,6 +100,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
     /**
      * 返回适配器内部的列表给外部
+     *
      * @return
      */
     public List<TodoEvent> getTodoEventList() {
@@ -90,20 +108,20 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     }
 
 
-    public EventsAdapter(List<TodoEvent> todoEventList) {
-        mTodoEventList=todoEventList;
+    public EventsAdapter(List<TodoEvent> todoEventList, SwipeMenuRecyclerView menuRecyclerView) {
+        mTodoEventList = todoEventList;
+        this.menuRecyclerView = menuRecyclerView;
     }
 
 
     @Override
     public EventsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (mContext==null){
+        if (mContext == null) {
             mContext = parent.getContext();
         }
 
-        View view = LayoutInflater.from(mContext).inflate(R.layout.event_item,parent,false);
-        ViewHolder holder = new ViewHolder(view);
-
+        View view = LayoutInflater.from(mContext).inflate(R.layout.event_item, parent, false);
+        holder = new ViewHolder(view);
         return holder;
     }
 
@@ -114,23 +132,38 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         final int pos = position;
         final EventsAdapter.ViewHolder hd = holder;
 
-        todoEvent.setId(position);
         todoEvent.save();
 
         //seting defaul style or the viewholder don't know what to do
         hd.checkBoxSample.setChecked(false);
-        hd.eventNameText.setPaintFlags( hd.eventNameText.getPaintFlags()&(~Paint.STRIKE_THRU_TEXT_FLAG));
-
+        hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() & (~Paint
+                .STRIKE_THRU_TEXT_FLAG));
 
 
         //setting click listener
-        hd.handleView.setOnLongClickListener(new View.OnLongClickListener() {
+//        hd.handleView.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                setPosition(hd.getPosition());
+//                return false;
+//            }
+//        });
+        hd.handleView.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onLongClick(View v) {
-                setPosition(hd.getPosition());
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                int action = motionEvent.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                    case MotionEvent.ACTION_UP:
+                        menuRecyclerView.startDrag(hd);
+                        break;
+                    default:
+                        break;
+                }
                 return false;
             }
         });
+
 
 
         hd.eventNameText.setText(todoEvent.getEventName());
@@ -140,45 +173,22 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         else
             hd.expiredText.setVisibility(View.GONE);
 
-        hd.eventNameText.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                Snackbar.make(view,"你想分享这个事件吗？",Snackbar.LENGTH_LONG)
-                        .setAction("确定", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                Intent i = new Intent(Intent.ACTION_SEND);//setting action
-                                i.setType("text/plain");//setting intent data type
-                                StringBuilder builder = new StringBuilder();
-                                builder.append("你的朋友通过ToDoList给你分享他的事件！\n");
-                                builder.append("标题: "+todoEvent.getEventName()+"\n");
-                                builder.append("详情: " + todoEvent.getEventDetail()+ "\n");
-                                builder.append("是否已经完成: " + todoEvent.isEventFinish() + "\n");
-                                String text = builder.toString();
-                                i.putExtra(Intent.EXTRA_TEXT,text);
-                                i.putExtra(Intent.EXTRA_SUBJECT,"an interesting event");//putting extra
-                                i = Intent.createChooser(i,"share event");//creating chooser to choose an app to do the activity
-                                mContext.startActivity(i); //start activity
-                            }
-                        }).show();
-                return true;
-            }
-        });
-
         hd.eventNameText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 EventContentActivity eC = new EventContentActivity(hd);
-                eC.actionStart(mContext,todoEvent);
+                eC.actionStart(mContext, todoEvent);
             }
         });
+
         hd.checkBoxSample.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!todoEvent.isEventFinish()){
+//                if (!todoEvent.isEventFinish()) {
                     hd.checkBoxSample.setChecked(true);
-                    hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                }
+                    hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() | Paint
+                            .STRIKE_THRU_TEXT_FLAG);
+//                }
 
 
                 final AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
@@ -193,7 +203,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                         对完成事件信息设置
                          */
                         finishEvent.setEventName(todoEvent.getEventName());
-                        finishEvent.setId(todoEvent.getId());
+//                        finishEvent.setId(todoEvent.getId());
                         finishEvent.setEventFinishDate(todoEvent.getEventDate());
                         finishEvent.setEventAlarmTime(todoEvent.getEventTime());
                         finishEvent.save();
@@ -201,18 +211,19 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                         /*
                         删掉此条未完成事件
                          */
-                        todoEvent.setEventFinish(true);
+//                        todoEvent.setEventFinish(true);
                         todoEvent.delete();
                         mTodoEventList.remove(pos);
                         notifyDataSetChanged();
-                        Toast.makeText(mContext,"干得漂亮",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "干得漂亮", Toast.LENGTH_SHORT).show();
                     }
                 });
                 dialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         hd.checkBoxSample.setChecked(false);
-                        hd.eventNameText.setPaintFlags( hd.eventNameText.getPaintFlags()&(~Paint.STRIKE_THRU_TEXT_FLAG));
+                        hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() & (~Paint
+                                .STRIKE_THRU_TEXT_FLAG));
                     }
                 });
                 dialog.setCancelable(false);
