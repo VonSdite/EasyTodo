@@ -7,6 +7,10 @@
 ## 历史
 
 
+- **17/10/28**
+    + 10/26做的事件滑动删除由于无法用ItemTouchHelper来实现滑动菜单，前功尽弃，**抛弃了该方法**
+    + 采用外援库[**SwipeRecyclerView**](https://github.com/yanzhenjie/SwipeRecyclerView)实现事件项的拖拽交换， 滑动菜单
+
 - **17/10/26**
     + 添加事件的EditText 禁止换行，且对软键盘的确定按钮进行响应，并判断EditText内容是否为空
     + 完成事件项 的拖动交换， 滑动删除的功能

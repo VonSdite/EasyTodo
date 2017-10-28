@@ -1,84 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
 
-<android.support.v7.widget.CardView
+    <android.support.v7.widget.CardView
+        android:id="@+id/event_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
         app:cardCornerRadius="4dp"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:android="http://schemas.android.com/apk/res/android"
         app:cardElevation="1dp"
-        android:id="@+id/event_item"
         app:cardMaxElevation="2dp"
         app:cardUseCompatPadding="true">
 
-
-    <LinearLayout
-        android:id="@+id/item_event"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <xyz.wendyltanpcy.myapplication.helper.CheckBoxSample
-            android:id="@+id/event_finish"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            app:color_background="#FF3F51B5"
-            app:color_border="#FF3F51B5"
-            app:size="22dp"/>
-        <TextView
-            android:id="@+id/event_name"
+        <LinearLayout
+            android:id="@+id/item_event"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="35dp"
-            android:layout_weight="1"
-            android:maxLines="1"
-            android:padding="12dp"
-            android:textSize="17sp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/expired_text"
-            android:text="已过期"
-            android:visibility="gone"
-            android:textColor="@color/theme4"
-            android:textSize="10sp"/>
+            android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/handle"
-            android:layout_width="?listPreferredItemHeight"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical|right"
-            android:scaleType="center"
-            android:src="@mipmap/ic_reorder_grey_500_24dp"/>
-    </LinearLayout>
+            <xyz.wendyltanpcy.myapplication.helper.CheckBoxSample
+                android:id="@+id/event_finish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                app:color_background="#FF3F51B5"
+                app:color_border="#FF3F51B5"
+                app:size="22dp"/>
 
-    <!--<FrameLayout-->
-        <!--android:layout_marginStart="@+id/item_event"-->
-        <!--android:layout_width="100dp"-->
-        <!--android:layout_height="match_parent"-->
-        <!---->
-        <!--android:background="#f33213">-->
+            <TextView
+                android:id="@+id/event_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="35dp"
+                android:layout_weight="1"
+                android:maxLines="1"
+                android:padding="12dp"
+                android:textSize="17sp"/>
 
-        <!--<ImageView-->
-            <!--android:id="@+id/iv_img"-->
-            <!--android:layout_width="50dp"-->
-            <!--android:layout_height="50dp"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:src="@drawable/ic_rubbish"-->
-            <!--android:visibility="invisible"/>-->
-        <!--<TextView-->
-            <!--android:id="@+id/tv_text"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="左滑删除"-->
-            <!--android:textSize="18sp"-->
-            <!--android:textColor="#ffffff"-->
-            <!--android:layout_gravity="center"/>-->
-    <!--</FrameLayout>-->
+            <TextView
+                android:id="@+id/expired_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="已过期"
+                android:textColor="@color/theme4"
+                android:textSize="10sp"
+                android:visibility="gone"/>
 
-</android.support.v7.widget.CardView>
+            <ImageView
+                android:id="@+id/handle"
+                android:layout_width="?listPreferredItemHeight"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical|right"
+                android:scaleType="center"
+                android:src="@mipmap/ic_reorder_grey_500_24dp"/>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
 
+</LinearLayout>

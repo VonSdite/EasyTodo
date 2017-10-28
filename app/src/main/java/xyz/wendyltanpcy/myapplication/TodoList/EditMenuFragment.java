@@ -105,9 +105,9 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
                     Toast.makeText(getContext(), "text save!", Toast.LENGTH_SHORT).show();
                     TodoEvent event = new TodoEvent();
                     event.setEventName(editEvent.getText().toString());
-                    event.setEventFinish(false);
+//                    event.setEventFinish(false);
                     event.setEventDetail("add more detail");
-                    event.setId(adapter.getItemCount());
+//                    event.setId(adapter.getItemCount());
                     event.setDelay(false);
 
                     //set to default date

@@ -16,15 +16,10 @@ public class TodoEvent extends DataSupport implements Serializable{
     /*
     basic info
      */
-    @Column(unique = true)
-    private long id;
-
     @Column(nullable = false)
     private String eventName;
 
     private String eventDetail;
-    private boolean eventFinish;
-
     /*
     time info
      */
@@ -67,8 +62,6 @@ public class TodoEvent extends DataSupport implements Serializable{
             setEventExpired(true);
         }
 
-
-
     }
 
     public void setDelay(boolean delay) {
@@ -101,15 +94,6 @@ public class TodoEvent extends DataSupport implements Serializable{
 
     public void setEventImageBitMap(byte[] eventImageBitMap) {
         this.eventImageBitMap = eventImageBitMap;
-    }
-
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public Calendar getEventCalendar() {
@@ -158,7 +142,6 @@ public class TodoEvent extends DataSupport implements Serializable{
         return eventTime;
     }
 
-
     public Date getEventDeadLine() {
         return eventDeadLine;
     }
@@ -166,16 +149,6 @@ public class TodoEvent extends DataSupport implements Serializable{
     public void setEventDeadLine(Date eventDeadLine) {
         this.eventDeadLine = eventDeadLine;
     }
-
-
-    public boolean isEventFinish() {
-        return eventFinish;
-    }
-
-    public void setEventFinish(boolean eventFinish) {
-        this.eventFinish = eventFinish;
-    }
-
 
     public void setEventDetail(String eventDetail) {
         this.eventDetail = eventDetail;
@@ -192,7 +165,5 @@ public class TodoEvent extends DataSupport implements Serializable{
     public String getEventName() {
         return eventName;
     }
-
-
 
 }
