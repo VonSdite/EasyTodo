@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         eventNameRecyclerView.setItemAnimator(new DefaultItemAnimator());
         eventNameRecyclerView.setAdapter(MyAdapter);
 
-//        registerForContextMenu(eventNameRecyclerView);   // 不使用那个上下文菜单了
+        registerForContextMenu(eventNameRecyclerView);   // 不使用那个上下文菜单了
 
     }
 
@@ -521,29 +521,29 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     }
 
     // 上下文菜单， 这个已不使用了
-//    @Override
-//    public boolean onContextItemSelected(MenuItem item) {
-//        // TODO Auto-generated method stub
-//        int clickedItemPosition = item.getOrder();
-//        TodoEvent event = eventList.get(clickedItemPosition);
-//        switch (item.getItemId()) {
-//            case 1:
-//                event.delete();
-//                eventList.remove(clickedItemPosition);
-//                MyAdapter.notifyDataSetChanged();
-//                Toast.makeText(this, "你删掉了这条项目", Toast.LENGTH_LONG).show();
-//                break;
-//            case 2:
-//                event.setEventPriority();
-//                String prioriy = event.getEventPriority();
-//                Toast.makeText(this, "优先级: " + prioriy + " 完成日期: " + event.getEventDate(), Toast
-//                        .LENGTH_LONG).show();
-//                break;
-//            default:
-//                break;
-//        }
-//        return super.onContextItemSelected(item);
-//    }
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        // TODO Auto-generated method stub
+        int clickedItemPosition = item.getOrder();
+        TodoEvent event = eventList.get(clickedItemPosition);
+        switch (item.getItemId()) {
+            case 1:
+                event.delete();
+                eventList.remove(clickedItemPosition);
+                MyAdapter.notifyDataSetChanged();
+                Toast.makeText(this, "你删掉了这条项目", Toast.LENGTH_LONG).show();
+                break;
+            case 2:
+                event.setEventPriority();
+                String prioriy = event.getEventPriority();
+                Toast.makeText(this, "优先级: " + prioriy + " 完成日期: " + event.getEventDate(), Toast
+                        .LENGTH_LONG).show();
+                break;
+            default:
+                break;
+        }
+        return super.onContextItemSelected(item);
+    }
 
     /**
      * showing delay dialog

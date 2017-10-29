@@ -59,7 +59,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
      * 控制事件拖拽。
      */
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder
+            implements View.OnCreateContextMenuListener {
 
         private TextView eventNameText;
         private CheckBoxSample checkBoxSample;
@@ -77,18 +78,17 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             checkBoxSample = itemView.findViewById(R.id.event_finish);
             handleView = itemView.findViewById(R.id.handle);
             expiredText = itemView.findViewById(R.id.expired_text);
-//            itemView.setOnCreateContextMenuListener(this);
+            itemView.setOnCreateContextMenuListener(this);
         }
 
 
-        // 不使用这个菜单了
-//        @Override
-//        public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo
-//                contextMenuInfo) {
-//            //menuInfo is null
-//            menu.add(0, 1, getAdapterPosition(), "删除");
-//            menu.add(0, 2, getAdapterPosition(), "优先级");
-//        }
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo
+                contextMenuInfo) {
+            //menuInfo is null
+            menu.add(0, 1, getAdapterPosition(), "删除");
+            menu.add(0, 2, getAdapterPosition(), "优先级");
+        }
 
     }
 
@@ -141,13 +141,23 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
 
         //setting click listener
-//        hd.handleView.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                setPosition(hd.getPosition());
-//                return false;
-//            }
-//        });
+        hd.eventNameText.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                setPosition(hd.getAdapterPosition());
+                return false;
+            }
+        });
+
+        hd.handleView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                setPosition(hd.getAdapterPosition());
+                return false;
+            }
+        });
+
+
         hd.handleView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
