@@ -53,6 +53,9 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         this.position = position;
     }
 
+    public int getTodoEventSize(){
+        return mTodoEventList.size();
+    }
 
     /**
      * 自定义ViewHolder并且实现了ItemTouchHelperViewHolder接口（若无必要可以去掉）
@@ -87,7 +90,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                 contextMenuInfo) {
             //menuInfo is null
             menu.add(0, 1, getAdapterPosition(), "删除");
-            menu.add(0, 2, getAdapterPosition(), "优先级");
         }
 
     }

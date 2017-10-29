@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     private List<TodoEvent> eventList = new ArrayList<>();
     private static boolean haveInit = false;
     private DrawerLayout mDrawerLayout;
-    private SwipeRefreshLayout swipeRefresh;
     private ImageView homeImage;
     private FloatingActionButton add;
     public static final String INTENT_EVENT = "intent_event";
@@ -84,49 +83,12 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // add Button的设置
-        add = (FloatingActionButton) findViewById(R.id.add_event);
-        add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EditMenuFragment dialog = new EditMenuFragment();
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("adapter", MyAdapter);
-                dialog.setArguments(bundle);
-                dialog.show(getSupportFragmentManager(), "edit bar");
-                view.setVisibility(View.GONE); // 隐藏加号按钮
-            }
-        });
+        baseInit();  // 启动页面， 数据库加载， 界面初始化(滑动侧板菜单, 浮动添加事件按钮等)
 
-        baseInit();  // 启动页面， 数据库加载， 界面初始化(滑动侧板菜单等)
-
-        // showData();      // 输出eventList中的对象， 查看数据库 测试用
-
-        // 设置刷新
-//        swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
-//        swipeRefresh.setColorSchemeColors(ColorManager.getInstance().getStoreColor());
-//        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        try {
-//                            Thread.sleep(2000);
-//                        } catch (InterruptedException e) {
-//                            e.printStackTrace();
-//                        }
-//                        runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                doRefresh();
-//                            }
-//                        });
-//                    }
-//                }).start();
-//
-//            }
-//        });
+        Collections.sort(eventList);
+        for (TodoEvent t : eventList){
+            Log.i(TAG, "onCreate: "+t.getEventName()+" "+t.getPos());
+        }
 
         // 设置RecycleView
         SwipeMenuRecyclerView eventNameRecyclerView = (SwipeMenuRecyclerView) findViewById(R.id
@@ -143,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         eventNameRecyclerView.setItemAnimator(new DefaultItemAnimator());
         eventNameRecyclerView.setAdapter(MyAdapter);
 
-        registerForContextMenu(eventNameRecyclerView);   // 不使用那个上下文菜单了
+        registerForContextMenu(eventNameRecyclerView); // 长按上下文菜单
 
     }
 
@@ -228,42 +190,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         }
     };
 
-    public void swapEventTodoList(TodoEvent t1, TodoEvent t2) {
-        TodoEvent tmp = new TodoEvent();
-        tmp.setEventName(t1.getEventName());
-        tmp.setEventDetail(t1.getEventDetail());
-        tmp.setDelay(t1.isDelay());
-        tmp.setEventDeadLine(t1.getEventDeadLine());
-        tmp.setEventCalendar(t1.getEventCalendar());
-        tmp.setEventDate();
-        tmp.setEventTime();
-        tmp.setEventPriority();
-        tmp.setEventExpired(t1.isEventExpired());
-
-
-        t1.setEventName(t2.getEventName());
-        t1.setEventDetail(t2.getEventDetail());
-        t1.setDelay(t2.isDelay());
-        t1.setEventDeadLine(t2.getEventDeadLine());
-        t1.setEventCalendar(t2.getEventCalendar());
-        t1.setEventDate();
-        t1.setEventTime();
-        t1.setEventPriority();
-        t1.setEventExpired(t2.isEventExpired());
-        t1.save();
-
-        t2.setEventName(tmp.getEventName());
-        t2.setEventDetail(tmp.getEventDetail());
-        t2.setDelay(tmp.isDelay());
-        t2.setEventDeadLine(tmp.getEventDeadLine());
-        t2.setEventCalendar(tmp.getEventCalendar());
-        t2.setEventDate();
-        t2.setEventTime();
-        t2.setEventPriority();
-        t2.setEventExpired(tmp.isEventExpired());
-        t2.save();
-    }
-
     private OnItemMoveListener onItemMoveListener = new OnItemMoveListener() {
         @Override
         public boolean onItemMove(RecyclerView.ViewHolder srcHolder, RecyclerView.ViewHolder targetHolder) {
@@ -274,8 +200,12 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
             int toPosition = targetHolder.getAdapterPosition();
 
             Collections.swap(eventList, fromPosition, toPosition);
+            eventList.get(fromPosition).setPos(fromPosition); // 重新设置id， 数据库根据id排序
+            eventList.get(toPosition).setPos(toPosition); // 重新设置id， 数据库根据id排序
+            Log.i(TAG, "onItemMove: "+eventList.get(fromPosition).save());
+            eventList.get(toPosition).save();
+
             MyAdapter.notifyItemMoved(fromPosition, toPosition);
-//            swapEventTodoList(eventList.get(fromPosition), eventList.get(toPosition));
             return true;// 返回true表示处理了并可以换位置，返回false表示你没有处理并不能换位置。
         }
 
@@ -296,6 +226,9 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        for (TodoEvent t : eventList){
+            Log.i(TAG, "onCreate: "+t.getEventName()+" "+t.getPos());
+        }
         haveInit = false;
     }
 
@@ -309,6 +242,22 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
      * 视图上的初始化
      */
     private void baseInit() {
+
+        // add Button的设置
+        add = (FloatingActionButton) findViewById(R.id.add_event);
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditMenuFragment dialog = new EditMenuFragment();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("adapter", MyAdapter);
+                dialog.setArguments(bundle);
+                dialog.show(getSupportFragmentManager(), "edit bar");
+                view.setVisibility(View.GONE); // 隐藏加号按钮
+            }
+        });
+
+
         if (!haveInit) {
             initEvents();           // 获取数据库 或 创建数据库
 
@@ -316,7 +265,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
 
             eventList = DataSupport.findAll(TodoEvent.class); // 获取 待办事项数据库
             showNoEvent();
-            // eventList = sortEventList(eventList); // 按日期优先级排序，已不使用
         }
 
         sendNotification(eventList);
@@ -359,19 +307,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     }
 
     /**
-     * 按优先级排序列表(根据日期）
-     */
-    private List<TodoEvent> sortEventList(List<TodoEvent> todoEventList) {
-        Collections.sort(todoEventList, new Comparator<TodoEvent>() {
-            public int compare(TodoEvent event1, TodoEvent event2) {
-                return Integer.valueOf(event1.getEventDateNum()).compareTo(event2.getEventDateNum
-                        ());
-            }
-        });
-        return todoEventList;
-    }
-
-    /**
      * 初始化主题颜色
      */
     public void initThemeColor() {
@@ -388,13 +323,11 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         }
     }
 
-
     /**
      * 发送通知
      */
     private void sendNotification(List<TodoEvent> todoEventList) {
         SharedPreferences setting = PreferenceManager.getDefaultSharedPreferences(this);
-
 
         if (setting.getBoolean(Consts.NOTIFICATION_KEY, false)) {
             Calendar calendar = Calendar.getInstance();
@@ -422,7 +355,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
 
     }
 
-
     /**
      * 一键自动推迟到今天
      *
@@ -440,23 +372,9 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
             event.setEventPriority();
             event.setEventExpired(false);
             event.save();
-
         }
-        //doRefresh();
         Toast.makeText(this, "已将事件推迟到今天！ ", Toast.LENGTH_SHORT).show();
         return list;
-    }
-
-    /**
-     * 刷新具体要做什么
-     */
-    private void doRefresh() {
-        //eventList = MyAdapter.getTodoEventList();
-        //showNoEvent();
-        //eventList = sortEventList(eventList);
-        //MyAdapter.notifyDataSetChanged();
-
-//        swipeRefresh.setRefreshing(false);
     }
 
     /**
@@ -504,11 +422,9 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     protected void onResume() {
         super.onResume();
 
-        doRefresh();
         if (ColorManager.IS_COLOR_CHANGE) {
             syncButtonColor();
         }
-
 
     }
 
@@ -520,7 +436,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         initThemeColor();
     }
 
-    // 上下文菜单， 这个已不使用了
+    // 上下文菜单
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         // TODO Auto-generated method stub
@@ -532,12 +448,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                 eventList.remove(clickedItemPosition);
                 MyAdapter.notifyDataSetChanged();
                 Toast.makeText(this, "你删掉了这条项目", Toast.LENGTH_LONG).show();
-                break;
-            case 2:
-                event.setEventPriority();
-                String prioriy = event.getEventPriority();
-                Toast.makeText(this, "优先级: " + prioriy + " 完成日期: " + event.getEventDate(), Toast
-                        .LENGTH_LONG).show();
                 break;
             default:
                 break;
