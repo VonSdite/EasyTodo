@@ -11,11 +11,8 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -41,7 +38,6 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 import com.yanzhenjie.recyclerview.swipe.touch.OnItemMoveListener;
-import com.yanzhenjie.recyclerview.swipe.touch.OnItemStateChangedListener;
 
 import org.litepal.LitePal;
 import org.litepal.crud.DataSupport;
@@ -50,7 +46,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,12 +78,10 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Log.i(TAG, "onCreate: hahah");
         baseInit();  // 启动页面， 数据库加载， 界面初始化(滑动侧板菜单, 浮动添加事件按钮等)
 
-        Collections.sort(eventList);
-        for (TodoEvent t : eventList){
-            Log.i(TAG, "onCreate: "+t.getEventName()+" "+t.getPos());
-        }
+        Collections.sort(eventList);  // 按evenList每个元素的pos进行排序， 即为显示的顺序
 
         // 设置RecycleView
         SwipeMenuRecyclerView eventNameRecyclerView = (SwipeMenuRecyclerView) findViewById(R.id
@@ -101,15 +94,15 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         eventNameRecyclerView.setSwipeMenuItemClickListener(mMenuItemClickListener); // 滑动菜单监听器
         eventNameRecyclerView.setOnItemMoveListener(onItemMoveListener);// 监听拖拽，更新UI。
 
-        eventNameRecyclerView.setLayoutManager(layoutManager);
+        eventNameRecyclerView.setLayoutManager(layoutManager);  // 设置LayoutManager
         eventNameRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        eventNameRecyclerView.setAdapter(MyAdapter);
+        eventNameRecyclerView.setAdapter(MyAdapter);    // 设置adapter
 
         registerForContextMenu(eventNameRecyclerView); // 长按上下文菜单
 
     }
 
-    // 创建菜单：
+    // 创建滑动菜单
     private SwipeMenuCreator mSwipeMenuCreator = new SwipeMenuCreator() {
         @Override
         public void onCreateMenu(SwipeMenu leftMenu, SwipeMenu rightMenu, int viewType) {
@@ -148,13 +141,14 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         }
     };
 
+    // 滑动菜单的监听器
     private SwipeMenuItemClickListener mMenuItemClickListener = new SwipeMenuItemClickListener() {
         @Override
         public void onItemClick(SwipeMenuBridge menuBridge) {
             // 任何操作必须先关闭菜单，否则可能出现Item菜单打开状态错乱。
             menuBridge.closeMenu();
-            int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
-            int menuPosition = menuBridge.getPosition();    // 菜单在RecyclerView的Item中的Position。
+            int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position
+            int menuPosition = menuBridge.getPosition();    // 菜单在RecyclerView的Item中的Position
 
             final TodoEvent todoEvent = eventList.get(adapterPosition); // 获取到todoEvent
             switch (menuPosition){
@@ -169,7 +163,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                     builder.append("你的朋友通过ToDoList给你分享他的事件！\n");
                     builder.append("标题: " + todoEvent.getEventName() + "\n");
                     builder.append("详情: " + todoEvent.getEventDetail() + "\n");
-//                    builder.append("是否已经完成: " + todoEvent.isEventFinish() + "\n");
                     String text = builder.toString();
                     i.putExtra(Intent.EXTRA_TEXT, text);
                     i.putExtra(Intent.EXTRA_SUBJECT, "an interesting event");
@@ -182,6 +175,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                     todoEvent.delete();
                     eventList.remove(adapterPosition);
                     MyAdapter.notifyItemRangeRemoved(adapterPosition, 1);
+                    showNoEvent(); // 如果evenList为空会显示没有事件时的提示
                     break;
                 default:
                     break;
@@ -199,16 +193,18 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
             int fromPosition = srcHolder.getAdapterPosition();
             int toPosition = targetHolder.getAdapterPosition();
 
-            Collections.swap(eventList, fromPosition, toPosition);
-            eventList.get(fromPosition).setPos(fromPosition); // 重新设置id， 数据库根据id排序
-            eventList.get(toPosition).setPos(toPosition); // 重新设置id， 数据库根据id排序
-            Log.i(TAG, "onItemMove: "+eventList.get(fromPosition).save());
-            eventList.get(toPosition).save();
+            Collections.swap(eventList, fromPosition, toPosition); // 交换这两个对象
+            eventList.get(fromPosition).setPos(fromPosition); // 重新设置pos， Item根据pos排序
+            eventList.get(toPosition).setPos(toPosition);     // 重新设置pos， Item根据pos排序
+            eventList.get(fromPosition).save();               // 将pos更新到数据库
+            eventList.get(toPosition).save();                 // 将pos更新到数据库
 
             MyAdapter.notifyItemMoved(fromPosition, toPosition);
-            return true;// 返回true表示处理了并可以换位置，返回false表示你没有处理并不能换位置。
+
+            return true; // 返回true表示处理了并可以换位置，返回false表示你没有处理并不能换位置。
         }
 
+        // 这个不用看， 因为禁止了侧滑删除， 但这个方法必须重写上去
         @Override
         public void onItemDismiss(RecyclerView.ViewHolder srcHolder) {
             int position = srcHolder.getAdapterPosition();
@@ -226,9 +222,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        for (TodoEvent t : eventList){
-            Log.i(TAG, "onCreate: "+t.getEventName()+" "+t.getPos());
-        }
         haveInit = false;
     }
 
@@ -256,7 +249,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                 view.setVisibility(View.GONE); // 隐藏加号按钮
             }
         });
-
 
         if (!haveInit) {
             initEvents();           // 获取数据库 或 创建数据库
@@ -410,7 +402,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     /**
      * 显示没有事件时候
      */
-
     private void showNoEvent() {
         if (eventList.isEmpty()) {
             View visibility = findViewById(R.id.no_event_layout);
@@ -421,17 +412,15 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     @Override
     protected void onResume() {
         super.onResume();
-
         if (ColorManager.IS_COLOR_CHANGE) {
             syncButtonColor();
         }
-
+        MyAdapter.notifyDataSetChanged();
     }
 
     /**
      * when onResume,'init' all theme color again
      */
-
     private void syncButtonColor() {
         initThemeColor();
     }
@@ -446,8 +435,8 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
             case 1:
                 event.delete();
                 eventList.remove(clickedItemPosition);
-                MyAdapter.notifyDataSetChanged();
-                Toast.makeText(this, "你删掉了这条项目", Toast.LENGTH_LONG).show();
+                MyAdapter.notifyItemRangeRemoved(clickedItemPosition, 1);
+//                Toast.makeText(this, "你删掉了这条项目", Toast.LENGTH_LONG).show();
                 break;
             default:
                 break;
@@ -458,7 +447,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     /**
      * showing delay dialog
      */
-
     public void showDelayDialog() {
         List<Map<String, Object>> list = new ArrayList<>();
 
@@ -513,6 +501,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                     showNoEvent();
                 }
             });
+
             deleteAlert.setNegativeButton("取消", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {

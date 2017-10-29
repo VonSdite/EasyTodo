@@ -109,7 +109,6 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
                     TodoEvent event = new TodoEvent();
                     event.setEventName(editEvent.getText().toString());
 //                    event.setEventFinish(false);
-                    event.setEventDetail("add more detail");
 //                    event.setId(adapter.getItemCount());
                     event.setDelay(false);
                     event.setPos(adapter.getTodoEventSize()+1);
@@ -126,7 +125,6 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
                     event.setEventPriority();
                     event.setEventExpired(false);
                     event.save();
-
 
                     int newItempos = adapter.getItemCount();
                     adapter.getTodoEventList().add(event);
