@@ -1,5 +1,7 @@
 package xyz.wendyltanpcy.myapplication.model;
 
+import android.support.annotation.NonNull;
+
 import org.litepal.annotation.Column;
 import org.litepal.crud.DataSupport;
 
@@ -11,11 +13,16 @@ import java.util.Date;
  * 数据库表类事件主类
  */
 
-public class TodoEvent extends DataSupport implements Serializable{
+public class TodoEvent extends DataSupport implements Serializable, Comparable<TodoEvent>{
+
+    @Override
+    public int compareTo(@NonNull TodoEvent todoEvent) {
+        return this.getPos() - todoEvent.getPos();
+    }
 
     /*
-    basic info
-     */
+        basic info
+         */
     @Column(nullable = false)
     private String eventName;
 
@@ -40,6 +47,16 @@ public class TodoEvent extends DataSupport implements Serializable{
     image info
      */
     private byte[] eventImageBitMap;
+
+    private int pos;  // 标记是item的第几项
+
+    public void setPos(int pos) {
+        this.pos = pos;
+    }
+
+    public int getPos() {
+        return pos;
+    }
 
     public void setEventPriority() {
         Calendar calendar = Calendar.getInstance();

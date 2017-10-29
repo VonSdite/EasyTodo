@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -24,6 +25,8 @@ import java.util.Date;
 import xyz.wendyltanpcy.myapplication.Adapter.EventsAdapter;
 import xyz.wendyltanpcy.myapplication.R;
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * 底部弹出式，用以输入将要生成的新事件标题
@@ -106,9 +109,10 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
                     TodoEvent event = new TodoEvent();
                     event.setEventName(editEvent.getText().toString());
 //                    event.setEventFinish(false);
-                    event.setEventDetail("add more detail");
 //                    event.setId(adapter.getItemCount());
                     event.setDelay(false);
+                    event.setPos(adapter.getTodoEventSize()+1);
+                    Log.i(TAG, "onClick: "+event.getPos());
 
                     //set to default date
                     Calendar now = Calendar.getInstance();
@@ -121,7 +125,6 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
                     event.setEventPriority();
                     event.setEventExpired(false);
                     event.save();
-
 
                     int newItempos = adapter.getItemCount();
                     adapter.getTodoEventList().add(event);

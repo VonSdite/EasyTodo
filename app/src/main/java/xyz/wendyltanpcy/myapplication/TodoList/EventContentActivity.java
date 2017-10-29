@@ -51,6 +51,7 @@ public class EventContentActivity extends AppCompatActivity {
     private TextView eventNameText ;
     private TextView eventDetailText ;
     private TextView eventDeadLineText ;
+    private TextView eventEventAlram ;
     private static TodoEvent Event;
     private ImageView eventImage;
     private EventsAdapter.ViewHolder holder;
@@ -76,8 +77,8 @@ public class EventContentActivity extends AppCompatActivity {
     }
 
     /*
-    默认的构造器
-     */
+        默认的构造器
+   */
     public EventContentActivity(){
 
     }
@@ -113,15 +114,13 @@ public class EventContentActivity extends AppCompatActivity {
                 getSupportFragmentManager().findFragmentById(R.id.news_content_fragment);
         EventContentFragment.refresh(Event);
 
-
-
+        eventEventAlram = (TextView) findViewById(R.id.event_alram);
         chooseDate = (ImageView) findViewById(R.id.choose_date);
         chooseAlarm = (ImageView) findViewById(R.id.choose_alarm);
         eventNameText = (TextView) findViewById(R.id.event_name);
         eventDetailText = (TextView) findViewById(R.id.event_detail);
         eventDeadLineText = (TextView) findViewById(R.id.event_deadline);
         eventImage = (ImageView) findViewById(R.id.event_content_image);
-
 
         /*
         如果事件具有图片的字节属性，就设置事件图片
@@ -132,9 +131,17 @@ public class EventContentActivity extends AppCompatActivity {
             eventImage.setImageBitmap(bitmap);
         }
 
-
-
         chooseDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager manager = EventContentFragment.getFragmentManager();
+                PickDateFragment dialog = PickDateFragment.newInstance(Event.getEventDeadLine());
+                dialog.setTargetFragment(EventContentFragment,REQUEST_DATE);
+                dialog.show(manager,DIALOG_DATE);
+            }
+        });
+
+        eventDeadLineText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FragmentManager manager = EventContentFragment.getFragmentManager();
@@ -155,15 +162,29 @@ public class EventContentActivity extends AppCompatActivity {
             }
         });
 
+        eventEventAlram.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager manager = EventContentFragment.getFragmentManager();
+                PickTimeFragment dialog = PickTimeFragment.newInstance(Event.getEventDeadLine());
+                dialog.setTargetFragment(EventContentFragment,REQUEST_TIME);
+                dialog.show(manager,DIALOG_TIME);
+            }
+        });
+
         saveDetailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Event.setEventName(eventNameText.getText().toString());
-                Event.setEventDetail(eventDetailText.getText().toString());
-                Event.setEventPriority();
-                Event.save();
-                finish();
-
+                String mission = eventNameText.getText().toString();
+                if (!mission.isEmpty()) {
+                    Event.setEventName(mission);
+                    Event.setEventDetail(eventDetailText.getText().toString());
+                    Event.setEventPriority();
+                    Event.save();
+                    finish();
+                } else {
+                    Toast.makeText(getBaseContext(), "Mission不能为空", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -198,7 +219,7 @@ public class EventContentActivity extends AppCompatActivity {
 
     private void getThemeColor(Toolbar toolbar){
         ThemeColor color = DataSupport.find(ThemeColor.class,1);
-        if (color!=null) {
+        if (color != null) {
             toolbar.setBackgroundColor(color.getColor());
             saveDetailButton.setBackgroundTintList(ColorStateList.valueOf(color.getColor()));
         }
