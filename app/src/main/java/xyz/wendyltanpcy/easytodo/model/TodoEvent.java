@@ -5,7 +5,11 @@ import android.support.annotation.NonNull;
 import org.litepal.crud.DataSupport;
 
 import java.io.Serializable;
+
 import java.text.SimpleDateFormat;
+
+import java.util.Calendar;
+
 import java.util.Date;
 
 /**
@@ -18,6 +22,7 @@ public class TodoEvent extends DataSupport implements Serializable, Comparable<T
     private String eventDetail;      // 事件的详情
 
     private Date eventDeadline;      // 事件的deadline 这是个Date类型
+
     private String eventDate;        // 事件的年月日字符串
     private String eventTime;        // 事件的时分字符串
 
@@ -35,10 +40,12 @@ public class TodoEvent extends DataSupport implements Serializable, Comparable<T
         return eventDeadline;
     }
 
+
     // deadline的年月日
     public void setEventDate() {
         SimpleDateFormat format1 = new SimpleDateFormat("YYYY年MM月dd日");
         this.eventDate = format1.format(this.eventDeadline);
+
     }
 
     public String getEventDate() {
@@ -49,6 +56,7 @@ public class TodoEvent extends DataSupport implements Serializable, Comparable<T
     public void setEventTime() {
         SimpleDateFormat format1 = new SimpleDateFormat("HH时mm分");
         this.eventTime = format1.format(this.eventDeadline);
+
     }
 
     public String getEventTime() {

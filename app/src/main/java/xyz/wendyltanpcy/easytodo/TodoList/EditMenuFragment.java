@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import xyz.wendyltanpcy.easytodo.Adapter.EventsAdapter;
@@ -119,8 +120,7 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
 
                     event.setEventDate();       // 设置事件年月日字符串
                     event.setEventTime();       // 设置事件时分字符串
-                    Log.i(TAG, "onClick: "+event.getEventDate());
-                    Log.i(TAG, "onClick: "+event.getEventTime());
+                 
 
                     event.save();               // 保存到数据库
 

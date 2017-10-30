@@ -67,7 +67,9 @@ public class EventContentActivity extends AppCompatActivity {
     private static final int REQUEST_CODE_PICK_IMAGE = 222;
     private EventContentFragment EventContentFragment;
 
+
     private static final String TAG = "EventContentActivity";
+
     public void actionStart(Context context, TodoEvent event){
         Intent intent = new Intent(context,EventContentActivity.class);
         Event = event;

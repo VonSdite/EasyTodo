@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     public static final String INTENT_EVENT = "intent_event";
     private static List<Integer> DelayList = new ArrayList<>();
 
+
     private boolean isSwap = false;
 
     @Override
@@ -226,6 +227,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         haveInit = false;
     }
 
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -235,6 +237,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
             for (TodoEvent todoEvent : eventList) {
                 todoEvent.save();
             }
+
         }
     }
 
@@ -267,6 +270,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         }
 
         sendNotification(eventList);
+
         initThemeColor();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -362,6 +366,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     public List<TodoEvent> autoDelayOne(List<TodoEvent> list, List<Integer> callbackList) {
         for (Integer num : callbackList) {
             TodoEvent event = list.get(num.intValue());
+
 
             Date date = new Date(new Date().getTime()+24*60*60*1000); // 设置截止日期为第二天
             event.setEventDeadline(date);

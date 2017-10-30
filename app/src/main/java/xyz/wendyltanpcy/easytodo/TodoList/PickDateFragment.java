@@ -27,7 +27,9 @@ public class PickDateFragment extends DialogFragment {
 
     private DatePicker mDatePicker;
 
-    public static final String EXTRA_DATE = "xyz.wendyltanpcy.myapplication.TodoList.date";
+
+    public static final String EXTRA_DATE = "xyz.wendyltanpcy.easytodo.TodoList.date";
+
     private static final String ARG_DATE = "date";
 
     public static PickDateFragment newInstance(Date date){

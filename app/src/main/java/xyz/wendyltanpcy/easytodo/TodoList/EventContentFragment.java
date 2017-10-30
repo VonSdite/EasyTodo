@@ -4,16 +4,25 @@ package xyz.wendyltanpcy.easytodo.TodoList;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+
 import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import android.widget.Toast;
+
+
 import java.util.Calendar;
 import java.util.Date;
 
 import xyz.wendyltanpcy.easytodo.R;
+
+import xyz.wendyltanpcy.easytodo.Service.AlarmService;
+import xyz.wendyltanpcy.easytodo.Service.LocalService;
+
 import xyz.wendyltanpcy.easytodo.model.TodoEvent;
 
 /**
@@ -60,6 +69,7 @@ public class EventContentFragment extends Fragment {
         switch (requestCode){
             case REQUEST_DATE:
                 Date date = (Date)data.getSerializableExtra(PickDateFragment.EXTRA_DATE);
+
                 date = new Date(date.getTime()
                         + Event.getEventDeadline().getTime() % 86400000); // 控制时分秒不变
                 Event.setEventDeadline(date);
@@ -81,6 +91,7 @@ public class EventContentFragment extends Fragment {
 
                 Event.setEventDeadline(date_time);
                 Event.setEventDate();
+
                 Event.setEventTime();
                 Event.save();
                 eventAlarmText.setText(Event.getEventTime());
@@ -96,6 +107,7 @@ public class EventContentFragment extends Fragment {
 
                 //尝试双进程
 
+
 //                Intent service = new Intent(getContext(),LocalService.class);
 //                getContext().startService(service);
 //                Intent remoteService = new Intent(getContext(),AlarmService.class);
@@ -104,6 +116,7 @@ public class EventContentFragment extends Fragment {
 //                getContext().startService(remoteService);
 //
 //                Toast.makeText(getActivity(),"将会在指定时间提醒！",Toast.LENGTH_SHORT).show();
+
             default:
                 break;
         }
