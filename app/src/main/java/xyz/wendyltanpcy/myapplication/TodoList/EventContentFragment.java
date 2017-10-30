@@ -66,28 +66,23 @@ public class EventContentFragment extends Fragment {
                 date = new Date(date.getTime()
                         + Event.getEventDeadline().getTime() % 86400000); // 控制时分秒不变
                 Event.setEventDeadline(date);
-                Calendar calendar_date = Calendar.getInstance();
-                calendar_date.setTime(date);
 
-                Event.setEventCalendar(calendar_date);
                 Event.setEventDate();
                 Event.setEventTime();
 
                 Event.save();
                 eventDeadLineText.setText(Event.getEventDate());
+                Log.i(TAG, "onActivityResult: 3");
                 break;
 
             case REQUEST_TIME:
                 Calendar calendar_time = (Calendar) data.getSerializableExtra(PickTimeFragment.EXTRA_TIME);
                 Date date_time = new Date(Event.getEventDeadline().getTime()
-                                - Event.getEventCalendar().get(Calendar.HOUR)*1000*60*60
-                                - Event.getEventCalendar().get(Calendar.MINUTE)*1000*60
+                                - Event.getEventDeadline().getTime() % 86400000         // 减去原来的时分
                                 + calendar_time.get(Calendar.HOUR)*1000*60*60
                                 + calendar_time.get(Calendar.MINUTE)*1000*60);          // 控制年月日不变
+
                 Event.setEventDeadline(date_time);
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(date_time);
-                Event.setEventCalendar(calendar);
                 Event.setEventDate();
                 Event.setEventTime();
                 Event.save();

@@ -113,15 +113,15 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
                     event.setPos(adapter.getTodoEventSize()+1);         // 设置事件的位置
 
                     //set to default deadline
-                    Calendar deadline = Calendar.getInstance();
-                    Date date = new Date(new Date().getTime()+24*60*60*1000); // 设置截止日期为第二天
-                    date.setSeconds(0);                                       // 设置秒为0
-                    deadline.setTime(date);
+                    Date date = new Date();
+                    // 设置截止日期为第二天, 秒为0
+                    date = new Date(date.getTime() + 24*60*60*1000 - date.getTime()%60000);
                     event.setEventDeadline(date);
-                    event.setEventCalendar(deadline);
 
                     event.setEventDate();       // 设置事件年月日字符串
                     event.setEventTime();       // 设置事件时分字符串
+                    Log.i(TAG, "onClick: "+event.getEventDate());
+                    Log.i(TAG, "onClick: "+event.getEventTime());
 
                     event.save();               // 保存到数据库
 

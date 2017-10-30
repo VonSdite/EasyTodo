@@ -363,11 +363,8 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         for (Integer num : callbackList) {
             TodoEvent event = list.get(num.intValue());
 
-            Calendar deadline = Calendar.getInstance();
             Date date = new Date(new Date().getTime()+24*60*60*1000); // 设置截止日期为第二天
-            deadline.setTime(date);
             event.setEventDeadline(date);
-            event.setEventCalendar(deadline);
 
             event.setEventDate();       // 设置事件年月日字符串
             event.setEventTime();       // 设置事件时分字符串

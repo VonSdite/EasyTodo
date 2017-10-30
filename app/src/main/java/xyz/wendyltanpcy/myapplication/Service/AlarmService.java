@@ -48,7 +48,7 @@ public class AlarmService extends Service {
     public void getAlarmTime() {
 
             title = mEvent.getEventName();
-            time = mEvent.getEventCalendar().getTimeInMillis();
+//            time = mEvent.getEventCalendar().getTimeInMillis();
             content = mEvent.getEventDetail();
 
             Intent startNotification = new Intent(this, AlarmReceiver.class);
