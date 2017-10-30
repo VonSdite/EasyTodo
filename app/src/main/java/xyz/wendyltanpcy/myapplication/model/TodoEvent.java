@@ -12,125 +12,42 @@ import java.util.Date;
 /**
  * 数据库表类事件主类
  */
-
 public class TodoEvent extends DataSupport implements Serializable, Comparable<TodoEvent>{
 
-    @Override
-    public int compareTo(@NonNull TodoEvent todoEvent) {
-        return this.getPos() - todoEvent.getPos();
+//    @Column(nullable = false)
+    private String eventName;        // 事件的名称
+    private String eventDetail;      // 事件的详情
+
+    private Date eventDeadline;      // 事件的deadline 这是个Date类型
+    private Calendar eventCalendar;  // 事件的deadline 这是个Calendar类型
+    private String eventDate;        // 事件的年月日字符串
+    private String eventTime;        // 事件的时分字符串
+
+    private byte[] eventImageBitMap; // 事件的照片
+
+    private int pos;  // 标记是item的第几项, 显示的时候按这个顺序显示出来
+
+
+    // deadline的日期
+    public void setEventDeadline(Date eventDeadline) {
+        this.eventDeadline = eventDeadline;
     }
 
-    /*
-        basic info
-         */
-    @Column(nullable = false)
-    private String eventName;
-
-    private String eventDetail;
-    /*
-    time info
-     */
-    private Date eventDeadLine;
-    private Calendar eventCalendar;
-    private String eventTime;
-    private String eventDate;
-
-    /*
-    priority
-     */
-    private int eventDateNum;
-    private String eventPriority;
-    private boolean eventExpired;
-    private boolean isDelay;
-
-    /*
-    image info
-     */
-    private byte[] eventImageBitMap;
-
-    private int pos;  // 标记是item的第几项
-
-    public void setPos(int pos) {
-        this.pos = pos;
+    public Date getEventDeadline() {
+        return eventDeadline;
     }
 
-    public int getPos() {
-        return pos;
-    }
-
-    public void setEventPriority() {
-        Calendar calendar = Calendar.getInstance();
-        int year =calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH)+1;
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        StringBuilder builder2 = new StringBuilder().append(year).append(month).append(day);
-        int eventNum = Integer.parseInt(builder2.toString());
-        if (eventDateNum==eventNum){
-            eventPriority = "高";
-            setEventExpired(false);
-        }else if (eventDateNum>eventNum&&eventDateNum<=eventNum+3){
-            eventPriority = "中";
-            setEventExpired(false);
-        }else if (eventDateNum>eventNum+3){
-            eventPriority = "低";
-            setEventExpired(false);
-        }else if (eventDateNum<eventNum){
-            eventPriority = "已过期";
-            setEventExpired(true);
-        }
-
-    }
-
-    public void setDelay(boolean delay) {
-        isDelay = delay;
-    }
-
-    public boolean isDelay() {
-        return isDelay;
-    }
-
-    public void setEventExpired(boolean eventExpired) {
-        this.eventExpired = eventExpired;
-    }
-
-    public boolean isEventExpired() {
-        return eventExpired;
-    }
-
-    public String getEventPriority() {
-        return eventPriority;
-    }
-
-    public int getEventDateNum() {
-        return eventDateNum;
-    }
-
-    public byte[] getEventImageBitMap() {
-        return eventImageBitMap;
-    }
-
-    public void setEventImageBitMap(byte[] eventImageBitMap) {
-        this.eventImageBitMap = eventImageBitMap;
+    // deadline的日期
+    public void setEventCalendar(Calendar calendar) {
+        this.eventCalendar = calendar;
     }
 
     public Calendar getEventCalendar() {
         return eventCalendar;
     }
 
-    public void setEventCalendar(Calendar calendar) {
-        Calendar newC = Calendar.getInstance();
 
-        newC.setTime(this.eventDeadLine);
-        calendar.set(Calendar.SECOND,0);
-        newC.set(newC.get(Calendar.YEAR),newC.get(Calendar.MONTH),newC.get(Calendar.DAY_OF_MONTH),
-                calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),
-                calendar.get(Calendar.SECOND));
-        newC.set(Calendar.MILLISECOND,0);
-
-        this.eventCalendar = newC;
-    }
-
-
+    // deadline的年月日
     public void setEventDate() {
         int year = eventCalendar.get(Calendar.YEAR);
         int month = eventCalendar.get(Calendar.MONTH)+1;
@@ -139,14 +56,13 @@ public class TodoEvent extends DataSupport implements Serializable, Comparable<T
                 .append("年").append(month).append("月").append(day).append("日");
 
         this.eventDate = builder1.toString();
-        StringBuilder builder2 = new StringBuilder().append(year).append(month).append(day);
-        eventDateNum = Integer.parseInt(builder2.toString());
     }
 
     public String getEventDate() {
         return eventDate;
     }
 
+    // deadline的时分
     public void setEventTime() {
         int hour = eventCalendar.get(Calendar.HOUR_OF_DAY);
         int min = eventCalendar.get(Calendar.MINUTE);
@@ -159,14 +75,16 @@ public class TodoEvent extends DataSupport implements Serializable, Comparable<T
         return eventTime;
     }
 
-    public Date getEventDeadLine() {
-        return eventDeadLine;
+    // event的照片
+    public byte[] getEventImageBitMap() {
+        return eventImageBitMap;
     }
 
-    public void setEventDeadLine(Date eventDeadLine) {
-        this.eventDeadLine = eventDeadLine;
+    public void setEventImageBitMap(byte[] eventImageBitMap) {
+        this.eventImageBitMap = eventImageBitMap;
     }
 
+    // event的详情
     public void setEventDetail(String eventDetail) {
         this.eventDetail = eventDetail;
     }
@@ -175,6 +93,7 @@ public class TodoEvent extends DataSupport implements Serializable, Comparable<T
         return eventDetail;
     }
 
+    // event的名称
     public void setEventName(String eventName) {
         this.eventName = eventName;
     }
@@ -183,4 +102,23 @@ public class TodoEvent extends DataSupport implements Serializable, Comparable<T
         return eventName;
     }
 
+    // event作为item的位置
+    public void setPos(int pos) {
+        this.pos = pos;
+    }
+
+    public int getPos() {
+        return pos;
+    }
+
+    // 用于排序的
+    @Override
+    public int compareTo(@NonNull TodoEvent todoEvent) {
+        return this.getPos() - todoEvent.getPos();
+    }
+
+    public boolean isEventExpired(){
+        Date date = new Date();
+        return date.compareTo(eventDeadline) > 0;
+    }
 }

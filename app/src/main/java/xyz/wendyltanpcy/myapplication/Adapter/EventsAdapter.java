@@ -2,32 +2,26 @@ package xyz.wendyltanpcy.myapplication.Adapter;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Paint;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.List;
 
 import xyz.wendyltanpcy.myapplication.R;
 import xyz.wendyltanpcy.myapplication.TodoList.EventContentActivity;
 import xyz.wendyltanpcy.myapplication.helper.CheckBoxSample;
-import xyz.wendyltanpcy.myapplication.helper.ItemTouchHelperAdapter;
 import xyz.wendyltanpcy.myapplication.model.FinishEvent;
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
@@ -180,6 +174,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
         hd.eventNameText.setText(todoEvent.getEventName());
 
+        // 显示过期问题
         if (todoEvent.isEventExpired())
             hd.expiredText.setVisibility(View.VISIBLE);
         else

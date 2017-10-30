@@ -46,6 +46,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Log.i(TAG, "onCreate: hahah");
         baseInit();  // 启动页面， 数据库加载， 界面初始化(滑动侧板菜单, 浮动添加事件按钮等)
 
         Collections.sort(eventList);  // 按evenList每个元素的pos进行排序， 即为显示的顺序
@@ -227,7 +227,8 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
 
     public void checkExpired(List<TodoEvent> todoEventList) {
         for (TodoEvent event : todoEventList) {
-            event.setEventPriority();
+//            event.setEventPriority();
+            Log.i(TAG, "checkExpired: "+event.getEventDate()+event.getEventTime());
         }
     }
 
@@ -348,7 +349,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     }
 
     /**
-     * 一键自动推迟到今天
+     * 一键自动推迟到明天
      *
      * @param list
      * @return
@@ -356,23 +357,26 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     public List<TodoEvent> autoDelayOne(List<TodoEvent> list, List<Integer> callbackList) {
         for (Integer num : callbackList) {
             TodoEvent event = list.get(num.intValue());
-            Calendar newC = Calendar.getInstance();
-            event.setEventDeadLine(newC.getTime());
-            event.setEventCalendar(newC);
-            event.setEventDate();
-            event.setEventTime();
-            event.setEventPriority();
-            event.setEventExpired(false);
+
+            Calendar deadline = Calendar.getInstance();
+            Date date = new Date(new Date().getTime()+24*60*60*1000); // 设置截止日期为第二天
+            deadline.setTime(date);
+            event.setEventDeadline(date);
+            event.setEventCalendar(deadline);
+
+            event.setEventDate();       // 设置事件年月日字符串
+            event.setEventTime();       // 设置事件时分字符串
+
             event.save();
         }
-        Toast.makeText(this, "已将事件推迟到今天！ ", Toast.LENGTH_SHORT).show();
+        MyAdapter.notifyDataSetChanged();
+        Toast.makeText(this, "已将事件推迟到明天！ ", Toast.LENGTH_SHORT).show();
         return list;
     }
 
     /**
      * 开机启动动画
      */
-
     private void showStartupAnimate() {
 
         haveInit = true;
@@ -454,7 +458,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
             Map<String, Object> map = new HashMap<String, Object>();
             map.put("title", event.getEventName());
             map.put("date", event.getEventDate());
-            map.put("delay", event.isDelay());
             list.add(map);
         }
 

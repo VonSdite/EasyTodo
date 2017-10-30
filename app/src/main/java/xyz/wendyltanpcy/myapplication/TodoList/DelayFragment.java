@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import xyz.wendyltanpcy.myapplication.Adapter.EventsAdapter;
 import xyz.wendyltanpcy.myapplication.R;
 
 /**
@@ -47,7 +48,6 @@ public class DelayFragment extends DialogFragment {
             ((DialogInterface.OnDismissListener) activity).onDismiss(dialog);
         }
     }
-
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState){
@@ -80,11 +80,6 @@ public class DelayFragment extends DialogFragment {
                     Integer a = new Integer(position);
                     callBackList.add(a);
                 }
-
-
-
-
-
 
             }
         });
