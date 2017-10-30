@@ -26,7 +26,9 @@ public class PickTimeFragment extends DialogFragment {
 
     private TimePicker mTimePicker;
 
+
     public static final String EXTRA_TIME = "xyz.wendyltanpcy.easytodo.TodoList.time";
+
     public static final String ARG_TIME = "time";
 
 
@@ -51,6 +53,7 @@ public class PickTimeFragment extends DialogFragment {
         View v = LayoutInflater.from(getActivity()).inflate(R.layout.pick_time_fragment,null);
 
         mTimePicker = v.findViewById(R.id.timePicker);
+
         mTimePicker.setIs24HourView(true);
 
         return new AlertDialog.Builder(getActivity()) //fluent interface

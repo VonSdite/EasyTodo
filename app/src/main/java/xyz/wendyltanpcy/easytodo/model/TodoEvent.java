@@ -5,7 +5,11 @@ import android.support.annotation.NonNull;
 import org.litepal.crud.DataSupport;
 
 import java.io.Serializable;
+
+import java.text.SimpleDateFormat;
+
 import java.util.Calendar;
+
 import java.util.Date;
 
 /**
@@ -18,7 +22,7 @@ public class TodoEvent extends DataSupport implements Serializable, Comparable<T
     private String eventDetail;      // 事件的详情
 
     private Date eventDeadline;      // 事件的deadline 这是个Date类型
-    private Calendar eventCalendar;  // 事件的deadline 这是个Calendar类型
+
     private String eventDate;        // 事件的年月日字符串
     private String eventTime;        // 事件的时分字符串
 
@@ -36,25 +40,12 @@ public class TodoEvent extends DataSupport implements Serializable, Comparable<T
         return eventDeadline;
     }
 
-    // deadline的日期
-    public void setEventCalendar(Calendar calendar) {
-        this.eventCalendar = calendar;
-    }
-
-    public Calendar getEventCalendar() {
-        return eventCalendar;
-    }
-
 
     // deadline的年月日
     public void setEventDate() {
-        int year = eventCalendar.get(Calendar.YEAR);
-        int month = eventCalendar.get(Calendar.MONTH)+1;
-        int day = eventCalendar.get(Calendar.DAY_OF_MONTH);
-        StringBuilder builder1 = new StringBuilder().append(year)
-                .append("年").append(month).append("月").append(day).append("日");
+        SimpleDateFormat format1 = new SimpleDateFormat("YYYY年MM月dd日");
+        this.eventDate = format1.format(this.eventDeadline);
 
-        this.eventDate = builder1.toString();
     }
 
     public String getEventDate() {
@@ -63,11 +54,9 @@ public class TodoEvent extends DataSupport implements Serializable, Comparable<T
 
     // deadline的时分
     public void setEventTime() {
-        int hour = eventCalendar.get(Calendar.HOUR_OF_DAY);
-        int min = eventCalendar.get(Calendar.MINUTE);
-        StringBuilder builder = new StringBuilder().append(hour)
-                .append("时").append(min).append("分");
-        this.eventTime = builder.toString();
+        SimpleDateFormat format1 = new SimpleDateFormat("HH时mm分");
+        this.eventTime = format1.format(this.eventDeadline);
+
     }
 
     public String getEventTime() {

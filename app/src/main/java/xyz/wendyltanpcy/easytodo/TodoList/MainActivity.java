@@ -74,6 +74,9 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     public static final String INTENT_EVENT = "intent_event";
     private static List<Integer> DelayList = new ArrayList<>();
 
+
+    private boolean isSwap = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -196,10 +199,9 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
             Collections.swap(eventList, fromPosition, toPosition); // 交换这两个对象
             eventList.get(fromPosition).setPos(fromPosition); // 重新设置pos， Item根据pos排序
             eventList.get(toPosition).setPos(toPosition);     // 重新设置pos， Item根据pos排序
-            eventList.get(fromPosition).save();               // 将pos更新到数据库
-            eventList.get(toPosition).save();                 // 将pos更新到数据库
 
             MyAdapter.notifyItemMoved(fromPosition, toPosition);
+            isSwap = true;
 
             return true; // 返回true表示处理了并可以换位置，返回false表示你没有处理并不能换位置。
         }
@@ -225,10 +227,17 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         haveInit = false;
     }
 
-    public void checkExpired(List<TodoEvent> todoEventList) {
-        for (TodoEvent event : todoEventList) {
-//            event.setEventPriority();
-            Log.i(TAG, "checkExpired: "+event.getEventDate()+event.getEventTime());
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // 保存数据库， 如果发生交换位置
+        if (isSwap) {
+            for (TodoEvent todoEvent : eventList) {
+                todoEvent.save();
+            }
+
         }
     }
 
@@ -261,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         }
 
         sendNotification(eventList);
-        checkExpired(eventList);
+
         initThemeColor();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -358,11 +367,9 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         for (Integer num : callbackList) {
             TodoEvent event = list.get(num.intValue());
 
-            Calendar deadline = Calendar.getInstance();
+
             Date date = new Date(new Date().getTime()+24*60*60*1000); // 设置截止日期为第二天
-            deadline.setTime(date);
             event.setEventDeadline(date);
-            event.setEventCalendar(deadline);
 
             event.setEventDate();       // 设置事件年月日字符串
             event.setEventTime();       // 设置事件时分字符串
