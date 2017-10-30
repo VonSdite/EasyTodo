@@ -31,7 +31,6 @@ import org.litepal.crud.DataSupport;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import kr.co.namee.permissiongen.PermissionFail;
 import kr.co.namee.permissiongen.PermissionGen;
@@ -67,8 +66,6 @@ public class EventContentActivity extends AppCompatActivity {
     private static final int REQ_GALLERY = 333;
     private static final int REQUEST_CODE_PICK_IMAGE = 222;
     private EventContentFragment EventContentFragment;
-
-
 
     public void actionStart(Context context, TodoEvent event){
         Intent intent = new Intent(context,EventContentActivity.class);
@@ -135,7 +132,7 @@ public class EventContentActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 FragmentManager manager = EventContentFragment.getFragmentManager();
-                PickDateFragment dialog = PickDateFragment.newInstance(Event.getEventDeadLine());
+                PickDateFragment dialog = PickDateFragment.newInstance(Event.getEventDeadline());
                 dialog.setTargetFragment(EventContentFragment,REQUEST_DATE);
                 dialog.show(manager,DIALOG_DATE);
             }
@@ -145,7 +142,7 @@ public class EventContentActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 FragmentManager manager = EventContentFragment.getFragmentManager();
-                PickDateFragment dialog = PickDateFragment.newInstance(Event.getEventDeadLine());
+                PickDateFragment dialog = PickDateFragment.newInstance(Event.getEventDeadline());
                 dialog.setTargetFragment(EventContentFragment,REQUEST_DATE);
                 dialog.show(manager,DIALOG_DATE);
             }
@@ -155,10 +152,9 @@ public class EventContentActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 FragmentManager manager = EventContentFragment.getFragmentManager();
-                PickTimeFragment dialog = PickTimeFragment.newInstance(Event.getEventDeadLine());
+                PickTimeFragment dialog = PickTimeFragment.newInstance(Event.getEventDeadline());
                 dialog.setTargetFragment(EventContentFragment,REQUEST_TIME);
                 dialog.show(manager,DIALOG_TIME);
-
             }
         });
 
@@ -166,9 +162,9 @@ public class EventContentActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 FragmentManager manager = EventContentFragment.getFragmentManager();
-                PickTimeFragment dialog = PickTimeFragment.newInstance(Event.getEventDeadLine());
-                dialog.setTargetFragment(EventContentFragment,REQUEST_TIME);
-                dialog.show(manager,DIALOG_TIME);
+                PickTimeFragment dialog = PickTimeFragment.newInstance(Event.getEventDeadline());
+                dialog.setTargetFragment(EventContentFragment, REQUEST_TIME);
+                dialog.show(manager, DIALOG_TIME);
             }
         });
 
@@ -179,7 +175,6 @@ public class EventContentActivity extends AppCompatActivity {
                 if (!mission.isEmpty()) {
                     Event.setEventName(mission);
                     Event.setEventDetail(eventDetailText.getText().toString());
-                    Event.setEventPriority();
                     Event.save();
                     finish();
                 } else {
@@ -193,7 +188,6 @@ public class EventContentActivity extends AppCompatActivity {
     /**
      * 初始化主题颜色
      */
-
     private void getThemeColorForCollapse(CollapsingToolbarLayout collapsingToolbar) {
         ThemeColor color = DataSupport.find(ThemeColor.class,1);
         if (color!=null) {
@@ -215,19 +209,17 @@ public class EventContentActivity extends AppCompatActivity {
      *  获得主题的颜色
      * @param toolbar
      */
-
-
     private void getThemeColor(Toolbar toolbar){
         ThemeColor color = DataSupport.find(ThemeColor.class,1);
         if (color != null) {
-            toolbar.setBackgroundColor(color.getColor());
+            toolbar.setBackgroundColor(0);  // 设置toolbar为透明的颜色， 不遮挡图片
             saveDetailButton.setBackgroundTintList(ColorStateList.valueOf(color.getColor()));
         }
         else{
             color = new ThemeColor();
             color.setColor(ColorManager.DEFAULT_COLOR);
             color.save();
-            toolbar.setBackgroundColor(color.getColor());
+            toolbar.setBackgroundColor(0);  // 设置toolbar为透明的颜色， 不遮挡图片
             saveDetailButton.setBackgroundTintList(ColorStateList.valueOf(color.getColor()));
         }
     }
@@ -359,7 +351,7 @@ public class EventContentActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.captureImage) {
-           Toast.makeText(this,"capturing!",Toast.LENGTH_SHORT).show();
+//           Toast.makeText(this,"capturing!",Toast.LENGTH_SHORT).show();
             showTakePicture();
         }
 

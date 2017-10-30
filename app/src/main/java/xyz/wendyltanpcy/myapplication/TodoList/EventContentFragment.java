@@ -35,8 +35,6 @@ public class EventContentFragment extends Fragment {
     private TextView eventAlarmText;
     private TodoEvent Event;
 
-
-
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.events_content_frag,container,false);
 
@@ -56,24 +54,25 @@ public class EventContentFragment extends Fragment {
         eventAlarmText.setText(event.getEventTime());
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
             case REQUEST_DATE:
                 Date date = (Date)data.getSerializableExtra(PickDateFragment.EXTRA_DATE);
-                Event.setEventDeadLine(date);
                 Calendar calendar_date = Calendar.getInstance();
                 calendar_date.setTime(date);
+
+                Event.setEventDeadline(date);
                 Event.setEventCalendar(calendar_date);
                 Event.setEventDate();
-                Event.setEventPriority();
+
                 Event.save();
                 eventDeadLineText.setText(Event.getEventDate());
                 break;
             case REQUEST_TIME:
                 Calendar calendar_time = (Calendar) data.getSerializableExtra(PickTimeFragment.EXTRA_TIME);
+
                 Event.setEventCalendar(calendar_time);
                 Event.setEventTime();
                 Event.save();

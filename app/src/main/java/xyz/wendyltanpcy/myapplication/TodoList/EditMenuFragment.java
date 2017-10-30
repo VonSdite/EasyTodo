@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -26,7 +25,6 @@ import xyz.wendyltanpcy.myapplication.Adapter.EventsAdapter;
 import xyz.wendyltanpcy.myapplication.R;
 import xyz.wendyltanpcy.myapplication.model.TodoEvent;
 
-import static android.content.ContentValues.TAG;
 
 /**
  * 底部弹出式，用以输入将要生成的新事件标题
@@ -105,30 +103,27 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
         switch (view.getId()){
             case R.id.save:
                 if (!editEvent.getText().toString().isEmpty()) {
-                    Toast.makeText(getContext(), "text save!", Toast.LENGTH_SHORT).show();
+
+                    Toast.makeText(getContext(), "Event save", Toast.LENGTH_SHORT).show();
                     TodoEvent event = new TodoEvent();
-                    event.setEventName(editEvent.getText().toString());
-//                    event.setEventFinish(false);
-//                    event.setId(adapter.getItemCount());
-                    event.setDelay(false);
-                    event.setPos(adapter.getTodoEventSize()+1);
-                    Log.i(TAG, "onClick: "+event.getPos());
+                    event.setEventName(editEvent.getText().toString()); // 设置事件的名称
+                    event.setPos(adapter.getTodoEventSize()+1);         // 设置事件的位置
 
-                    //set to default date
-                    Calendar now = Calendar.getInstance();
-                    Date date = new Date();
-                    now.setTime(date);
-                    event.setEventDeadLine(date);
-                    event.setEventCalendar(now);
-                    event.setEventDate();
-                    event.setEventTime();
-                    event.setEventPriority();
-                    event.setEventExpired(false);
-                    event.save();
+                    //set to default deadline
+                    Calendar deadline = Calendar.getInstance();
+                    Date date = new Date(new Date().getTime()+24*60*60*1000); // 设置截止日期为第二天
+                    deadline.setTime(date);
+                    event.setEventDeadline(date);
+                    event.setEventCalendar(deadline);
 
-                    int newItempos = adapter.getItemCount();
+                    event.setEventDate();       // 设置事件年月日字符串
+                    event.setEventTime();       // 设置事件时分字符串
+
+                    event.save();               // 保存到数据库
+
+                    int newItemPos = adapter.getItemCount();
                     adapter.getTodoEventList().add(event);
-                    adapter.notifyItemInserted(newItempos);
+                    adapter.notifyItemInserted(newItemPos);  // 通知新的事件加入
 
                     View visibility = getActivity().findViewById(R.id.no_event_layout);
                     visibility.setVisibility(View.INVISIBLE);
