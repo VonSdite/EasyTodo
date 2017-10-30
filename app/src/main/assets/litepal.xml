@@ -3,15 +3,15 @@
     <dbname value="EventStore"></dbname>
     <version value="39"></version>
     <list>
-        <mapping class="xyz.wendyltanpcy.myapplication.model.TodoEvent"></mapping>
+        <mapping class="xyz.wendyltanpcy.easytodo.model.TodoEvent"></mapping>
     </list>
     <list>
-        <mapping class="xyz.wendyltanpcy.myapplication.model.FinishEvent"></mapping>
+        <mapping class="xyz.wendyltanpcy.easytodo.model.FinishEvent"></mapping>
     </list>
     <list>
-        <mapping class="xyz.wendyltanpcy.myapplication.model.ThemeColor"></mapping>
+        <mapping class="xyz.wendyltanpcy.easytodo.model.ThemeColor"></mapping>
     </list>
     <list>
-        <mapping class="xyz.wendyltanpcy.myapplication.model.WebPage"></mapping>
+        <mapping class="xyz.wendyltanpcy.easytodo.model.WebPage"></mapping>
     </list>
 </litepal>

@@ -9,6 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/news_content_fragment"
-        android:name="xyz.wendyltanpcy.myapplication.TodoList.EventContentFragment"/>
+        android:name="xyz.wendyltanpcy.easytodo.TodoList.EventContentFragment"/>
 
 </android.support.design.widget.CoordinatorLayout>
