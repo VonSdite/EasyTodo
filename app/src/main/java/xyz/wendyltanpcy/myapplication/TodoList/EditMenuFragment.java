@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -98,6 +99,8 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
         return dialog;
     }
 
+    private static final String TAG = "EditMenuFragment";
+    
     @Override
     public void onClick(View view) {
         switch (view.getId()){
@@ -112,6 +115,7 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
                     //set to default deadline
                     Calendar deadline = Calendar.getInstance();
                     Date date = new Date(new Date().getTime()+24*60*60*1000); // 设置截止日期为第二天
+                    date.setSeconds(0);                                       // 设置秒为0
                     deadline.setTime(date);
                     event.setEventDeadline(date);
                     event.setEventCalendar(deadline);

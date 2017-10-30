@@ -4,6 +4,7 @@ package xyz.wendyltanpcy.myapplication.TodoList;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,26 +55,40 @@ public class EventContentFragment extends Fragment {
         eventAlarmText.setText(event.getEventTime());
     }
 
+    private static final String TAG = "EventContentFragment";
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
             case REQUEST_DATE:
                 Date date = (Date)data.getSerializableExtra(PickDateFragment.EXTRA_DATE);
+                date = new Date(date.getTime()
+                        + Event.getEventDeadline().getTime() % 86400000); // 控制时分秒不变
                 Event.setEventDeadline(date);
                 Calendar calendar_date = Calendar.getInstance();
                 calendar_date.setTime(date);
 
                 Event.setEventCalendar(calendar_date);
                 Event.setEventDate();
+                Event.setEventTime();
 
                 Event.save();
                 eventDeadLineText.setText(Event.getEventDate());
                 break;
+
             case REQUEST_TIME:
                 Calendar calendar_time = (Calendar) data.getSerializableExtra(PickTimeFragment.EXTRA_TIME);
-
-                Event.setEventCalendar(calendar_time);
+                Date date_time = new Date(Event.getEventDeadline().getTime()
+                                - Event.getEventCalendar().get(Calendar.HOUR)*1000*60*60
+                                - Event.getEventCalendar().get(Calendar.MINUTE)*1000*60
+                                + calendar_time.get(Calendar.HOUR)*1000*60*60
+                                + calendar_time.get(Calendar.MINUTE)*1000*60);          // 控制年月日不变
+                Event.setEventDeadline(date_time);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date_time);
+                Event.setEventCalendar(calendar);
+                Event.setEventDate();
                 Event.setEventTime();
                 Event.save();
                 eventAlarmText.setText(Event.getEventTime());
@@ -89,14 +104,14 @@ public class EventContentFragment extends Fragment {
 
                 //尝试双进程
 
-                Intent service = new Intent(getContext(),LocalService.class);
-                getContext().startService(service);
-                Intent remoteService = new Intent(getContext(),AlarmService.class);
-
-                remoteService.putExtra("event",Event);
-                getContext().startService(remoteService);
-
-                Toast.makeText(getActivity(),"将会在指定时间提醒！",Toast.LENGTH_SHORT).show();
+//                Intent service = new Intent(getContext(),LocalService.class);
+//                getContext().startService(service);
+//                Intent remoteService = new Intent(getContext(),AlarmService.class);
+//
+//                remoteService.putExtra("event",Event);
+//                getContext().startService(remoteService);
+//
+//                Toast.makeText(getActivity(),"将会在指定时间提醒！",Toast.LENGTH_SHORT).show();
             default:
                 break;
         }
