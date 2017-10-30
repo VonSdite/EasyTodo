@@ -60,10 +60,10 @@ public class EventContentFragment extends Fragment {
         switch (requestCode){
             case REQUEST_DATE:
                 Date date = (Date)data.getSerializableExtra(PickDateFragment.EXTRA_DATE);
+                Event.setEventDeadline(date);
                 Calendar calendar_date = Calendar.getInstance();
                 calendar_date.setTime(date);
 
-                Event.setEventDeadline(date);
                 Event.setEventCalendar(calendar_date);
                 Event.setEventDate();
 
