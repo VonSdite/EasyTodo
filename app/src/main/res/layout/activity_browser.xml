@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <xyz.wendyltanpcy.myapplication.helper.ColorLinearLayout
+        <xyz.wendyltanpcy.easytodo.helper.ColorLinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -55,7 +55,7 @@
 
 
 
-        </xyz.wendyltanpcy.myapplication.helper.ColorLinearLayout>
+        </xyz.wendyltanpcy.easytodo.helper.ColorLinearLayout>
 
         <ProgressBar
             android:id="@+id/pb_load"
@@ -71,7 +71,7 @@
 
         </WebView>
 
-        <xyz.wendyltanpcy.myapplication.helper.ColorLinearLayout
+        <xyz.wendyltanpcy.easytodo.helper.ColorLinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -100,7 +100,7 @@
                 android:src="@drawable/ic_chevron_right_white_24dp"/>
 
 
-        </xyz.wendyltanpcy.myapplication.helper.ColorLinearLayout>
+        </xyz.wendyltanpcy.easytodo.helper.ColorLinearLayout>
 
 
     </LinearLayout>
@@ -115,7 +115,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <xyz.wendyltanpcy.myapplication.helper.ColorLinearLayout
+            <xyz.wendyltanpcy.easytodo.helper.ColorLinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="180dp"
                 android:padding="10dp">
@@ -156,7 +156,7 @@
 
 
 
-            </xyz.wendyltanpcy.myapplication.helper.ColorLinearLayout>
+            </xyz.wendyltanpcy.easytodo.helper.ColorLinearLayout>
 
 
 
@@ -168,7 +168,7 @@
                     android:layout_height="match_parent"
                     android:id="@+id/page_list_fragment"
                     android:layout_gravity="bottom"
-                    android:name="xyz.wendyltanpcy.myapplication.TodoBrowser.PageListFragment"/>
+                    android:name="xyz.wendyltanpcy.easytodo.TodoBrowser.PageListFragment"/>
             </LinearLayout>
         </LinearLayout>
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="xyz.wendyltanpcy.myapplication">
+          package="xyz.wendyltanpcy.easytodo">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
@@ -15,7 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".TodoList.MainActivity"
+            android:name="xyz.wendyltanpcy.easytodo.TodoList.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -23,20 +23,20 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".FinishList.FinishEventListActivity"
+        <activity android:name="xyz.wendyltanpcy.easytodo.FinishList.FinishEventListActivity"
                   android:label="FinishEvent"
                   android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
         <activity
-            android:name=".TodoList.EventContentActivity"
+            android:name="xyz.wendyltanpcy.easytodo.TodoList.EventContentActivity"
             android:theme="@style/eventContentTheme">
 
         </activity>
-        <activity android:name=".TodoList.EditMenuActivity">
+        <activity android:name="xyz.wendyltanpcy.easytodo.TodoList.EditMenuActivity">
         </activity>
-        <activity android:name=".TodoList.EventListActivity"/>
-        <activity android:name=".TodoList.SettingsActivity"
+        <activity android:name="xyz.wendyltanpcy.easytodo.TodoList.EventListActivity"/>
+        <activity android:name="xyz.wendyltanpcy.easytodo.TodoList.SettingsActivity"
             android:theme="@style/Theme.Settings"/>
 
         <provider
@@ -49,13 +49,13 @@
                 android:resource="@xml/file_paths"/>
         </provider>
 
-        <activity android:name=".TodoBrowser.BrowserActivity">
+        <activity android:name="xyz.wendyltanpcy.easytodo.TodoBrowser.BrowserActivity">
         </activity>
 
-        <activity android:name=".TodoList.MotiveActivity"/>
+        <activity android:name="xyz.wendyltanpcy.easytodo.TodoList.MotiveActivity"/>
 
 
-        <service android:name=".Service.AlarmService"
+        <service android:name="xyz.wendyltanpcy.easytodo.Service.AlarmService"
                  android:enabled="true"
                  android:exported="true"
                  android:persistent="true"
@@ -63,10 +63,10 @@
                  android:process=":remoteService">
         </service>
 
-        <service android:name=".Service.LocalService" >
+        <service android:name="xyz.wendyltanpcy.easytodo.Service.LocalService" >
         </service>
 
-        <receiver android:name=".Receiver.AlarmReceiver">
+        <receiver android:name="xyz.wendyltanpcy.easytodo.Receiver.AlarmReceiver">
             <intent-filter>
                 <action android:name="intent_alarm"/>
                 <action android:name="intent_event"/>

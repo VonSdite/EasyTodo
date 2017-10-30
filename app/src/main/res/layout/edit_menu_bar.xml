@@ -15,7 +15,7 @@
         android:inputType="text"
         />
 
-    <xyz.wendyltanpcy.myapplication.helper.ColorLinearLayout
+    <xyz.wendyltanpcy.easytodo.helper.ColorLinearLayout
         android:id="@+id/edit_menu_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,6 +45,6 @@
             app:srcCompat="@android:drawable/ic_menu_send"/>
 
 
-    </xyz.wendyltanpcy.myapplication.helper.ColorLinearLayout>
+    </xyz.wendyltanpcy.easytodo.helper.ColorLinearLayout>
 
 </LinearLayout>

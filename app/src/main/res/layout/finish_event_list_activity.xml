@@ -9,11 +9,11 @@
         android:layout_height="match_parent"
         android:id="@+id/finish_event_list_fragment"
         android:visibility="visible"
-        android:name="xyz.wendyltanpcy.myapplication.FinishList.FinishEventListFragment"/>
+        android:name="xyz.wendyltanpcy.easytodo.FinishList.FinishEventListFragment"/>
 
     <fragment
         android:id="@+id/no_finish_frag"
-        android:name="xyz.wendyltanpcy.myapplication.FinishList.NoFinishEventFragment"
+        android:name="xyz.wendyltanpcy.easytodo.FinishList.NoFinishEventFragment"
         android:layout_width="match_parent"
         android:visibility="gone"
         android:layout_height="match_parent"/>

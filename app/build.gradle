@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     buildToolsVersion "25.0.1"
     defaultConfig {
-        applicationId "xyz.wendyltanpcy.myapplication"
+        applicationId "xyz.wendyltanpcy.easytodo"
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 1
