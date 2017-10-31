@@ -119,7 +119,7 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
                     event.setEventDate();       // 设置事件年月日字符串
                     event.setEventTime();       // 设置事件时分字符串
                  
-
+                    event.setClicked(false);    // 设置为没被点击
                     event.save();               // 保存到数据库
 
                     int newItemPos = adapter.getItemCount();

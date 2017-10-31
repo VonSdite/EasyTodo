@@ -48,6 +48,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -57,6 +58,7 @@ import xyz.wendyltanpcy.easytodo.R;
 import xyz.wendyltanpcy.easytodo.TodoBrowser.BrowserActivity;
 import xyz.wendyltanpcy.easytodo.helper.ColorManager;
 import xyz.wendyltanpcy.easytodo.model.Consts;
+import xyz.wendyltanpcy.easytodo.model.FinishEvent;
 import xyz.wendyltanpcy.easytodo.model.ThemeColor;
 import xyz.wendyltanpcy.easytodo.model.TodoEvent;
 
@@ -149,6 +151,8 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         public void onItemClick(SwipeMenuBridge menuBridge) {
             // 任何操作必须先关闭菜单，否则可能出现Item菜单打开状态错乱。
             menuBridge.closeMenu();
+            closeContextMenu();         // 关闭上下文菜单
+
             int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position
             int menuPosition = menuBridge.getPosition();    // 菜单在RecyclerView的Item中的Position
 
@@ -189,6 +193,8 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     private OnItemMoveListener onItemMoveListener = new OnItemMoveListener() {
         @Override
         public boolean onItemMove(RecyclerView.ViewHolder srcHolder, RecyclerView.ViewHolder targetHolder) {
+            closeContextMenu();         // 关闭上下文菜单
+
             // 不同的ViewType不能拖拽换位置。
             if (srcHolder.getItemViewType() != targetHolder.getItemViewType()) return false;
 
@@ -200,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
             eventList.get(toPosition).setPos(toPosition);     // 重新设置pos， Item根据pos排序
 
             MyAdapter.notifyItemMoved(fromPosition, toPosition);
-            isSwap = true;
+            isSwap = true;          // 标记发生了交换
 
             return true; // 返回true表示处理了并可以换位置，返回false表示你没有处理并不能换位置。
         }
@@ -231,13 +237,42 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     protected void onPause() {
         super.onPause();
 
+        notifySwapItem();   // 如果发生了交换位置，保存到数据库
+
+        // 去掉完成的事件
+        removeClicked();
+    }
+
+    private void notifySwapItem(){
         // 保存数据库， 如果发生交换位置
         if (isSwap) {
             for (TodoEvent todoEvent : eventList) {
                 todoEvent.save();
             }
-
+            isSwap = false;         // 重新设置标志为false
         }
+    }
+
+    // 删除被clicked的item
+    private void removeClicked(){
+        // 去掉完成的事件
+        Iterator<TodoEvent> todoIter = eventList.iterator();
+        while (todoIter.hasNext()){
+            TodoEvent todoEvent = todoIter.next();
+            if (todoEvent.isClicked()){
+                FinishEvent finishEvent = new FinishEvent();
+                finishEvent.setEventName(todoEvent.getEventName());
+                finishEvent.setEventFinishDate(todoEvent.getEventDate());
+                finishEvent.save();
+                todoIter.remove();
+                todoEvent.delete();
+            }
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     /**
@@ -431,7 +466,8 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     @Override
     protected void onResume() {
         super.onResume();
-        initDrawerLayout(); //重新加载侧滑菜单选择在已完成上
+        initDrawerLayout(); // 重新加载侧滑菜单选择在已完成上
+        showNoEvent();      // 判断是否显示空的layout
         if (ColorManager.IS_COLOR_CHANGE) {
             syncButtonColor();
         }
@@ -443,6 +479,12 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
      */
     private void syncButtonColor() {
         initThemeColor();
+    }
+
+    // 关闭上下文菜单时
+    @Override
+    public void onContextMenuClosed(Menu menu) {
+        super.onContextMenuClosed(menu);
     }
 
     // 上下文菜单

@@ -43,8 +43,6 @@ public class FinishEventListActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefresh;
     private static boolean haveInit = false;
 
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,8 +50,6 @@ public class FinishEventListActivity extends AppCompatActivity {
         baseInit();
         finishEventList = DataSupport.findAll(FinishEvent.class);
         showNoEvent();
-
-
 
         RecyclerView eventNameRecyclerView = (RecyclerView) findViewById(R.id.event_name_recycler_view_finish);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -90,7 +86,6 @@ public class FinishEventListActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
     private void showNoEvent(){
@@ -113,7 +108,6 @@ public class FinishEventListActivity extends AppCompatActivity {
     private  void initEvents(){
         LitePal.getDatabase();
     }
-
 
     private void baseInit(){
 
@@ -161,7 +155,6 @@ public class FinishEventListActivity extends AppCompatActivity {
         });
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -187,5 +180,4 @@ public class FinishEventListActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 }
