@@ -73,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     private FloatingActionButton add;
     public static final String INTENT_EVENT = "intent_event";
     private static List<Integer> DelayList = new ArrayList<>();
-    private sta
 
     private boolean isSwap = false;
 
@@ -273,6 +272,12 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
 
         initThemeColor();
 
+        initDrawerLayout();
+
+    }
+
+    private void initDrawerLayout()
+    {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -288,16 +293,20 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
                 switch (item.getItemId()) {
+                    case R.id.nav_task:
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        mDrawerLayout.closeDrawer(Gravity.START);
+                        break;
                     case R.id.nav_finish:
-                        startActivity(new Intent(MainActivity.this, FinishEventListActivity.class));
+                        startActivity(new Intent(getApplicationContext(), FinishEventListActivity.class));
                         mDrawerLayout.closeDrawer(Gravity.START);
                         break;
                     case R.id.nav_broswer:
-                        startActivity(new Intent(MainActivity.this, BrowserActivity.class));
+                        startActivity(new Intent(getApplicationContext(), BrowserActivity.class));
                         mDrawerLayout.closeDrawer(Gravity.START);
                         break;
                     case R.id.nav_setting:
-                        startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                        startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                         mDrawerLayout.closeDrawer(Gravity.START);
                         break;
                     default:
@@ -305,7 +314,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                 return true;
             }
         });
-
     }
 
     /**
@@ -423,6 +431,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     @Override
     protected void onResume() {
         super.onResume();
+        initDrawerLayout(); //重新加载侧滑菜单选择在已完成上
         if (ColorManager.IS_COLOR_CHANGE) {
             syncButtonColor();
         }
