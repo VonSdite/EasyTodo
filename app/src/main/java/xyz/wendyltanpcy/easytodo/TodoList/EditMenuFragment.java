@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import xyz.wendyltanpcy.easytodo.Adapter.EventsAdapter;
@@ -114,6 +116,7 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
                     Date date = new Date();
                     // 设置截止日期为第二天, 秒为0
                     date = new Date(date.getTime() + 24*60*60*1000 - date.getTime()%60000);
+
                     event.setEventDeadline(date);
 
                     event.setEventDate();       // 设置事件年月日字符串
