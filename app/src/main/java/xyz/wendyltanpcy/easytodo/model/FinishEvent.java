@@ -10,36 +10,15 @@ import java.io.Serializable;
 
 public class FinishEvent extends DataSupport implements Serializable {
 
-    private String eventName;
-    private long id;
-    private String eventFinishDate;
-    private String eventAlarmTime;
+    private String eventName;       // 完成事件的名称
+    private String eventFinishDate; // 完成事件的时间
 
     public void setEventFinishDate(String eventFinishDate) {
         this.eventFinishDate = eventFinishDate;
     }
 
-    public void setEventAlarmTime(String eventAlarmTime) {
-        this.eventAlarmTime = eventAlarmTime;
-    }
-
-
     public String getEventFinishDate() {
         return eventFinishDate;
-    }
-
-
-    public String getEventAlarmTime() {
-        return eventAlarmTime;
-    }
-
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getEventName() {

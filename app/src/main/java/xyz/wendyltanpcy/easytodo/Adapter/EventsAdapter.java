@@ -3,8 +3,11 @@ package xyz.wendyltanpcy.easytodo.Adapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Paint;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -24,6 +27,8 @@ import xyz.wendyltanpcy.easytodo.TodoList.EventContentActivity;
 import xyz.wendyltanpcy.easytodo.helper.CheckBoxSample;
 import xyz.wendyltanpcy.easytodo.model.FinishEvent;
 import xyz.wendyltanpcy.easytodo.model.TodoEvent;
+
+import static android.content.ContentValues.TAG;
 
 
 /**
@@ -64,11 +69,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         private ImageView handleView;
         private TextView expiredText;
 
-        public TextView getEventNameText() {
-            return eventNameText;
-        }
-
-
         public ViewHolder(View itemView) {
             super(itemView);
             eventNameText = itemView.findViewById(R.id.event_name);
@@ -77,7 +77,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             expiredText = itemView.findViewById(R.id.expired_text);
             itemView.setOnCreateContextMenuListener(this);
         }
-
 
         @Override
         public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo
@@ -128,7 +127,11 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         final int pos = position;
         final EventsAdapter.ViewHolder hd = holder;
 
-        todoEvent.save();
+        // 显示过期问题
+        if (todoEvent.isEventExpired())
+            hd.expiredText.setVisibility(View.VISIBLE);
+        else
+            hd.expiredText.setVisibility(View.GONE);
 
         //seting defaul style or the viewholder don't know what to do
         hd.checkBoxSample.setChecked(false);
@@ -136,15 +139,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                 .STRIKE_THRU_TEXT_FLAG));
 
 
-        //setting click listener
-        hd.eventNameText.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                setPosition(hd.getAdapterPosition());
-                return false;
-            }
-        });
-
+        // 长按出现删除菜单
         hd.handleView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -153,7 +148,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             }
         });
 
-
+        // 触摸拖动
         hd.handleView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -170,15 +165,33 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             }
         });
 
+        // 触摸拖动
+        hd.eventNameText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                int action = motionEvent.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                    case MotionEvent.ACTION_UP:
+                        menuRecyclerView.startDrag(hd);
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
 
+        // 长按出现删除菜单
+        hd.eventNameText.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                setPosition(hd.getAdapterPosition());
+                return false;
+            }
+        });
 
         hd.eventNameText.setText(todoEvent.getEventName());
-
-        // 显示过期问题
-        if (todoEvent.isEventExpired())
-            hd.expiredText.setVisibility(View.VISIBLE);
-        else
-            hd.expiredText.setVisibility(View.GONE);
 
         hd.eventNameText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -191,65 +204,26 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         hd.checkBoxSample.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                if (!todoEvent.isEventFinish()) {
+                TodoEvent todoEvent = mTodoEventList.get(pos);
+                if(todoEvent.isClicked()) {
+                    hd.checkBoxSample.setChecked(false);
+                    hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() & (~Paint
+                            .STRIKE_THRU_TEXT_FLAG));
+                    todoEvent.setClicked(false);
+                } else {
+
                     hd.checkBoxSample.setChecked(true);
                     hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() | Paint
                             .STRIKE_THRU_TEXT_FLAG);
-//                }
-
-
-                final AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
-                dialog.setTitle("确定已经完成这个事件？");
-                dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        TodoEvent todoEvent = mTodoEventList.get(pos);
-                        FinishEvent finishEvent = new FinishEvent();
-
-                        /*
-                        对完成事件信息设置
-                         */
-                        finishEvent.setEventName(todoEvent.getEventName());
-//                        finishEvent.setId(todoEvent.getId());
-                        finishEvent.setEventFinishDate(todoEvent.getEventDate());
-                        finishEvent.setEventAlarmTime(todoEvent.getEventTime());
-                        finishEvent.save();
-
-                        /*
-                        删掉此条未完成事件
-                         */
-//                        todoEvent.setEventFinish(true);
-                        todoEvent.delete();
-                        mTodoEventList.remove(pos);
-                        notifyDataSetChanged();
-                        Toast.makeText(mContext, "干得漂亮", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                dialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        hd.checkBoxSample.setChecked(false);
-                        hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() & (~Paint
-                                .STRIKE_THRU_TEXT_FLAG));
-                    }
-                });
-                dialog.setCancelable(false);
-                dialog.show();
-
+                    todoEvent.setClicked(true);
+                }
             }
         });
-        hd.handleView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                view.showContextMenu();
-            }
-        });
+
     }
-
 
     @Override
     public int getItemCount() {
         return mTodoEventList.size();
     }
-
 }
