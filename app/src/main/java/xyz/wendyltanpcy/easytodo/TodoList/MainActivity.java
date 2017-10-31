@@ -13,6 +13,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -77,6 +78,9 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     private static List<Integer> DelayList = new ArrayList<>();
 
     private boolean isSwap = false;
+
+    public MainActivity() {
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -244,8 +248,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
 
         notifySwapItem();   // 如果发生了交换位置，保存到数据库
 
-        // 去掉完成的事件
-            removeClicked();
     }
 
     private void notifySwapItem(){
@@ -255,23 +257,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                 todoEvent.save();
             }
             isSwap = false;         // 重新设置标志为false
-        }
-    }
-
-    // 删除被clicked的item
-    private void removeClicked(){
-        // 去掉完成的事件
-        Iterator<TodoEvent> todoIter = eventList.iterator();
-        while (todoIter.hasNext()){
-            TodoEvent todoEvent = todoIter.next();
-            if (todoEvent.isClicked()){
-                FinishEvent finishEvent = new FinishEvent();
-                finishEvent.setEventName(todoEvent.getEventName());
-                finishEvent.setEventFinishDate(todoEvent.getEventDate());
-                finishEvent.save();
-                todoIter.remove();
-                todoEvent.delete();
-            }
         }
     }
 

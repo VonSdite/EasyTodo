@@ -134,7 +134,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             hd.expiredText.setVisibility(View.GONE);
 
         //seting defaul style or the viewholder don't know what to do
-        hd.checkBoxSample.setChecked(false);
+        hd.checkBoxSample.setChecked(todoEvent.isClicked());        // 勾的打勾
         hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() & (~Paint
                 .STRIKE_THRU_TEXT_FLAG));
 
@@ -212,12 +212,13 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                     hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() & (~Paint
                             .STRIKE_THRU_TEXT_FLAG));
                     todoEvent.setClicked(false);
+                    todoEvent.save();
                 } else {
-
                     hd.checkBoxSample.setChecked(true);
                     hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() | Paint
                             .STRIKE_THRU_TEXT_FLAG);
                     todoEvent.setClicked(true);
+                    todoEvent.save();
                 }
             }
         });

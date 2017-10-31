@@ -13,6 +13,7 @@ import java.util.List;
 
 import xyz.wendyltanpcy.easytodo.R;
 import xyz.wendyltanpcy.easytodo.model.FinishEvent;
+import xyz.wendyltanpcy.easytodo.model.TodoEvent;
 
 /**
  * Created by Wendy on 2017/9/28.
@@ -21,7 +22,7 @@ import xyz.wendyltanpcy.easytodo.model.FinishEvent;
 public class FinishEventsAdapter extends RecyclerView.Adapter<FinishEventsAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<FinishEvent> mFinishEventsList;
+    private List<TodoEvent> mFinishEventsList;
 
     @Override
     public FinishEventsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -36,10 +37,10 @@ public class FinishEventsAdapter extends RecyclerView.Adapter<FinishEventsAdapte
 
     @Override
     public void onBindViewHolder(FinishEventsAdapter.ViewHolder holder, int position) {
-        FinishEvent finishEvent = mFinishEventsList.get(position);
+        TodoEvent finishEvent = mFinishEventsList.get(position);
         holder.eventNameText.setText(finishEvent.getEventName());
         holder.eventNameText.setPaintFlags(holder.eventNameText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        holder.eventFinishDateText.setText(finishEvent.getEventFinishDate());
+        holder.eventFinishDateText.setText(finishEvent.getEventDate());
     }
 
     @Override
@@ -47,11 +48,11 @@ public class FinishEventsAdapter extends RecyclerView.Adapter<FinishEventsAdapte
         return mFinishEventsList.size();
     }
 
-    public FinishEventsAdapter(List<FinishEvent> finishEventsList){
+    public FinishEventsAdapter(List<TodoEvent> finishEventsList){
         mFinishEventsList = finishEventsList;
     }
 
-    public List<FinishEvent> getFinishEventsList(){
+    public List<TodoEvent> getFinishEventsList(){
         return mFinishEventsList;
     }
 
