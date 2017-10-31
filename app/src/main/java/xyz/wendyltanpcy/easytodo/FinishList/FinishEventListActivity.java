@@ -22,6 +22,7 @@ import org.litepal.LitePal;
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import xyz.wendyltanpcy.easytodo.Adapter.FinishEventsAdapter;
@@ -30,6 +31,7 @@ import xyz.wendyltanpcy.easytodo.TodoBrowser.BrowserActivity;
 import xyz.wendyltanpcy.easytodo.TodoList.MainActivity;
 import xyz.wendyltanpcy.easytodo.TodoList.SettingsActivity;
 import xyz.wendyltanpcy.easytodo.model.FinishEvent;
+import xyz.wendyltanpcy.easytodo.model.TodoEvent;
 
 /**
  * Created by Wendy on 2017/9/28.
@@ -38,7 +40,7 @@ import xyz.wendyltanpcy.easytodo.model.FinishEvent;
 public class FinishEventListActivity extends AppCompatActivity {
 
     private FinishEventsAdapter MyAdapter;
-    private List<FinishEvent> finishEventList = new ArrayList<>();
+    private List<TodoEvent> finishEventList = new ArrayList<>();
     private DrawerLayout mDrawerLayout;
     private SwipeRefreshLayout swipeRefresh;
     private static boolean haveInit = false;
@@ -48,8 +50,8 @@ public class FinishEventListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.finish_event_list_activity);
         baseInit();
-        finishEventList = DataSupport.findAll(FinishEvent.class);
-        showNoEvent();
+
+//        showNoEvent();
 
         RecyclerView eventNameRecyclerView = (RecyclerView) findViewById(R.id.event_name_recycler_view_finish);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -88,18 +90,18 @@ public class FinishEventListActivity extends AppCompatActivity {
 
     }
 
-    private void showNoEvent(){
-        if (finishEventList.isEmpty()){
-            View visibility = findViewById(R.id.no_finish_frag);
-            View vi_main = findViewById(R.id.finish_event_list_fragment);
-            visibility.setVisibility(View.VISIBLE);
-            vi_main.setVisibility(View.GONE);
-        }
-    }
+//    private void showNoEvent(){
+//        if (finishEventList.isEmpty()){
+////            View visibility = findViewById(R.id.no_finish_frag);
+//            View vi_main = findViewById(R.id.finish_event_list_fragment);
+////            visibility.setVisibility(View.VISIBLE);
+////            vi_main.setVisibility(View.GONE);
+//        }
+//    }
 
     private void doRefresh(){
         finishEventList = MyAdapter.getFinishEventsList();
-        showNoEvent();
+//        showNoEvent();
         MyAdapter.notifyDataSetChanged();
         swipeRefresh.setRefreshing(false);
         Toast.makeText(FinishEventListActivity.this,"数据刷新成功",Toast.LENGTH_SHORT).show();
@@ -111,11 +113,20 @@ public class FinishEventListActivity extends AppCompatActivity {
 
     private void baseInit(){
 
+        finishEventList = DataSupport.findAll(TodoEvent.class);
+
+        Iterator<TodoEvent> iter = finishEventList.iterator();
+        while (iter.hasNext()){
+            TodoEvent todoEvent = iter.next();
+            if (!todoEvent.isClicked()){
+                iter.remove();
+            }
+        }
+
         if(!haveInit){
             initEvents();
 
-            finishEventList = DataSupport.findAll(FinishEvent.class);
-            showNoEvent();
+//            showNoEvent();
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.finsh_toolbar);
