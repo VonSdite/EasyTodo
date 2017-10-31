@@ -51,7 +51,7 @@ public class FinishEventListActivity extends AppCompatActivity {
         setContentView(R.layout.finish_event_list_activity);
         baseInit();
 
-//        showNoEvent();
+        showNoEvent();
 
         RecyclerView eventNameRecyclerView = (RecyclerView) findViewById(R.id.event_name_recycler_view_finish);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
@@ -59,6 +59,7 @@ public class FinishEventListActivity extends AppCompatActivity {
         eventNameRecyclerView.setLayoutManager(layoutManager);
         eventNameRecyclerView.setItemAnimator(new DefaultItemAnimator());
         eventNameRecyclerView.setAdapter(MyAdapter);
+
 
          /*
         设置刷新
@@ -90,18 +91,23 @@ public class FinishEventListActivity extends AppCompatActivity {
 
     }
 
-//    private void showNoEvent(){
-//        if (finishEventList.isEmpty()){
-////            View visibility = findViewById(R.id.no_finish_frag);
-//            View vi_main = findViewById(R.id.finish_event_list_fragment);
-////            visibility.setVisibility(View.VISIBLE);
-////            vi_main.setVisibility(View.GONE);
-//        }
-//    }
+    private void showNoEvent(){
+        if (finishEventList.isEmpty()){
+            View visablity = findViewById(R.id.no_event_layout);
+            visablity.setVisibility(View.VISIBLE);
+            visablity = findViewById(R.id.event_name_recycler_view_finish);
+            visablity.setVisibility(View.GONE);
+        }else{
+            View visablity = findViewById(R.id.no_event_layout);
+            visablity.setVisibility(View.GONE);
+            visablity = findViewById(R.id.event_name_recycler_view_finish);
+            visablity.setVisibility(View.VISIBLE);
+        }
+    }
 
     private void doRefresh(){
         finishEventList = MyAdapter.getFinishEventsList();
-//        showNoEvent();
+        showNoEvent();
         MyAdapter.notifyDataSetChanged();
         swipeRefresh.setRefreshing(false);
         Toast.makeText(FinishEventListActivity.this,"数据刷新成功",Toast.LENGTH_SHORT).show();
@@ -126,7 +132,7 @@ public class FinishEventListActivity extends AppCompatActivity {
         if(!haveInit){
             initEvents();
 
-//            showNoEvent();
+            showNoEvent();
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.finsh_toolbar);

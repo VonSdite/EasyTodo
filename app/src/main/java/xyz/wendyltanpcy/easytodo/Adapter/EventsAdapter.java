@@ -1,13 +1,10 @@
 package xyz.wendyltanpcy.easytodo.Adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Paint;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.AlertDialog;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -15,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
@@ -25,10 +21,7 @@ import java.util.List;
 import xyz.wendyltanpcy.easytodo.R;
 import xyz.wendyltanpcy.easytodo.TodoList.EventContentActivity;
 import xyz.wendyltanpcy.easytodo.helper.CheckBoxSample;
-import xyz.wendyltanpcy.easytodo.model.FinishEvent;
 import xyz.wendyltanpcy.easytodo.model.TodoEvent;
-
-import static android.content.ContentValues.TAG;
 
 
 /**
@@ -121,6 +114,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     }
 
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(EventsAdapter.ViewHolder holder, int position) {
         final TodoEvent todoEvent = mTodoEventList.get(position);
@@ -134,9 +128,15 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             hd.expiredText.setVisibility(View.GONE);
 
         //seting defaul style or the viewholder don't know what to do
-        hd.checkBoxSample.setChecked(todoEvent.isClicked());        // 勾的打勾
-        hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() & (~Paint
-                .STRIKE_THRU_TEXT_FLAG));
+        if (todoEvent.isClicked()) {
+            hd.checkBoxSample.setChecked(true);        // 勾的打勾
+            hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() | Paint
+                    .STRIKE_THRU_TEXT_FLAG);
+        } else {
+            hd.checkBoxSample.setChecked(false);
+            hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() & (~Paint
+                    .STRIKE_THRU_TEXT_FLAG));
+        }
 
 
         // 长按出现删除菜单
@@ -219,6 +219,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                             .STRIKE_THRU_TEXT_FLAG);
                     todoEvent.setClicked(true);
                     todoEvent.save();
+                    Snackbar.make(hd.itemView,"此事件已完成！",Snackbar.LENGTH_SHORT).show();
                 }
             }
         });

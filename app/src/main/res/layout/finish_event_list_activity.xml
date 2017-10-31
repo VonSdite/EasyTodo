@@ -11,14 +11,5 @@
         android:visibility="visible"
         android:name="xyz.wendyltanpcy.easytodo.FinishList.FinishEventListFragment"/>
 
-    <fragment
-        android:id="@+id/no_finish_frag"
-        android:name="xyz.wendyltanpcy.easytodo.FinishList.NoFinishEventFragment"
-        android:layout_width="match_parent"
-        android:visibility="gone"
-        android:layout_height="match_parent"/>
-
-
-
 
 </LinearLayout>
