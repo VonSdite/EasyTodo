@@ -2,8 +2,10 @@ package xyz.wendyltanpcy.easytodo.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -21,6 +23,7 @@ import java.util.List;
 import xyz.wendyltanpcy.easytodo.R;
 import xyz.wendyltanpcy.easytodo.TodoList.EventContentActivity;
 import xyz.wendyltanpcy.easytodo.helper.CheckBoxSample;
+import xyz.wendyltanpcy.easytodo.model.FinishEvent;
 import xyz.wendyltanpcy.easytodo.model.TodoEvent;
 
 
@@ -36,6 +39,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     private int position;
     private ViewHolder holder;
     public SwipeMenuRecyclerView menuRecyclerView;
+
+    private View visibility;        // showNoEvent用
 
     public ViewHolder getHolder() {
         return holder;
@@ -96,9 +101,10 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     }
 
 
-    public EventsAdapter(List<TodoEvent> todoEventList, SwipeMenuRecyclerView menuRecyclerView) {
+    public EventsAdapter(List<TodoEvent> todoEventList, SwipeMenuRecyclerView menuRecyclerView, View v) {
         mTodoEventList = todoEventList;
         this.menuRecyclerView = menuRecyclerView;
+        visibility = v;
     }
 
 
@@ -206,21 +212,60 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         hd.checkBoxSample.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TodoEvent todoEvent = mTodoEventList.get(pos);
-                if(todoEvent.isClicked()) {
-                    hd.checkBoxSample.setChecked(false);
-                    hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() & (~Paint
-                            .STRIKE_THRU_TEXT_FLAG));
-                    todoEvent.setClicked(false);
-                    todoEvent.save();
-                } else {
-                    hd.checkBoxSample.setChecked(true);
-                    hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() | Paint
-                            .STRIKE_THRU_TEXT_FLAG);
-                    todoEvent.setClicked(true);
-                    todoEvent.save();
-                    Snackbar.make(hd.itemView,"此事件已完成！",Snackbar.LENGTH_SHORT).show();
-                }
+                hd.checkBoxSample.setChecked(true);
+                hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() | Paint
+                        .STRIKE_THRU_TEXT_FLAG);
+
+
+                final TodoEvent todoEvent = mTodoEventList.get(pos);
+                final AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
+                dialog.setTitle("确定已经完成这个事件？");
+                dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                FinishEvent finishEvent = new FinishEvent();
+                                finishEvent.setEventName(todoEvent.getEventName());
+                                finishEvent.setEventFinishDate(todoEvent.getEventDate());
+                                finishEvent.save();
+                                todoEvent.setClicked(true);
+                                todoEvent.delete();
+                                mTodoEventList.remove(pos);
+                                Snackbar.make(hd.itemView,"干得漂亮", Snackbar.LENGTH_SHORT).show();
+                                notifyItemChanged(pos);
+
+                                if (mTodoEventList.isEmpty()) {
+                                    visibility.setVisibility(View.VISIBLE);
+                                } else {
+                                    visibility.setVisibility(View.GONE);
+                                }
+                            }
+                        });
+                dialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        hd.checkBoxSample.setChecked(false);
+                        hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() & (~Paint
+                                .STRIKE_THRU_TEXT_FLAG));
+                        todoEvent.setClicked(false);
+                    }
+                });
+                dialog.setCancelable(false);
+                dialog.show();
+
+//                if(todoEvent.isClicked()) {
+//                    hd.checkBoxSample.setChecked(false);
+//                    hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() & (~Paint
+//                            .STRIKE_THRU_TEXT_FLAG));
+//                    todoEvent.setClicked(false);
+//                    todoEvent.save();
+//                } else {
+//                    hd.checkBoxSample.setChecked(true);
+//                    hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() | Paint
+//                            .STRIKE_THRU_TEXT_FLAG);
+//                    todoEvent.setClicked(true);
+//                    todoEvent.save();
+//                    Snackbar.make(hd.itemView,"此事件已完成！",Snackbar.LENGTH_SHORT).show();
+//                }
             }
         });
 

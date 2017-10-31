@@ -40,7 +40,7 @@ import xyz.wendyltanpcy.easytodo.model.TodoEvent;
 public class FinishEventListActivity extends AppCompatActivity {
 
     private FinishEventsAdapter MyAdapter;
-    private List<TodoEvent> finishEventList = new ArrayList<>();
+    private List<FinishEvent> finishEventList = new ArrayList<>();
     private DrawerLayout mDrawerLayout;
     private SwipeRefreshLayout swipeRefresh;
     private static boolean haveInit = false;
@@ -119,15 +119,7 @@ public class FinishEventListActivity extends AppCompatActivity {
 
     private void baseInit(){
 
-        finishEventList = DataSupport.findAll(TodoEvent.class);
-
-        Iterator<TodoEvent> iter = finishEventList.iterator();
-        while (iter.hasNext()){
-            TodoEvent todoEvent = iter.next();
-            if (!todoEvent.isClicked()){
-                iter.remove();
-            }
-        }
+        finishEventList = DataSupport.findAll(FinishEvent.class);
 
         if(!haveInit){
             initEvents();
@@ -190,6 +182,7 @@ public class FinishEventListActivity extends AppCompatActivity {
             finishEventList.clear();
             DataSupport.deleteAll(FinishEvent.class);
             MyAdapter.notifyDataSetChanged();
+            showNoEvent();
             Toast.makeText(this,"删除成功！",Toast.LENGTH_SHORT).show();
         }else if(id == android.R.id.home){
             mDrawerLayout.openDrawer(GravityCompat.START);

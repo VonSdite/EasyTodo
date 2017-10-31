@@ -22,7 +22,7 @@ import xyz.wendyltanpcy.easytodo.model.TodoEvent;
 public class FinishEventsAdapter extends RecyclerView.Adapter<FinishEventsAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<TodoEvent> mFinishEventsList;
+    private List<FinishEvent> mFinishEventsList;
 
     @Override
     public FinishEventsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -37,10 +37,10 @@ public class FinishEventsAdapter extends RecyclerView.Adapter<FinishEventsAdapte
 
     @Override
     public void onBindViewHolder(FinishEventsAdapter.ViewHolder holder, int position) {
-        TodoEvent finishEvent = mFinishEventsList.get(position);
+        FinishEvent finishEvent = mFinishEventsList.get(position);
         holder.eventNameText.setText(finishEvent.getEventName());
         holder.eventNameText.setPaintFlags(holder.eventNameText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        holder.eventFinishDateText.setText(finishEvent.getEventDate());
+        holder.eventFinishDateText.setText(finishEvent.getEventFinishDate());
     }
 
     @Override
@@ -48,11 +48,11 @@ public class FinishEventsAdapter extends RecyclerView.Adapter<FinishEventsAdapte
         return mFinishEventsList.size();
     }
 
-    public FinishEventsAdapter(List<TodoEvent> finishEventsList){
+    public FinishEventsAdapter(List<FinishEvent> finishEventsList){
         mFinishEventsList = finishEventsList;
     }
 
-    public List<TodoEvent> getFinishEventsList(){
+    public List<FinishEvent> getFinishEventsList(){
         return mFinishEventsList;
     }
 
