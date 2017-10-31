@@ -13,8 +13,9 @@ import xyz.wendyltanpcy.easytodo.R;
  */
 
 public class FinishEventListFragment extends Fragment {
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.finish_event_list_frag,container,false);
-        return  view;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
+        View view = inflater.inflate(R.layout.finish_event_list_frag, container, false);
+        return view;
     }
 }

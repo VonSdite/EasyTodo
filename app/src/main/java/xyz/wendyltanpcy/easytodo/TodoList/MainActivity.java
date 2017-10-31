@@ -48,6 +48,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -57,6 +58,7 @@ import xyz.wendyltanpcy.easytodo.R;
 import xyz.wendyltanpcy.easytodo.TodoBrowser.BrowserActivity;
 import xyz.wendyltanpcy.easytodo.helper.ColorManager;
 import xyz.wendyltanpcy.easytodo.model.Consts;
+import xyz.wendyltanpcy.easytodo.model.FinishEvent;
 import xyz.wendyltanpcy.easytodo.model.ThemeColor;
 import xyz.wendyltanpcy.easytodo.model.TodoEvent;
 
@@ -204,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
             eventList.get(toPosition).setPos(toPosition);     // 重新设置pos， Item根据pos排序
 
             MyAdapter.notifyItemMoved(fromPosition, toPosition);
-            isSwap = true;
+            isSwap = true;          // 标记发生了交换
 
             return true; // 返回true表示处理了并可以换位置，返回false表示你没有处理并不能换位置。
         }
@@ -235,6 +237,13 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     protected void onPause() {
         super.onPause();
 
+        notifySwapItem();   // 如果发生了交换位置，保存到数据库
+
+        // 去掉完成的事件
+        removeClicked();
+    }
+
+    private void notifySwapItem(){
         // 保存数据库， 如果发生交换位置
         if (isSwap) {
             for (TodoEvent todoEvent : eventList) {
@@ -242,6 +251,28 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
             }
             isSwap = false;         // 重新设置标志为false
         }
+    }
+
+    // 删除被clicked的item
+    private void removeClicked(){
+        // 去掉完成的事件
+        Iterator<TodoEvent> todoIter = eventList.iterator();
+        while (todoIter.hasNext()){
+            TodoEvent todoEvent = todoIter.next();
+            if (todoEvent.isClicked()){
+                FinishEvent finishEvent = new FinishEvent();
+                finishEvent.setEventName(todoEvent.getEventName());
+                finishEvent.setEventFinishDate(todoEvent.getEventDate());
+                finishEvent.save();
+                todoIter.remove();
+                todoEvent.delete();
+            }
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     /**

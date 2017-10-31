@@ -14,8 +14,9 @@ import xyz.wendyltanpcy.easytodo.R;
 
 public class NoFinishEventFragment extends Fragment {
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.no_finish_frag,container,false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
+            savedInstanceState) {
+        View v = inflater.inflate(R.layout.no_finish_frag, container, false);
         return v;
     }
 }

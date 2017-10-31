@@ -5,11 +5,7 @@ import android.support.annotation.NonNull;
 import org.litepal.crud.DataSupport;
 
 import java.io.Serializable;
-
 import java.text.SimpleDateFormat;
-
-import java.util.Calendar;
-
 import java.util.Date;
 
 /**
@@ -30,6 +26,15 @@ public class TodoEvent extends DataSupport implements Serializable, Comparable<T
 
     private int pos;  // 标记是item的第几项, 显示的时候按这个顺序显示出来
 
+    private boolean isClicked;  // 标记是否被点击了
+
+    public void setClicked(boolean clicked) {
+        isClicked = clicked;
+    }
+
+    public boolean isClicked() {
+        return isClicked;
+    }
 
     // deadline的日期
     public void setEventDeadline(Date eventDeadline) {
