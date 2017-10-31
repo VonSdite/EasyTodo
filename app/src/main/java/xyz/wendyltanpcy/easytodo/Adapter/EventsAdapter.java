@@ -40,6 +40,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     private ViewHolder holder;
     public SwipeMenuRecyclerView menuRecyclerView;
 
+    private View visibility;        // showNoEvent用
+
     public ViewHolder getHolder() {
         return holder;
     }
@@ -99,9 +101,10 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     }
 
 
-    public EventsAdapter(List<TodoEvent> todoEventList, SwipeMenuRecyclerView menuRecyclerView) {
+    public EventsAdapter(List<TodoEvent> todoEventList, SwipeMenuRecyclerView menuRecyclerView, View v) {
         mTodoEventList = todoEventList;
         this.menuRecyclerView = menuRecyclerView;
+        visibility = v;
     }
 
 
@@ -229,6 +232,12 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                                 mTodoEventList.remove(pos);
                                 Snackbar.make(hd.itemView,"干得漂亮", Snackbar.LENGTH_SHORT).show();
                                 notifyItemChanged(pos);
+
+                                if (mTodoEventList.isEmpty()) {
+                                    visibility.setVisibility(View.VISIBLE);
+                                } else {
+                                    visibility.setVisibility(View.GONE);
+                                }
                             }
                         });
                 dialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -240,6 +249,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                         todoEvent.setClicked(false);
                     }
                 });
+                dialog.setCancelable(false);
                 dialog.show();
 
 //                if(todoEvent.isClicked()) {

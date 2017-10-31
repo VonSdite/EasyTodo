@@ -77,6 +77,8 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     public static final String INTENT_EVENT = "intent_event";
     private static List<Integer> DelayList = new ArrayList<>();
 
+    private View visibility;
+
     private boolean isSwap = false;
 
     public MainActivity() {
@@ -95,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         SwipeMenuRecyclerView eventNameRecyclerView = (SwipeMenuRecyclerView) findViewById(R.id
                 .event_name_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        MyAdapter = new EventsAdapter(eventList, eventNameRecyclerView);
+        MyAdapter = new EventsAdapter(eventList, eventNameRecyclerView, visibility);
 
         // 设置侧滑菜单和侧滑菜单监听器
         eventNameRecyclerView.setSwipeMenuCreator(mSwipeMenuCreator); // 创建滑动菜单
@@ -226,6 +228,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
             int position = srcHolder.getAdapterPosition();
             eventList.remove(position);
             MyAdapter.notifyItemRemoved(position);
+            showNoEvent();
             Toast.makeText(MainActivity.this, "现在的第" + position + "条被删除。", Toast.LENGTH_SHORT).show();
         }
 
@@ -241,13 +244,10 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         haveInit = false;
     }
 
-
     @Override
     protected void onPause() {
         super.onPause();
-
         notifySwapItem();   // 如果发生了交换位置，保存到数据库
-
     }
 
     private void notifySwapItem(){
@@ -269,6 +269,8 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
      * 视图上的初始化
      */
     private void baseInit() {
+
+        visibility = findViewById(R.id.no_event_layout);    // showNoEvent 用
 
         // add Button的设置
         add = (FloatingActionButton) findViewById(R.id.add_event);
@@ -446,10 +448,11 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     /**
      * 显示没有事件时候
      */
-    private void showNoEvent() {
+    public void showNoEvent() {
         if (eventList.isEmpty()) {
-            View visibility = findViewById(R.id.no_event_layout);
             visibility.setVisibility(View.VISIBLE);
+        } else {
+            visibility.setVisibility(View.GONE);
         }
     }
 
