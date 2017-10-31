@@ -17,7 +17,8 @@
         <activity
             android:name="xyz.wendyltanpcy.easytodo.TodoList.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -25,7 +26,8 @@
         </activity>
         <activity android:name="xyz.wendyltanpcy.easytodo.FinishList.FinishEventListActivity"
                   android:label="FinishEvent"
-                  android:theme="@style/AppTheme.NoActionBar">
+                  android:theme="@style/AppTheme.NoActionBar"
+                android:launchMode="singleTask">
 
         </activity>
         <activity
@@ -37,7 +39,8 @@
         </activity>
         <activity android:name="xyz.wendyltanpcy.easytodo.TodoList.EventListActivity"/>
         <activity android:name="xyz.wendyltanpcy.easytodo.TodoList.SettingsActivity"
-            android:theme="@style/Theme.Settings"/>
+            android:theme="@style/Theme.Settings"
+            android:launchMode="singleTask"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"

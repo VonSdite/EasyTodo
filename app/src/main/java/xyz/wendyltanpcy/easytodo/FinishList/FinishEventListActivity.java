@@ -27,6 +27,7 @@ import java.util.List;
 import xyz.wendyltanpcy.easytodo.Adapter.FinishEventsAdapter;
 import xyz.wendyltanpcy.easytodo.R;
 import xyz.wendyltanpcy.easytodo.TodoBrowser.BrowserActivity;
+import xyz.wendyltanpcy.easytodo.TodoList.MainActivity;
 import xyz.wendyltanpcy.easytodo.TodoList.SettingsActivity;
 import xyz.wendyltanpcy.easytodo.model.FinishEvent;
 
@@ -138,14 +139,19 @@ public class FinishEventListActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.nav_task:
-                        finish();
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        mDrawerLayout.closeDrawer(Gravity.START);
                         break;
-                    case R.id.nav_setting:
-                        startActivity(new Intent(FinishEventListActivity.this, SettingsActivity.class));
+                    case R.id.nav_finish:
+                        startActivity(new Intent(getApplicationContext(), FinishEventListActivity.class));
                         mDrawerLayout.closeDrawer(Gravity.START);
                         break;
                     case R.id.nav_broswer:
-                        startActivity(new Intent(FinishEventListActivity.this,BrowserActivity.class));
+                        startActivity(new Intent(getApplicationContext(), BrowserActivity.class));
+                        mDrawerLayout.closeDrawer(Gravity.START);
+                        break;
+                    case R.id.nav_setting:
+                        startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                         mDrawerLayout.closeDrawer(Gravity.START);
                         break;
                     default:
