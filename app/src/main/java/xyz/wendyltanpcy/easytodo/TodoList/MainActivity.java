@@ -466,7 +466,8 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     @Override
     protected void onResume() {
         super.onResume();
-        initDrawerLayout(); //重新加载侧滑菜单选择在已完成上
+        initDrawerLayout(); // 重新加载侧滑菜单选择在已完成上
+        showNoEvent();      // 判断是否显示空的layout
         if (ColorManager.IS_COLOR_CHANGE) {
             syncButtonColor();
         }
