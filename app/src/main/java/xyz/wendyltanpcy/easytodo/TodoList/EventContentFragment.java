@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -76,18 +77,17 @@ public class EventContentFragment extends Fragment {
 
                 Event.setEventDate();
                 Event.setEventTime();
-
                 Event.save();
                 eventDeadLineText.setText(Event.getEventDate());
-                Log.i(TAG, "onActivityResult: 3");
                 break;
 
             case REQUEST_TIME:
-                Calendar calendar_time = (Calendar) data.getSerializableExtra(PickTimeFragment.EXTRA_TIME);
+                int hour = data.getIntExtra("hour", 0);
+                int min = data.getIntExtra("min", 0);
                 Date date_time = new Date(Event.getEventDeadline().getTime()
                                 - Event.getEventDeadline().getTime() % 86400000         // 减去原来的时分
-                                + calendar_time.get(Calendar.HOUR)*1000*60*60
-                                + calendar_time.get(Calendar.MINUTE)*1000*60);          // 控制年月日不变
+                                + hour*1000*60*60
+                                + min*1000*60);          // 控制年月日不变
 
                 Event.setEventDeadline(date_time);
                 Event.setEventDate();
