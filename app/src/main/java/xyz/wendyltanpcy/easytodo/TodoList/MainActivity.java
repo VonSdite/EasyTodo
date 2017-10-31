@@ -10,10 +10,10 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -49,7 +49,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -59,7 +58,6 @@ import xyz.wendyltanpcy.easytodo.R;
 import xyz.wendyltanpcy.easytodo.TodoBrowser.BrowserActivity;
 import xyz.wendyltanpcy.easytodo.helper.ColorManager;
 import xyz.wendyltanpcy.easytodo.model.Consts;
-import xyz.wendyltanpcy.easytodo.model.FinishEvent;
 import xyz.wendyltanpcy.easytodo.model.ThemeColor;
 import xyz.wendyltanpcy.easytodo.model.TodoEvent;
 
@@ -192,6 +190,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                     todoEvent.delete();
                     eventList.remove(adapterPosition);
                     MyAdapter.notifyItemRangeRemoved(adapterPosition, 1);
+                    Snackbar.make(MyAdapter.getHolder().itemView,"你删掉了这条项目",Snackbar.LENGTH_SHORT).show();
                     showNoEvent(); // 如果evenList为空会显示没有事件时的提示
                     break;
                 default:
@@ -491,7 +490,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                 event.delete();
                 eventList.remove(clickedItemPosition);
                 MyAdapter.notifyItemRangeRemoved(clickedItemPosition, 1);
-//                Toast.makeText(this, "你删掉了这条项目", Toast.LENGTH_LONG).show();
+                Snackbar.make(MyAdapter.getHolder().itemView,"你删掉了这条项目",Snackbar.LENGTH_SHORT).show();
                 break;
             default:
                 break;

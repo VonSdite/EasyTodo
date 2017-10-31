@@ -13,18 +13,23 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:id="@+id/no_event_layout"
+        android:gravity="center"
         android:visibility="invisible">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/no_event_image_add"
+            android:src="@drawable/icon_event_add"/>
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:maxLines="2"
-            android:padding="10dp"
-            android:text="还没有活动哟！快来添加一个"
-            android:textColor="#303a52"
-            android:textSize="17sp"/>
+            android:maxLines="1"
+            android:layout_marginTop="10dp"
+            android:text="还没有活动哟！快来添加一个"/>
     </LinearLayout>
 
 </android.support.design.widget.CoordinatorLayout>

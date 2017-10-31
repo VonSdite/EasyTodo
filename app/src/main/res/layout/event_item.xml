@@ -31,13 +31,13 @@
                 android:layout_marginLeft="10dp"
                 app:color_background="#FF3F51B5"
                 app:color_border="#FF3F51B5"
-                app:size="22dp"/>
+                app:size="25dp"/>
 
             <TextView
                 android:id="@+id/event_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="35dp"
+                android:layout_marginLeft="20dp"
                 android:layout_weight="1"
                 android:maxLines="1"
                 android:padding="12dp"
