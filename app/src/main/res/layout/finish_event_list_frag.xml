@@ -41,8 +41,7 @@
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/icon_done"
-                    android:background="#a4a4a4"/>
+                    android:src="@drawable/icon_done"/>
 
                 <TextView
                     android:layout_width="wrap_content"
