@@ -159,8 +159,13 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
             final TodoEvent todoEvent = eventList.get(adapterPosition); // 获取到todoEvent
             switch (menuPosition){
                 case 0:
-                    EventContentActivity eC = new EventContentActivity(MyAdapter.getHolder());
-                    eC.actionStart(MainActivity.this, todoEvent);
+                    if (todoEvent.isClicked()){
+                        // 判断事件是否被打钩
+                        Toast.makeText(MainActivity.this, "该事件已完成", Toast.LENGTH_SHORT).show();
+                    } else {
+                        EventContentActivity eC = new EventContentActivity(MyAdapter.getHolder());
+                        eC.actionStart(MainActivity.this, todoEvent);
+                    }
                     break;
                 case 1:
                     Intent i = new Intent(Intent.ACTION_SEND);//setting action
@@ -240,7 +245,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         notifySwapItem();   // 如果发生了交换位置，保存到数据库
 
         // 去掉完成的事件
-        removeClicked();
+            removeClicked();
     }
 
     private void notifySwapItem(){

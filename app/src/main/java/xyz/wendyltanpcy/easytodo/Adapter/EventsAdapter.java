@@ -196,8 +196,10 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         hd.eventNameText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EventContentActivity eC = new EventContentActivity(hd);
-                eC.actionStart(mContext, todoEvent);
+                if (!todoEvent.isClicked()) {
+                    EventContentActivity eC = new EventContentActivity(hd);
+                    eC.actionStart(mContext, todoEvent);
+                }
             }
         });
 
