@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TimePicker;
@@ -41,16 +42,17 @@ public class PickTimeFragment extends DialogFragment {
         return fragment;
     }
 
-
+    private static final String TAG = "PickTimeFragment";
+    
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState){
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        Date date = (Date)getArguments().getSerializable(ARG_TIME);//得到的date参数用calendar处理，初始化
+        Date date = (Date) getArguments().getSerializable(ARG_TIME);//得到的date参数用calendar处理，初始化
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
 
-        View v = LayoutInflater.from(getActivity()).inflate(R.layout.pick_time_fragment,null);
+        View v = LayoutInflater.from(getActivity()).inflate(R.layout.pick_time_fragment, null);
 
         mTimePicker = v.findViewById(R.id.timePicker);
 
@@ -67,25 +69,18 @@ public class PickTimeFragment extends DialogFragment {
 
                                 int hour = mTimePicker.getHour();
                                 int min = mTimePicker.getMinute();
-                                Calendar calendar = Calendar.getInstance();
-                                calendar.set(Calendar.HOUR_OF_DAY, hour);
-                                calendar.set(Calendar.MINUTE, min);
-
-                                Intent intent =  new Intent();
-                                intent.putExtra(EXTRA_TIME,calendar);
-                                sendResult(Activity.RESULT_OK,calendar);
-
+                                Intent intent = new Intent();
+                                intent.putExtra("hour", hour);
+                                intent.putExtra("min", min);
+                                sendResult(Activity.RESULT_OK, intent);
 
                             }//点击的时候使用sendResult回传数据。
                         })
                 .create();
     }
 
-    private void sendResult(int resultCode,Calendar calendar){
-
-        Intent intent = new Intent();
-        intent.putExtra(EXTRA_TIME,calendar);
-        getTargetFragment().onActivityResult(getTargetRequestCode(),resultCode,intent);
+    private void sendResult(int resultCode, Intent intent){
+        getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, intent);
     }
 
 }
