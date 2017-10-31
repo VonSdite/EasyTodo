@@ -11,6 +11,7 @@
     + 允许整个item可以拖动
     + 解决拖动item时 没有关闭contextmenu的问题
     + 修改了点击完成事件的情况， 当你点击时会打钩，切换掉界面回来时这个事件会被加入到finishEvent
+    + **Wendy** 添加打包demo.apk ! [demo](/demo/demo-17-10-31.apk)
 
 - **17/10/30**
     + 设置toolbar为透明的颜色， 避免遮挡图片
