@@ -3,8 +3,11 @@ package xyz.wendyltanpcy.easytodo.Adapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Paint;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -24,6 +27,8 @@ import xyz.wendyltanpcy.easytodo.TodoList.EventContentActivity;
 import xyz.wendyltanpcy.easytodo.helper.CheckBoxSample;
 import xyz.wendyltanpcy.easytodo.model.FinishEvent;
 import xyz.wendyltanpcy.easytodo.model.TodoEvent;
+
+import static android.content.ContentValues.TAG;
 
 
 /**
@@ -64,11 +69,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         private ImageView handleView;
         private TextView expiredText;
 
-        public TextView getEventNameText() {
-            return eventNameText;
-        }
-
-
         public ViewHolder(View itemView) {
             super(itemView);
             eventNameText = itemView.findViewById(R.id.event_name);
@@ -77,7 +77,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             expiredText = itemView.findViewById(R.id.expired_text);
             itemView.setOnCreateContextMenuListener(this);
         }
-
 
         @Override
         public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo
@@ -135,7 +134,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() & (~Paint
                 .STRIKE_THRU_TEXT_FLAG));
 
-
         //setting click listener
         hd.eventNameText.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -153,7 +151,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             }
         });
 
-
+        // 触摸拖动
         hd.handleView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -170,6 +168,22 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             }
         });
 
+        // 触摸拖动
+        hd.eventNameText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                int action = motionEvent.getAction();
+                switch (action) {
+                    case MotionEvent.ACTION_DOWN:
+                    case MotionEvent.ACTION_UP:
+                        menuRecyclerView.startDrag(hd);
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
 
 
         hd.eventNameText.setText(todoEvent.getEventName());
@@ -191,11 +205,9 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         hd.checkBoxSample.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                if (!todoEvent.isEventFinish()) {
                     hd.checkBoxSample.setChecked(true);
                     hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() | Paint
                             .STRIKE_THRU_TEXT_FLAG);
-//                }
 
 
                 final AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
@@ -238,12 +250,13 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
             }
         });
-        hd.handleView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                view.showContextMenu();
-            }
-        });
+
+//        hd.handleView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                view.showContextMenu();
+//            }
+//        });
     }
 
 

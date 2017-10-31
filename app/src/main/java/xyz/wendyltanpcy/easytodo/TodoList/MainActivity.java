@@ -149,6 +149,8 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         public void onItemClick(SwipeMenuBridge menuBridge) {
             // 任何操作必须先关闭菜单，否则可能出现Item菜单打开状态错乱。
             menuBridge.closeMenu();
+            closeContextMenu();         // 关闭上下文菜单
+
             int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position
             int menuPosition = menuBridge.getPosition();    // 菜单在RecyclerView的Item中的Position
 
@@ -189,6 +191,8 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     private OnItemMoveListener onItemMoveListener = new OnItemMoveListener() {
         @Override
         public boolean onItemMove(RecyclerView.ViewHolder srcHolder, RecyclerView.ViewHolder targetHolder) {
+            closeContextMenu();         // 关闭上下文菜单
+
             // 不同的ViewType不能拖拽换位置。
             if (srcHolder.getItemViewType() != targetHolder.getItemViewType()) return false;
 
@@ -236,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
             for (TodoEvent todoEvent : eventList) {
                 todoEvent.save();
             }
-
+            isSwap = false;         // 重新设置标志为false
         }
     }
 
@@ -443,6 +447,12 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
      */
     private void syncButtonColor() {
         initThemeColor();
+    }
+
+    // 关闭上下文菜单时
+    @Override
+    public void onContextMenuClosed(Menu menu) {
+        super.onContextMenuClosed(menu);
     }
 
     // 上下文菜单
