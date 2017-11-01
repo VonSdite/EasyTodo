@@ -69,25 +69,35 @@ public class EventContentFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
             case REQUEST_DATE:
-                Date date = (Date)data.getSerializableExtra(PickDateFragment.EXTRA_DATE);
 
-                date = new Date(date.getTime()
-                        + Event.getEventDeadline().getTime() % 86400000); // 控制时分秒不变
+                // 控制时分秒不变
+                Date d = (Date) data.getSerializableExtra(PickDateFragment.EXTRA_DATE);
+                Calendar newC = Calendar.getInstance();
+                newC.setTime(d);
+                Calendar origin = Calendar.getInstance();
+                origin.setTime(Event.getEventDeadline());
+                origin.set(newC.get(Calendar.YEAR), newC.get(Calendar.MONTH), newC.get(Calendar.DATE));
+
+                Date date = origin.getTime();
+
                 Event.setEventDeadline(date);
 
                 Event.setEventDate();
                 Event.setEventTime();
                 Event.save();
+
                 eventDeadLineText.setText(Event.getEventDate());
                 break;
 
             case REQUEST_TIME:
                 int hour = data.getIntExtra("hour", 0);
                 int min = data.getIntExtra("min", 0);
-                Date date_time = new Date(Event.getEventDeadline().getTime()
-                                - Event.getEventDeadline().getTime() % 86400000         // 减去原来的时分
-                                + hour*1000*60*60
-                                + min*1000*60);          // 控制年月日不变
+                // 控制年月日不变
+                Calendar originC = Calendar.getInstance();
+                originC.setTime(Event.getEventDeadline());
+                originC.set(Calendar.HOUR_OF_DAY, hour);
+                originC.set(Calendar.MINUTE, min);
+                Date date_time = originC.getTime();
 
                 Event.setEventDeadline(date_time);
                 Event.setEventDate();

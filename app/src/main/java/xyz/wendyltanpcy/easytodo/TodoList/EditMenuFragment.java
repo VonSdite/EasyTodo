@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import xyz.wendyltanpcy.easytodo.Adapter.EventsAdapter;
@@ -113,15 +114,16 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
                     event.setPos(adapter.getTodoEventSize()+1);         // 设置事件的位置
 
                     //set to default deadline
-                    Date date = new Date();
-                    // 设置截止日期为第二天, 秒为0
-                    date = new Date(date.getTime() + 24*60*60*1000 - date.getTime()%60000);
+                    Calendar c = Calendar.getInstance();
+                    c.add(Calendar.DAY_OF_MONTH, 1);    // 获取明天的日期
+                    c.set(Calendar.SECOND, 0);          // 设置秒为0
+                    Date date = c.getTime();
 
                     event.setEventDeadline(date);
 
                     event.setEventDate();       // 设置事件年月日字符串
                     event.setEventTime();       // 设置事件时分字符串
-                 
+
                     event.setClicked(false);    // 设置为没被点击
                     event.save();               // 保存到数据库
 
