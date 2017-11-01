@@ -123,8 +123,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(EventsAdapter.ViewHolder holder, int position) {
-        final TodoEvent todoEvent = mTodoEventList.get(position);
-        final int pos = position;
+        final TodoEvent todoEvent = mTodoEventList.get(holder.getAdapterPosition());
         final EventsAdapter.ViewHolder hd = holder;
 
         // 显示过期问题
@@ -217,7 +216,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                         .STRIKE_THRU_TEXT_FLAG);
 
 
-                final TodoEvent todoEvent = mTodoEventList.get(pos);
+                final TodoEvent todoEvent = mTodoEventList.get(hd.getAdapterPosition());
                 final AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
                 dialog.setTitle("确定已经完成这个事件？");
                 dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
@@ -229,10 +228,10 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                                 finishEvent.save();
                                 todoEvent.setClicked(true);
                                 todoEvent.delete();
-                                mTodoEventList.remove(pos);
+                                mTodoEventList.remove(hd.getAdapterPosition());
                                 Snackbar.make(hd.itemView,"干得漂亮", Snackbar.LENGTH_SHORT).show();
-                                notifyItemChanged(pos);
 
+                                notifyItemRemoved(hd.getAdapterPosition());
                                 if (mTodoEventList.isEmpty()) {
                                     visibility.setVisibility(View.VISIBLE);
                                 } else {
