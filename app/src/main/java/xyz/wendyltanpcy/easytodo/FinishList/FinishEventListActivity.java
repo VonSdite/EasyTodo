@@ -22,16 +22,13 @@ import org.litepal.LitePal;
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import xyz.wendyltanpcy.easytodo.Adapter.FinishEventsAdapter;
 import xyz.wendyltanpcy.easytodo.R;
-import xyz.wendyltanpcy.easytodo.TodoBrowser.BrowserActivity;
 import xyz.wendyltanpcy.easytodo.TodoList.MainActivity;
 import xyz.wendyltanpcy.easytodo.TodoList.SettingsActivity;
 import xyz.wendyltanpcy.easytodo.model.FinishEvent;
-import xyz.wendyltanpcy.easytodo.model.TodoEvent;
 
 /**
  * Created by Wendy on 2017/9/28.
@@ -149,10 +146,11 @@ public class FinishEventListActivity extends AppCompatActivity {
                         startActivity(new Intent(getApplicationContext(), FinishEventListActivity.class));
                         mDrawerLayout.closeDrawer(Gravity.START);
                         break;
-                    case R.id.nav_broswer:
-                        startActivity(new Intent(getApplicationContext(), BrowserActivity.class));
-                        mDrawerLayout.closeDrawer(Gravity.START);
-                        break;
+                    //隐藏浏览器入口，浏览器只作为测试版本用
+//                    case R.id.nav_broswer:
+//                        startActivity(new Intent(getApplicationContext(), BrowserActivity.class));
+//                        mDrawerLayout.closeDrawer(Gravity.START);
+//                        break;
                     case R.id.nav_setting:
                         startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                         mDrawerLayout.closeDrawer(Gravity.START);

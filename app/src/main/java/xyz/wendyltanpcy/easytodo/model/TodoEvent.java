@@ -77,6 +77,7 @@ public class TodoEvent extends DataSupport implements Serializable, Comparable<T
         this.eventImageBitMap = eventImageBitMap;
     }
 
+
     // event的详情
     public void setEventDetail(String eventDetail) {
         this.eventDetail = eventDetail;
