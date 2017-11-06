@@ -81,12 +81,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
-                    android:text="冷淡蓝"
+                    android:text="草原绿"
                     android:textColor="@color/colorPrimary"/>
 
                 <TextView
@@ -110,12 +111,13 @@
                     android:gravity="center_horizontal"
                     android:text="活力橙"
                     android:textColor="@color/theme3"/>
+
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
-                    android:text="血色红"
+                    android:text="绯红"
                     android:textColor="@color/theme4"/>
 
             </LinearLayout>

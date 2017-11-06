@@ -14,7 +14,7 @@ import xyz.wendyltanpcy.easytodo.R;
 
 public class ColorManager {
 
-    public static final int DEFAULT_COLOR = 0xFF525B8D;
+    public static final int DEFAULT_COLOR = 0xFF4CAF50;
     private final List<OnColorChangedListener> listeners = new ArrayList<>();
     private int mCurrentColor = DEFAULT_COLOR;
     private int mStoreColor = DEFAULT_COLOR;
