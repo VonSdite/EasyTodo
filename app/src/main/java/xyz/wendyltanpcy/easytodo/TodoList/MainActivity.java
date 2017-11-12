@@ -248,17 +248,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         notifySwapItem();   // 如果发生了交换位置，保存到数据库
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        initDrawerLayout(); // 重新加载侧滑菜单选择在已完成上
-        showNoEvent();      // 判断是否显示空的layout
-        if (ColorManager.IS_COLOR_CHANGE) {
-            syncButtonColor();
-        }
-        MyAdapter.notifyDataSetChanged();   // 为了显示已过期等
-    }
-
     private void notifySwapItem(){
         // 保存数据库， 如果发生交换位置
         if (isSwap) {
@@ -473,6 +462,17 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         } else {
             visibility.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initDrawerLayout(); // 重新加载侧滑菜单选择在已完成上
+        showNoEvent();      // 判断是否显示空的layout
+        if (ColorManager.IS_COLOR_CHANGE) {
+            syncButtonColor();
+        }
+        MyAdapter.notifyDataSetChanged();
     }
 
     /**
