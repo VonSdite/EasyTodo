@@ -2,10 +2,8 @@ package xyz.wendyltanpcy.easytodo.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -18,6 +16,7 @@ import android.widget.TextView;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.List;
 
 import xyz.wendyltanpcy.easytodo.R;
@@ -30,7 +29,7 @@ import xyz.wendyltanpcy.easytodo.model.TodoEvent;
 /**
  * 事件适配器，用于主界面事件的显示处理逻辑
  */
-public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> implements
+public class EventsAdapter extends SwipeMenuRecyclerView.Adapter<EventsAdapter.ViewHolder> implements
         Serializable
 
 {
@@ -39,6 +38,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     private int position;
     private ViewHolder holder;
     public SwipeMenuRecyclerView menuRecyclerView;
+    private int clickedItem = 0;
 
     private View visibility;        // showNoEvent用
 
@@ -122,46 +122,45 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
-    public void onBindViewHolder(EventsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final EventsAdapter.ViewHolder holder, int position) {
         final TodoEvent todoEvent = mTodoEventList.get(holder.getAdapterPosition());
-        final EventsAdapter.ViewHolder hd = holder;
 
         // 显示过期问题
         if (todoEvent.isEventExpired())
-            hd.expiredText.setVisibility(View.VISIBLE);
+            holder.expiredText.setVisibility(View.VISIBLE);
         else
-            hd.expiredText.setVisibility(View.GONE);
+            holder.expiredText.setVisibility(View.GONE);
 
         //seting defaul style or the viewholder don't know what to do
         if (todoEvent.isClicked()) {
-            hd.checkBoxSample.setChecked(true);        // 勾的打勾
-            hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() | Paint
+            holder.checkBoxSample.setChecked(true);        // 勾的打勾
+            holder.eventNameText.setPaintFlags(holder.eventNameText.getPaintFlags() | Paint
                     .STRIKE_THRU_TEXT_FLAG);
         } else {
-            hd.checkBoxSample.setChecked(false);
-            hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() & (~Paint
+            holder.checkBoxSample.setChecked(false);
+            holder.eventNameText.setPaintFlags(holder.eventNameText.getPaintFlags() & (~Paint
                     .STRIKE_THRU_TEXT_FLAG));
         }
 
 
         // 长按出现删除菜单
-        hd.handleView.setOnLongClickListener(new View.OnLongClickListener() {
+        holder.handleView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                setPosition(hd.getAdapterPosition());
+                setPosition(holder.getAdapterPosition());
                 return false;
             }
         });
 
         // 触摸拖动
-        hd.handleView.setOnTouchListener(new View.OnTouchListener() {
+        holder.handleView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 int action = motionEvent.getAction();
                 switch (action) {
                     case MotionEvent.ACTION_DOWN:
                     case MotionEvent.ACTION_UP:
-                        menuRecyclerView.startDrag(hd);
+                        menuRecyclerView.startDrag(holder);
                         break;
                     default:
                         break;
@@ -171,104 +170,124 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         });
 
         // 触摸拖动
-        hd.eventNameText.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                int action = motionEvent.getAction();
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                    case MotionEvent.ACTION_UP:
-                        menuRecyclerView.startDrag(hd);
-                        break;
-                    default:
-                        break;
-                }
-                return false;
-            }
-        });
+        // 这个也能touch的话，会导致当item过多的时候，难以往下拉
+//        holder.eventNameText.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                int action = motionEvent.getAction();
+//                switch (action) {
+//                    case MotionEvent.ACTION_DOWN:
+//                    case MotionEvent.ACTION_UP:
+//                        menuRecyclerView.startDrag(holder);
+//                        break;
+//                    default:
+//                        break;
+//                }
+//                return false;
+//            }
+//        });
 
         // 长按出现删除菜单
-        hd.eventNameText.setOnLongClickListener(new View.OnLongClickListener() {
+        holder.eventNameText.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                setPosition(hd.getAdapterPosition());
+                setPosition(holder.getAdapterPosition());
                 return false;
             }
         });
 
-        hd.eventNameText.setText(todoEvent.getEventName());
+        holder.eventNameText.setText(todoEvent.getEventName());
 
-        hd.eventNameText.setOnClickListener(new View.OnClickListener() {
+        holder.eventNameText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!todoEvent.isClicked()) {
-                    EventContentActivity eC = new EventContentActivity(hd);
+                    EventContentActivity eC = new EventContentActivity(holder);
                     eC.actionStart(mContext, todoEvent);
                 }
             }
         });
 
-        hd.checkBoxSample.setOnClickListener(new View.OnClickListener() {
+        holder.checkBoxSample.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                hd.checkBoxSample.setChecked(true);
-                hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() | Paint
-                        .STRIKE_THRU_TEXT_FLAG);
+                final TodoEvent todoEvent = mTodoEventList.get(holder.getAdapterPosition());
 
+                if(todoEvent.isClicked()) {
+                    // 取消标记完成， 取消打钩的操作
+                    holder.checkBoxSample.setChecked(false);
+                    holder.eventNameText.setPaintFlags(holder.eventNameText.getPaintFlags() & (~Paint
+                            .STRIKE_THRU_TEXT_FLAG));
 
-                final TodoEvent todoEvent = mTodoEventList.get(hd.getAdapterPosition());
-                final AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
-                dialog.setTitle("确定已经完成这个事件？");
-                dialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                FinishEvent finishEvent = new FinishEvent();
-                                finishEvent.setEventName(todoEvent.getEventName());
-                                finishEvent.setEventFinishDate(todoEvent.getEventDate());
-                                finishEvent.save();
-                                todoEvent.setClicked(true);
-                                todoEvent.delete();
-                                mTodoEventList.remove(hd.getAdapterPosition());
-                                Snackbar.make(hd.itemView,"干得漂亮", Snackbar.LENGTH_SHORT).show();
+                    todoEvent.setClicked(false);
+//                    todoEvent.save();
 
-                                notifyItemRemoved(hd.getAdapterPosition());
-                                if (mTodoEventList.isEmpty()) {
-                                    visibility.setVisibility(View.VISIBLE);
-                                } else {
-                                    visibility.setVisibility(View.GONE);
-                                }
-                            }
-                        });
-                dialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        hd.checkBoxSample.setChecked(false);
-                        hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() & (~Paint
-                                .STRIKE_THRU_TEXT_FLAG));
-                        todoEvent.setClicked(false);
+                    --clickedItem;
+
+                    if(clickedItem > 0) {
+                        Snackbar.make(holder.itemView, "已完成 "+clickedItem+" 件事", Snackbar.LENGTH_SHORT)
+                                .setAction("取消", cancelListener)
+                                .show();
                     }
-                });
-                dialog.setCancelable(false);
-                dialog.show();
 
-//                if(todoEvent.isClicked()) {
-//                    hd.checkBoxSample.setChecked(false);
-//                    hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() & (~Paint
-//                            .STRIKE_THRU_TEXT_FLAG));
-//                    todoEvent.setClicked(false);
+                } else {
+                    // 标记完成， 打钩的操作
+                    holder.checkBoxSample.setChecked(true);
+                    holder.eventNameText.setPaintFlags(holder.eventNameText.getPaintFlags() | Paint
+                            .STRIKE_THRU_TEXT_FLAG);
+
+                    todoEvent.setClicked(true);
 //                    todoEvent.save();
-//                } else {
-//                    hd.checkBoxSample.setChecked(true);
-//                    hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() | Paint
-//                            .STRIKE_THRU_TEXT_FLAG);
-//                    todoEvent.setClicked(true);
-//                    todoEvent.save();
-//                    Snackbar.make(hd.itemView,"此事件已完成！",Snackbar.LENGTH_SHORT).show();
-//                }
+
+                    ++clickedItem;
+
+                    Snackbar.make(holder.itemView, "已完成 "+clickedItem+" 件事", Snackbar.LENGTH_SHORT)
+                            .setAction("取消", cancelListener)
+                            .show();
+                }
             }
         });
 
     }
+
+    // Snackbar 的确定监听器
+//    private View.OnClickListener confirmListener = new View.OnClickListener() {
+//        @Override
+//        public void onClick(View view) {
+//            // 确定时执行将所有打钩的事件丢进FinishEvent中
+//            Iterator<TodoEvent> iterator = mTodoEventList.iterator();
+//            while (iterator.hasNext()){
+//                TodoEvent tmp = iterator.next();
+//                if (tmp.isClicked()){
+//                    FinishEvent finishEvent = new FinishEvent();
+//                    finishEvent.setEventName(tmp.getEventName());
+//                    finishEvent.setEventFinishDate(tmp.getEventDate());
+//                    finishEvent.save();
+//                    tmp.delete();
+//                    iterator.remove();
+//                }
+//            }
+//            notifyDataSetChanged();
+//            clickedItem = 0;
+//        }
+//    };
+
+    // Snackbar 的取消监听器
+    private View.OnClickListener cancelListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            // 取消打钩
+            Iterator<TodoEvent> iterator = mTodoEventList.iterator();
+            while (iterator.hasNext()){
+                TodoEvent tmp = iterator.next();
+                if (tmp.isClicked()){
+                    tmp.setClicked(false);
+                }
+            }
+            clickedItem = 0;
+            notifyDataSetChanged();
+        }
+    };
 
     @Override
     public int getItemCount() {
