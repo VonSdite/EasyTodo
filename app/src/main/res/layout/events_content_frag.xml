@@ -79,7 +79,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="任务"
+                        android:text="mission"
                         android:textSize="15sp"/>
 
                     <EditText
@@ -110,7 +110,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="详情"
+                        android:text="detail"
                         android:textSize="15sp"/>
 
                     <EditText
@@ -135,12 +135,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:padding="10dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/theme4"
-                        android:text="截止日期"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -178,12 +172,6 @@
                     android:padding="10dp">
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/theme4"
-                        android:text="提醒时间"/>
-
-                    <TextView
                         android:id="@+id/event_alram"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -218,5 +206,5 @@
         app:backgroundTint="@color/colorPrimary"
         app:layout_anchor="@id/appbar"
         app:layout_anchorGravity="bottom|right|end"
-        app:srcCompat="@drawable/ic_done_white_24dp"/>
+        app:srcCompat="@android:drawable/ic_menu_send"/>
 </android.support.design.widget.CoordinatorLayout>
