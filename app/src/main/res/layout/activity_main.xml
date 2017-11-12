@@ -29,6 +29,7 @@
             <xyz.wendyltanpcy.easytodo.helper.ColorLinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+<<<<<<< HEAD
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
@@ -40,6 +41,16 @@
 
 
         <include layout="@layout/content_main"/>
+=======
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:popupTheme="@style/AppTheme.PopupOverlay"/>
+            </xyz.wendyltanpcy.easytodo.helper.ColorLinearLayout>
+        </android.support.design.widget.AppBarLayout>
+>>>>>>> parent of b911244... 加入了Expandlistview用于事件分类
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -47,6 +58,7 @@
         <include layout="@layout/content_main"/>
 
 
+<<<<<<< HEAD
 >>>>>>> parent of b911244... 加入了Expandlistview用于事件分类
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/add_event"
@@ -70,6 +82,19 @@
                 app:backgroundTint="@color/colorPrimary"
                 app:srcCompat="@drawable/ic_add_white_24dp"/>
 >>>>>>> parent of 6f1b473... Merge pull request #24 from VonSdite/master
+=======
+        <include layout="@layout/content_main"/>
+
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/add_event"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            app:backgroundTint="@color/colorPrimary"
+            app:srcCompat="@drawable/ic_add_white_24dp"/>
+>>>>>>> parent of b911244... 加入了Expandlistview用于事件分类
 
     </android.support.design.widget.CoordinatorLayout>
 
