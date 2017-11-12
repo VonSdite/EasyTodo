@@ -13,4 +13,11 @@
                 android:layout_weight="1"
                 android:text="label1"/>
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                android:src="@drawable/ic_done_black_24dp"
+                android:id="@+id/label_item_is_current_check"/>
+
 </LinearLayout>

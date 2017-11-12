@@ -42,6 +42,7 @@ public class EventContentFragment extends Fragment {
     private TextView eventAlarmText;
     private TodoEvent Event;
     private ExpandableListView categoryExpandList;
+    private ExpandListAdapter categoryAdapter;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.events_content_frag,container,false);
@@ -51,7 +52,10 @@ public class EventContentFragment extends Fragment {
         eventDeadLineText = mView.findViewById(R.id.event_deadline);
         eventAlarmText = mView.findViewById(R.id.event_alram);
         categoryExpandList = mView.findViewById(R.id.expand_list);
-        categoryExpandList.setAdapter(new ExpandListAdapter());
+        categoryAdapter = new ExpandListAdapter();
+        //传入事件
+        categoryExpandList.setAdapter(categoryAdapter);
+
 
         return mView;
     }
@@ -62,6 +66,8 @@ public class EventContentFragment extends Fragment {
         eventDetailText.setText(event.getEventDetail());
         eventDeadLineText.setText(event.getEventDate());
         eventAlarmText.setText(event.getEventTime());
+        categoryAdapter.setEvent(event);
+
     }
 
 

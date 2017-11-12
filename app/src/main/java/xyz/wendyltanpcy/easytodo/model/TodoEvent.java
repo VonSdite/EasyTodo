@@ -17,6 +17,8 @@ public class TodoEvent extends DataSupport implements Serializable, Comparable<T
     private String eventName;        // 事件的名称
     private String eventDetail;      // 事件的详情
 
+    private int eventCategory = 0; //no category
+
     private Date eventDeadline;      // 事件的deadline 这是个Date类型
 
     private String eventDate;        // 事件的年月日字符串
@@ -115,4 +117,15 @@ public class TodoEvent extends DataSupport implements Serializable, Comparable<T
         Date date = new Date();
         return date.compareTo(eventDeadline) > 0;
     }
+
+    //用于组织类别分类
+
+    public void setEventCategory(int eventCategory) {
+        this.eventCategory = eventCategory;
+    }
+
+    public int getEventCategory() {
+        return eventCategory;
+    }
+
 }
