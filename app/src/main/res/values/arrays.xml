@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer-array name="default_color_array">
-        <item>@color/colorPrimary</item>
+        <item>@color/theme0</item>
         <item>@color/theme1</item>
         <item>@color/theme2</item>
         <item>@color/theme3</item>

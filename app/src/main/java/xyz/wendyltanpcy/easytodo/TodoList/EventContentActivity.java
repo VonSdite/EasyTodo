@@ -36,6 +36,9 @@ import kr.co.namee.permissiongen.PermissionFail;
 import kr.co.namee.permissiongen.PermissionGen;
 import kr.co.namee.permissiongen.PermissionSuccess;
 import xyz.wendyltanpcy.easytodo.Adapter.EventsAdapter;
+import xyz.wendyltanpcy.easytodo.Fragment.EventContentFragment;
+import xyz.wendyltanpcy.easytodo.Fragment.PickDateFragment;
+import xyz.wendyltanpcy.easytodo.Fragment.PickTimeFragment;
 import xyz.wendyltanpcy.easytodo.R;
 import xyz.wendyltanpcy.easytodo.helper.ColorManager;
 import xyz.wendyltanpcy.easytodo.helper.PictureUtils;
@@ -65,7 +68,7 @@ public class EventContentActivity extends AppCompatActivity {
     private String mPublicPhotoPath;
     private static final int REQ_GALLERY = 333;
     private static final int REQUEST_CODE_PICK_IMAGE = 222;
-    private EventContentFragment EventContentFragment;
+    private xyz.wendyltanpcy.easytodo.Fragment.EventContentFragment EventContentFragment;
 
 
     private static final String TAG = "EventContentActivity";

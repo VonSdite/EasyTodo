@@ -1,30 +1,27 @@
-package xyz.wendyltanpcy.easytodo.TodoList;
+package xyz.wendyltanpcy.easytodo.Fragment;
 
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
-
-import android.util.Log;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ExpandableListView;
 import android.widget.TextView;
 
-import android.widget.Toast;
-
-
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import xyz.wendyltanpcy.easytodo.Adapter.ExpandListAdapter;
 import xyz.wendyltanpcy.easytodo.R;
-
 import xyz.wendyltanpcy.easytodo.Service.AlarmService;
-import xyz.wendyltanpcy.easytodo.Service.LocalService;
-
 import xyz.wendyltanpcy.easytodo.model.TodoEvent;
+
+import static android.content.Context.ALARM_SERVICE;
 
 /**
  * Created by Wendy on 2017/9/6.
@@ -36,12 +33,15 @@ public class EventContentFragment extends Fragment {
     private static final int REQUEST_DATE = 0;
     private static final int REQUEST_TIME = 1;
 
+    private static final String TAG = "EventContentFragment";
+
 
     private TextView eventNameText ;
     private TextView eventDetailText ;
     private TextView eventDeadLineText ;
     private TextView eventAlarmText;
     private TodoEvent Event;
+    private ExpandableListView categoryExpandList;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.events_content_frag,container,false);
@@ -50,6 +50,8 @@ public class EventContentFragment extends Fragment {
         eventDetailText =  mView.findViewById(R.id.event_detail);
         eventDeadLineText = mView.findViewById(R.id.event_deadline);
         eventAlarmText = mView.findViewById(R.id.event_alram);
+        categoryExpandList = mView.findViewById(R.id.expand_list);
+        categoryExpandList.setAdapter(new ExpandListAdapter());
 
         return mView;
     }
@@ -62,7 +64,7 @@ public class EventContentFragment extends Fragment {
         eventAlarmText.setText(event.getEventTime());
     }
 
-    private static final String TAG = "EventContentFragment";
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -107,13 +109,15 @@ public class EventContentFragment extends Fragment {
                 eventAlarmText.setText(Event.getEventTime());
 
 //                //听说是原生的方法
-//                Intent i = new Intent(getContext(),AlarmService.class);
-//                i.putExtra("event",Event);
-//                PendingIntent sender = PendingIntent.getBroadcast(getContext(),0,i,0);
-//                AlarmManager manager = (AlarmManager)getContext().getSystemService(ALARM_SERVICE);
-//                manager.set(AlarmManager.RTC_WAKEUP,Event.getEventCalendar().getTimeInMillis(),sender);
-//                manager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+5000, 5000, sender);
-//                getContext().startService(i);
+                Intent i = new Intent(getContext(),AlarmService.class);
+                i.putExtra("event",Event);
+                PendingIntent sender = PendingIntent.getBroadcast(getContext(),0,i,0);
+                AlarmManager manager = (AlarmManager)getContext().getSystemService(ALARM_SERVICE);
+                Calendar c = Calendar.getInstance();
+                c.setTime(Event.getEventDeadline());
+                manager.set(AlarmManager.RTC_WAKEUP,c.getTimeInMillis(),sender);
+                manager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+5000, 5000, sender);
+                getContext().startService(i);
 
                 //尝试双进程
 

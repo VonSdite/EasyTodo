@@ -54,8 +54,9 @@ import java.util.Map;
 
 import xyz.wendyltanpcy.easytodo.Adapter.EventsAdapter;
 import xyz.wendyltanpcy.easytodo.FinishList.FinishEventListActivity;
+import xyz.wendyltanpcy.easytodo.Fragment.DelayFragment;
+import xyz.wendyltanpcy.easytodo.Fragment.EditMenuFragment;
 import xyz.wendyltanpcy.easytodo.R;
-import xyz.wendyltanpcy.easytodo.TodoBrowser.BrowserActivity;
 import xyz.wendyltanpcy.easytodo.helper.ColorManager;
 import xyz.wendyltanpcy.easytodo.model.Consts;
 import xyz.wendyltanpcy.easytodo.model.ThemeColor;
@@ -338,10 +339,11 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                         startActivity(new Intent(getApplicationContext(), FinishEventListActivity.class));
                         mDrawerLayout.closeDrawer(Gravity.START);
                         break;
-                    case R.id.nav_broswer:
-                        startActivity(new Intent(getApplicationContext(), BrowserActivity.class));
-                        mDrawerLayout.closeDrawer(Gravity.START);
-                        break;
+                        //取消浏览器的入口，浏览器只留作测试版本开放
+//                    case R.id.nav_broswer:
+//                        startActivity(new Intent(getApplicationContext(), BrowserActivity.class));
+//                        mDrawerLayout.closeDrawer(Gravity.START);
+//                        break;
                     case R.id.nav_setting:
                         startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                         mDrawerLayout.closeDrawer(Gravity.START);
@@ -377,17 +379,23 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         SharedPreferences setting = PreferenceManager.getDefaultSharedPreferences(this);
 
         if (setting.getBoolean(Consts.NOTIFICATION_KEY, false)) {
-            Calendar calendar = Calendar.getInstance();
+            Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH) + 1;
+            int day = c.get(Calendar.DAY_OF_MONTH)+1;
+            StringBuilder builder;
+            if (day<10){
+                builder = new StringBuilder().append(year+"年"+month+"月"+"0"+day+"日");
+            }else{
+                builder = new StringBuilder().append(year+"年"+month+"月"+day+"日");
+            }
+
+            String dayString = builder.toString();
             int eventCount = 0;
             boolean vibrate = setting.getBoolean(Consts.VIBRATE_KEY, false);
             String ringtoneName = setting.getString("ringtoneName", "");
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH);
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-            StringBuilder builder = new StringBuilder().append(year).append("年").append(month + 1)
-                    .append("月").append(day).append("日");
             for (TodoEvent event : todoEventList) {
-                if (event.getEventDate().equals(builder.toString())) {
+                if (event.getEventDate().equals(dayString)) {
                     eventCount++;
                 }
             }
@@ -397,7 +405,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
             i.putExtra("ringtoneName", ringtoneName);
             PendingIntent pi = PendingIntent.getBroadcast(this, 777, i, 0);
             AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-            am.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pi);
+            am.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pi);
         }
 
     }
