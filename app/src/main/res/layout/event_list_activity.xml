@@ -7,5 +7,5 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/event_list_fragment"
-        android:name="xyz.wendyltanpcy.easytodo.Fragment.EventListFragment"/>
+        android:name="xyz.wendyltanpcy.easytodo.TodoList.EventListFragment"/>
 </LinearLayout>

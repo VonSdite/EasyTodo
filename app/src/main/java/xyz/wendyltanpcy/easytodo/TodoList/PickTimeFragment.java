@@ -1,4 +1,4 @@
-package xyz.wendyltanpcy.easytodo.Fragment;
+package xyz.wendyltanpcy.easytodo.TodoList;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TimePicker;

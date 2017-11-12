@@ -204,31 +204,9 @@
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
-            <android.support.v7.widget.CardView
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:clickable="true"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:layout_margin="5dp"
-                app:cardCornerRadius="4dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <xyz.wendyltanpcy.easytodo.helper.MyExpandListView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/expand_list"/>
-
-                </LinearLayout>
-            </android.support.v7.widget.CardView>
 
         </LinearLayout>
-
-
-
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
