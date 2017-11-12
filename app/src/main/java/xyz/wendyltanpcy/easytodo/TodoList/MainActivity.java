@@ -54,6 +54,8 @@ import java.util.Map;
 
 import xyz.wendyltanpcy.easytodo.Adapter.EventsAdapter;
 import xyz.wendyltanpcy.easytodo.FinishList.FinishEventListActivity;
+import xyz.wendyltanpcy.easytodo.Fragment.DelayFragment;
+import xyz.wendyltanpcy.easytodo.Fragment.EditMenuFragment;
 import xyz.wendyltanpcy.easytodo.R;
 import xyz.wendyltanpcy.easytodo.helper.ColorManager;
 import xyz.wendyltanpcy.easytodo.model.Consts;
