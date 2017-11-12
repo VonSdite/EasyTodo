@@ -13,41 +13,40 @@
         android:scaleType="fitXY"
         android:visibility="gone"/>
 
-<android.support.v4.widget.DrawerLayout
-    android:id="@+id/drawer_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <android.support.design.widget.CoordinatorLayout
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.design.widget.AppBarLayout
+        <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/AppTheme.AppBarOverlay">
-            <xyz.wendyltanpcy.easytodo.helper.ColorLinearLayout
+            android:layout_height="match_parent">
+
+            <android.support.design.widget.AppBarLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/toolbar"
+                android:layout_height="wrap_content"
+                android:theme="@style/AppTheme.AppBarOverlay">
+                <xyz.wendyltanpcy.easytodo.helper.ColorLinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    app:popupTheme="@style/AppTheme.PopupOverlay"/>
-            </xyz.wendyltanpcy.easytodo.helper.ColorLinearLayout>
-        </android.support.design.widget.AppBarLayout>
+                    android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.Toolbar
+                        android:id="@+id/toolbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="?attr/actionBarSize"
+                        app:popupTheme="@style/AppTheme.PopupOverlay"/>
+                </xyz.wendyltanpcy.easytodo.helper.ColorLinearLayout>
+            </android.support.design.widget.AppBarLayout>
 
 
-        <include layout="@layout/content_main"/>
-
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> parent of 0809f60... Revert "加入了Expandlistview用于事件分类"
         <include layout="@layout/content_main"/>
 
-
->>>>>>> parent of b911244... 加入了Expandlistview用于事件分类
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/add_event"
             android:layout_width="wrap_content"
@@ -71,15 +70,17 @@
                 app:srcCompat="@drawable/ic_add_white_24dp"/>
 >>>>>>> parent of 6f1b473... Merge pull request #24 from VonSdite/master
 
-    </android.support.design.widget.CoordinatorLayout>
+        </android.support.design.widget.CoordinatorLayout>
 
         <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        app:headerLayout="@layout/nav_header"
-        app:menu="@menu/nav_menu" />
+            android:id="@+id/nav_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            app:headerLayout="@layout/nav_header"
+            app:menu="@menu/nav_menu">
 
-</android.support.v4.widget.DrawerLayout>
+        </android.support.design.widget.NavigationView>
+
+    </android.support.v4.widget.DrawerLayout>
 </LinearLayout>
