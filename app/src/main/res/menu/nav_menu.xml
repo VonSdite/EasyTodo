@@ -16,7 +16,7 @@
             <!--android:title="浏览器beta"/>-->
         <item
             android:id="@+id/nav_setting"
-            android:icon="@drawable/ic_settings"
+            android:icon="@drawable/ic_settings_white_24dp"
             android:title="设置"/>
 
     </group>

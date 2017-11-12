@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xyz.wendyltanpcy.easytodo.helper.ColorLinearLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="180dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
     android:layout_width="match_parent">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="180dp"
+        android:background="@drawable/nav_header_bg"
         android:padding="10dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/icon_image"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_centerInParent="true"
-            android:src="@mipmap/icon2" />
+            android:layout_alignEnd="@+id/mail"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="24dp"
+            android:src="@mipmap/icon2"/>
 
         <TextView
             android:id="@+id/username"
@@ -33,6 +38,6 @@
             android:text="TodoList 2.0"
             android:textColor="#FFF"
             android:textSize="14sp"/>
-
     </RelativeLayout>
-</xyz.wendyltanpcy.easytodo.helper.ColorLinearLayout>
+
+</LinearLayout>
