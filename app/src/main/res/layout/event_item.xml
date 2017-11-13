@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content">
+
 
     <android.support.v7.widget.CardView
         android:id="@+id/event_item"
@@ -16,6 +16,17 @@
         app:cardElevation="1dp"
         app:cardMaxElevation="2dp"
         app:cardUseCompatPadding="true">
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/category_bookmark"
+            android:visibility="invisible"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="-5dp"
+            android:src="@drawable/icon_bookmark"/>
 
         <LinearLayout
             android:id="@+id/item_event"
@@ -33,11 +44,12 @@
                 app:color_border="#FF3F51B5"
                 app:size="25dp"/>
 
+
             <TextView
                 android:id="@+id/event_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="30dp"
                 android:layout_weight="1"
                 android:maxLines="1"
                 android:padding="12dp"
@@ -59,7 +71,10 @@
                 android:layout_gravity="center_vertical|right"
                 android:scaleType="center"
                 android:src="@mipmap/ic_reorder_grey_500_24dp"/>
+
         </LinearLayout>
+
     </android.support.v7.widget.CardView>
+
 
 </LinearLayout>

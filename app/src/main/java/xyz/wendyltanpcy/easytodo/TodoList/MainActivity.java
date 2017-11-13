@@ -378,7 +378,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
             }else{
                 builder = new StringBuilder().append(year+"年"+month+"月"+day+"日");
             }
-
             String dayString = builder.toString();
             int eventCount = 0;
             boolean vibrate = setting.getBoolean(Consts.VIBRATE_KEY, false);

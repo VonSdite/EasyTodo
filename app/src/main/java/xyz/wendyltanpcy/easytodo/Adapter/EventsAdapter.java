@@ -3,6 +3,7 @@ package xyz.wendyltanpcy.easytodo.Adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.ColorStateList;
 import android.graphics.Paint;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -40,6 +41,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     private ViewHolder holder;
     public SwipeMenuRecyclerView menuRecyclerView;
 
+
+
     private View visibility;        // showNoEvent用
 
     public ViewHolder getHolder() {
@@ -66,6 +69,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         private CheckBoxSample checkBoxSample;
         private ImageView handleView;
         private TextView expiredText;
+        private ImageView bookmark;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -73,6 +77,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             checkBoxSample = itemView.findViewById(R.id.event_finish);
             handleView = itemView.findViewById(R.id.handle);
             expiredText = itemView.findViewById(R.id.expired_text);
+            bookmark = itemView.findViewById(R.id.category_bookmark);
             itemView.setOnCreateContextMenuListener(this);
         }
 
@@ -152,6 +157,28 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                 return false;
             }
         });
+
+        //get category and set bookmark color
+        int category = todoEvent.getEventCategory();
+        if (category>0){
+            hd.bookmark.setVisibility(View.VISIBLE);
+            switch (category){
+                case 1:
+                    hd.bookmark.setImageTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.theme0)));
+                    break;
+                case 2:
+                    hd.bookmark.setImageTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.theme1)));
+                    break;
+                case 3:
+                    hd.bookmark.setImageTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.theme2)));
+                    break;
+                case 4:
+                    hd.bookmark.setImageTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.theme3)));
+                    break;
+            }
+        }else{
+            hd.bookmark.setVisibility(View.INVISIBLE);
+        }
 
         // 触摸拖动
         hd.handleView.setOnTouchListener(new View.OnTouchListener() {

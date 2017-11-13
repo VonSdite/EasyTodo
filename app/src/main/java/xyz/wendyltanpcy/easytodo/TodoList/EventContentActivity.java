@@ -98,6 +98,10 @@ public class EventContentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.events_content);
 
+        Intent i = getIntent();
+        if (Event==null)
+            Event = (TodoEvent) i.getSerializableExtra("event");
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         saveDetailButton = (FloatingActionButton) findViewById(R.id.save_detail_button);
 
