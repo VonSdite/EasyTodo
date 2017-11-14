@@ -13,6 +13,22 @@
         android:scaleType="fitXY"
         android:visibility="gone"/>
 
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+        <xyz.wendyltanpcy.easytodo.helper.ColorLinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:popupTheme="@style/AppTheme.PopupOverlay"/>
+        </xyz.wendyltanpcy.easytodo.helper.ColorLinearLayout>
+    </android.support.design.widget.AppBarLayout>
+
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
@@ -22,21 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <android.support.design.widget.AppBarLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:theme="@style/AppTheme.AppBarOverlay">
-                <xyz.wendyltanpcy.easytodo.helper.ColorLinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
 
-                    <android.support.v7.widget.Toolbar
-                        android:id="@+id/toolbar"
-                        android:layout_width="match_parent"
-                        android:layout_height="?attr/actionBarSize"
-                        app:popupTheme="@style/AppTheme.PopupOverlay"/>
-                </xyz.wendyltanpcy.easytodo.helper.ColorLinearLayout>
-            </android.support.design.widget.AppBarLayout>
 
 
 

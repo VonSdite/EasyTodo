@@ -8,13 +8,14 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -22,7 +23,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -64,7 +64,7 @@ import xyz.wendyltanpcy.easytodo.model.TodoEvent;
 
 
 public class MainActivity extends AppCompatActivity implements Serializable, DialogInterface
-        .OnDismissListener {
+        .OnDismissListener, NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "MainActivity";
     private EventsAdapter MyAdapter;
@@ -308,40 +308,12 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        final NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_menu);
-        }
-        navView.setCheckedItem(R.id.nav_task);
-        navView.setNavigationItemSelectedListener(new NavigationView
-                .OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.nav_task:
-                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                        mDrawerLayout.closeDrawer(Gravity.START);
-                        break;
-                    case R.id.nav_finish:
-                        startActivity(new Intent(getApplicationContext(), FinishEventListActivity.class));
-                        mDrawerLayout.closeDrawer(Gravity.START);
-                        break;
-                        //取消浏览器的入口，浏览器只留作测试版本开放
-//                    case R.id.nav_broswer:
-//                        startActivity(new Intent(getApplicationContext(), BrowserActivity.class));
-//                        mDrawerLayout.closeDrawer(Gravity.START);
-//                        break;
-                    case R.id.nav_setting:
-                        startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
-                        mDrawerLayout.closeDrawer(Gravity.START);
-                        break;
-                    default:
-                }
-                return true;
-            }
-        });
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+        NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
+        navView.setNavigationItemSelectedListener(this);
     }
 
     /**
@@ -597,5 +569,26 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         }
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_task:
+                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                break;
+            case R.id.nav_finish:
+                startActivity(new Intent(getApplicationContext(), FinishEventListActivity.class));
+                break;
+            //取消浏览器的入口，浏览器只留作测试版本开放
+//                    case R.id.nav_broswer:
+//                        startActivity(new Intent(getApplicationContext(), BrowserActivity.class));
+//                        mDrawerLayout.closeDrawer(Gravity.START);
+//                        break;
+            case R.id.nav_setting:
+                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+                break;
+        }
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
 }
 
