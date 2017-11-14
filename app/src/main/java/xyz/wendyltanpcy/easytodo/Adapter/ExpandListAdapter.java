@@ -97,16 +97,20 @@ public class ExpandListAdapter extends BaseExpandableListAdapter {
             switch (mEvent.getEventCategory()){
                 case 1:
                     labelString = "生活";
+                    groupViewHolder.category.setTextColor(parent.getContext().getResources().getColor(R.color.theme0));
                     break;
                 case 2:
                     labelString = "工作";
+                    groupViewHolder.category.setTextColor(parent.getContext().getResources().getColor(R.color.theme1));
                     break;
                 case 3:
                     labelString = "紧急";
+                    groupViewHolder.category.setTextColor(parent.getContext().getResources().getColor(R.color.theme2));
                     break;
 
                 case 4:
                     labelString = "私人";
+                    groupViewHolder.category.setTextColor(parent.getContext().getResources().getColor(R.color.theme3));
                     break;
             }
         }
@@ -125,21 +129,21 @@ public class ExpandListAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.expand_list_item_view, parent, false);
             childViewHolder = new ChildViewHolder();
-
+            childViewHolder.expandView = convertView.findViewById(R.id.expand_item_view);
             childViewHolder.tvTitle = convertView.findViewById(R.id.label_expand_item);
             childViewHolder.isChoosen = convertView.findViewById(R.id.label_item_is_current_check);
 
             //init the view when first enter the expandlist
-            if (mEvent.getEventCategory()==childPosition+1)
+            if (mEvent.getEventCategory()==childPosition+1) {
                 childViewHolder.isChoosen.setVisibility(View.VISIBLE);
-
+            }
             else{
                 childViewHolder.isChoosen.setVisibility(View.INVISIBLE);
             }
 
 
             //setting the listener for storing category
-            childViewHolder.tvTitle.setOnClickListener(new View.OnClickListener() {
+            childViewHolder.expandView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     mEvent.setEventCategory(childPosition+1);
@@ -175,6 +179,7 @@ public class ExpandListAdapter extends BaseExpandableListAdapter {
         TextView category;
     }
     static class ChildViewHolder {
+        View expandView;
         TextView tvTitle;
         ImageView isChoosen;
     }

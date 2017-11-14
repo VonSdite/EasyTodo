@@ -57,6 +57,7 @@ public class EventContentActivity extends AppCompatActivity {
     private static TodoEvent Event;
     private ImageView eventImage;
     private EventsAdapter.ViewHolder holder;
+    private static boolean actionStartFlag = false;
     private static final int REQUEST_DATE = 0;
     private static final int REQUEST_TIME = 1;
     private static final String DIALOG_DATE = "DialogDate";
@@ -73,9 +74,10 @@ public class EventContentActivity extends AppCompatActivity {
 
     private static final String TAG = "EventContentActivity";
 
-    public void actionStart(Context context, TodoEvent event){
+    public static void actionStart(Context context, TodoEvent event){
         Intent intent = new Intent(context,EventContentActivity.class);
         Event = event;
+        actionStartFlag = true;
         context.startActivity(intent);
     }
 
@@ -98,12 +100,14 @@ public class EventContentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.events_content);
 
+
+        //launch by notification
         Intent i = getIntent();
-        if (Event==null)
+        if (!actionStartFlag)
             Event = (TodoEvent) i.getSerializableExtra("event");
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        saveDetailButton = (FloatingActionButton) findViewById(R.id.save_detail_button);
+        Toolbar toolbar =  findViewById(R.id.toolbar);
+        saveDetailButton = findViewById(R.id.save_detail_button);
 
         setSupportActionBar(toolbar);
         getThemeColor(toolbar);

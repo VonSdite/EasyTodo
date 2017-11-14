@@ -58,7 +58,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         Calendar c = Calendar.getInstance();
         int year = c.get(Calendar.YEAR);
         int month = c.get(Calendar.MONTH) + 1;
-        int day = c.get(Calendar.DAY_OF_MONTH)+1;
+        int day = c.get(Calendar.DAY_OF_MONTH);
         StringBuilder builder;
         if (day<10){
             builder = new StringBuilder().append(year+"年"+month+"月"+"0"+day+"日");
@@ -140,32 +140,43 @@ public class AlarmReceiver extends BroadcastReceiver {
             manager.notify(0,notification);
         }else{
             NotificationManager manager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
-
             id=1;
+            int requestCode = 777;
+            Notification notification;
+
+            //construct the group header here
+            title = "今天要做的事情 "+num;
+            content = "";
+            Intent intent1 = new Intent(context,MainActivity.class);
+            PendingIntent pending = PendingIntent.getActivity(context,requestCode,intent1,0);
+            if (vibrate)
+                notification = createBuilderWithRing(context,title,content,pending,ringtoneName).setGroupSummary(true).build();
+            else
+                notification = createBuilder(context,title,content,pending).setGroupSummary(true).build();
+            manager.notify(0,notification);
+
+            //construct the group item notification
             for (TodoEvent event :tempList) {
                 title = event.getEventName();
                 content = event.getEventDetail();
-                Intent intent1 = new Intent(context, EventContentActivity.class);
-                intent1.putExtra("event",event);
-                PendingIntent pi = PendingIntent.getActivity(context, 777, intent1, 0);
-                Notification notification;
+                if(content.isEmpty())
+                    content = "no detail yet";
+                else
+                    content = "详情: " + content;
+
+                Intent intent2 = new Intent(context, EventContentActivity.class);
+                intent2.putExtra("event",event);
+                PendingIntent pi = PendingIntent.getActivity(context, requestCode, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
                 if (vibrate) {
-                    if (id==1)
-                        notification = createBuilderWithRing(context, title, content, pi, ringtoneName).setGroupSummary(true).build();
-                    else
-                        notification = createBuilderWithRing(context, title, content, pi, ringtoneName).build();
+                    notification = createBuilderWithRing(context, title, content, pi, ringtoneName).build();
                 } else {
-                    if (id==1)
-                        notification = createBuilder(context, title, content, pi).setGroupSummary(true).build();
-                    else
-                        notification = createBuilder(context, title, content, pi).build();
+                    notification = createBuilder(context, title, content, pi).build();
                 }
                 manager.notify(id, notification);
                 id++;
+                requestCode++;
             }
         }
-
-
 
 
     }
