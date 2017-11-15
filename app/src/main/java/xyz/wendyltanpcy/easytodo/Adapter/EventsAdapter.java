@@ -198,21 +198,21 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         });
 
         // 触摸拖动
-        hd.eventNameText.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                int action = motionEvent.getAction();
-                switch (action) {
-                    case MotionEvent.ACTION_DOWN:
-                    case MotionEvent.ACTION_UP:
-                        menuRecyclerView.startDrag(hd);
-                        break;
-                    default:
-                        break;
-                }
-                return false;
-            }
-        });
+//        hd.eventNameText.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                int action = motionEvent.getAction();
+//                switch (action) {
+//                    case MotionEvent.ACTION_DOWN:
+//                    case MotionEvent.ACTION_UP:
+//                        menuRecyclerView.startDrag(hd);
+//                        break;
+//                    default:
+//                        break;
+//                }
+//                return false;
+//            }
+//        });
 
         // 长按出现删除菜单
         hd.eventNameText.setOnLongClickListener(new View.OnLongClickListener() {
