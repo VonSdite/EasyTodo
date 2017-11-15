@@ -157,19 +157,6 @@ public class FinishEventListActivity extends AppCompatActivity implements Naviga
                 .withDescription("Your finish event here");
 
 
-        //subitem
-        SecondaryDrawerItem subitem1 = new SecondaryDrawerItem().withIdentifier(3).withName("生活").withBadge("Life").withTextColorRes(R.color.theme0);
-        SecondaryDrawerItem subitem2 = new SecondaryDrawerItem().withIdentifier(3).withName("工作").withBadge("Work").withTextColorRes(R.color.theme1);
-        SecondaryDrawerItem subitem3 = new SecondaryDrawerItem().withIdentifier(3).withName("紧急").withBadge("Emergency").withTextColorRes(R.color.theme2);
-        SecondaryDrawerItem subitem4 = new SecondaryDrawerItem().withIdentifier(3).withName("私人").withBadge("Private").withTextColorRes(R.color.theme3);
-
-        SecondaryDrawerItem item3  = new SecondaryDrawerItem().withIdentifier(3)
-                .withName("类别")
-                .withIcon(R.drawable.icon_bookmark)
-                .withSubItems(subitem1,subitem2,subitem3,subitem4)
-                .withIsExpanded(false)
-                .withDescription("Your event category");
-
         final SecondaryDrawerItem item4 = new SecondaryDrawerItem()
                 .withName("设置")
                 .withIdentifier(4)
@@ -206,7 +193,6 @@ public class FinishEventListActivity extends AppCompatActivity implements Naviga
                         new SectionDrawerItem().withName("常规").withDivider(false),
                         item1,
                         item2,
-                        item3,
                         new SectionDrawerItem().withName("相关"),
                         item4
                 )
