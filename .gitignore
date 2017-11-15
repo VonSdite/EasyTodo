@@ -1,3 +1,5 @@
+gradle.properties
+build.gradle
 *.iml
 .gradle
 /local.properties
