@@ -15,6 +15,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -311,6 +312,58 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     }
 
     /**
+     * set different category list shown
+     * @param index
+     */
+
+    private void setCategoryList(int index){
+        //pass -1 in to show all
+        List<TodoEvent> tempList;
+        tempList = DataSupport.findAll(TodoEvent.class);
+        eventList.clear();
+        ActionBar actionBar = getSupportActionBar();
+        String barTitle = "";
+        switch (index){
+            case -1:
+                barTitle = "EasyTodo";
+                break;
+            case 1:
+                barTitle = "Life";
+                break;
+            case 2:
+                barTitle = "Work";
+                break;
+            case 3:
+                barTitle = "Emergency";
+                break;
+            case 4:
+                barTitle = "Private";
+                break;
+        }
+        if (actionBar!=null){
+            actionBar.setTitle(barTitle);
+        }
+
+
+
+        if (index==-1){
+            eventList.addAll(tempList);
+        }else{
+            //else
+            for (TodoEvent event:tempList){
+                if (event.getEventCategory()==index){
+                    eventList.add(event);
+                }
+            }
+
+        }
+
+
+        MyAdapter.notifyDataSetChanged();
+        mDrawer.closeDrawer();
+    }
+
+    /**
      * using Material Drawer to init custom drawer instead of using traditional drawer and navview
      */
 
@@ -332,10 +385,10 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
 
 
         //subitem
-        SecondaryDrawerItem subitem1 = new SecondaryDrawerItem().withIdentifier(3).withName("生活").withBadge("Life").withTextColorRes(R.color.theme0);
-        SecondaryDrawerItem subitem2 = new SecondaryDrawerItem().withIdentifier(3).withName("工作").withBadge("Work").withTextColorRes(R.color.theme1);
-        SecondaryDrawerItem subitem3 = new SecondaryDrawerItem().withIdentifier(3).withName("紧急").withBadge("Emergency").withTextColorRes(R.color.theme2);
-        SecondaryDrawerItem subitem4 = new SecondaryDrawerItem().withIdentifier(3).withName("私人").withBadge("Private").withTextColorRes(R.color.theme3);
+        SecondaryDrawerItem subitem1 = new SecondaryDrawerItem().withIdentifier(4).withName("生活").withBadge("Life").withTextColorRes(R.color.theme0);
+        SecondaryDrawerItem subitem2 = new SecondaryDrawerItem().withIdentifier(5).withName("工作").withBadge("Work").withTextColorRes(R.color.theme1);
+        SecondaryDrawerItem subitem3 = new SecondaryDrawerItem().withIdentifier(6).withName("紧急").withBadge("Emergency").withTextColorRes(R.color.theme2);
+        SecondaryDrawerItem subitem4 = new SecondaryDrawerItem().withIdentifier(7).withName("私人").withBadge("Private").withTextColorRes(R.color.theme3);
 
         SecondaryDrawerItem item3  = new SecondaryDrawerItem().withIdentifier(3)
                 .withName("类别")
@@ -346,7 +399,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
 
         final SecondaryDrawerItem item4 = new SecondaryDrawerItem()
                 .withName("设置")
-                .withIdentifier(4)
+                .withIdentifier(8)
                 .withIcon(R.drawable.ic_settings)
                 .withDescription("Click for settings");
 
@@ -389,13 +442,25 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                         // do something with the clicked item :D
                         switch ((int) drawerItem.getIdentifier()){
                             case 1:
-                                mDrawer.closeDrawer();
+                                setCategoryList(-1);
                                 break;
                             case 2:
                                 startActivity(new Intent(MainActivity.this,FinishEventListActivity.class));
                                 mDrawer.closeDrawer();
                                 break;
                             case 4:
+                                setCategoryList(1);
+                                break;
+                            case 5:
+                                setCategoryList(2);
+                                break;
+                            case 6:
+                                setCategoryList(3);
+                                break;
+                            case 7:
+                                setCategoryList(4);
+                                break;
+                            case 8:
                                 startActivity(new Intent(MainActivity.this,SettingsActivity.class));
                                 mDrawer.closeDrawer();
                                 break;
