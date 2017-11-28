@@ -31,9 +31,9 @@
 ### 开发者
 ***15软工三人组开发***
 
-- 吴文迪 -> *[Wendy](https://github.com/wendyltan)*
-- 王壁鸿 -> *[Sdite](https://github.com/VonSdite)*
-- 郑棉鑫 -> *[Mxin](https://github.com/JnuMxin)*
+- Wendy -> *[Wendy](https://github.com/wendyltan)*
+- Sdite -> *[Sdite](https://github.com/VonSdite)*
+- Mxin -> *[Mxin](https://github.com/JnuMxin)*
 
 
 ### 技术
@@ -47,8 +47,9 @@
 - [LitePal](https://github.com/LitePalFramework/LitePal)
 - [SwipeRecyclerView](https://github.com/yanzhenjie/SwipeRecyclerView)
 - [PermissionGen](https://github.com/lovedise/PermissionGen)
+- [MaterialDrawer](https://github.com/mikepenz/MaterialDrawer)
 - RecyclerView
-- Glide（多媒体）
+- [Glide](https://github.com/bumptech/glide)
 
 ### 已实现的功能
 
@@ -125,11 +126,11 @@
 *以下为后续项目需解决的事项*
 
 #### 待添加功能
-- 可添加子任务的功能
-- 添加长期任务/定期提醒任务
+- ~~可添加子任务的功能~~(not consider)
+- ~~添加长期任务/定期提醒任务~~(not consider)
 - 闹钟提醒功能
 - 点击附加的图片查看大图的功能
-- 添加分类事件界面的功能
++ ~~添加分类事件界面的功能~~(done)
 - 获取课表，上课前提醒
 - 加入类似聊天机器人的客服，后续可更改为智能机器人，自动为用户生成相应事项
 
@@ -142,6 +143,10 @@
 
 
 ### 历史
+
+
+- **17/11/28**
+    + 修改软键盘问题，主页通知问题，生成2.0版本的release
 
 - **17/11/15**
     + 侧滑菜单彻底更改为Material Drawer

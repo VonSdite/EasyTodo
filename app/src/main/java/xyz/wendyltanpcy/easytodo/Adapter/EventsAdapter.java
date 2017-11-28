@@ -197,22 +197,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
             }
         });
 
-        // 触摸拖动
-//        hd.eventNameText.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View view, MotionEvent motionEvent) {
-//                int action = motionEvent.getAction();
-//                switch (action) {
-//                    case MotionEvent.ACTION_DOWN:
-//                    case MotionEvent.ACTION_UP:
-//                        menuRecyclerView.startDrag(hd);
-//                        break;
-//                    default:
-//                        break;
-//                }
-//                return false;
-//            }
-//        });
 
         // 长按出现删除菜单
         hd.eventNameText.setOnLongClickListener(new View.OnLongClickListener() {
@@ -278,20 +262,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                 dialog.setCancelable(false);
                 dialog.show();
 
-//                if(todoEvent.isClicked()) {
-//                    hd.checkBoxSample.setChecked(false);
-//                    hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() & (~Paint
-//                            .STRIKE_THRU_TEXT_FLAG));
-//                    todoEvent.setClicked(false);
-//                    todoEvent.save();
-//                } else {
-//                    hd.checkBoxSample.setChecked(true);
-//                    hd.eventNameText.setPaintFlags(hd.eventNameText.getPaintFlags() | Paint
-//                            .STRIKE_THRU_TEXT_FLAG);
-//                    todoEvent.setClicked(true);
-//                    todoEvent.save();
-//                    Snackbar.make(hd.itemView,"此事件已完成！",Snackbar.LENGTH_SHORT).show();
-//                }
             }
         });
 

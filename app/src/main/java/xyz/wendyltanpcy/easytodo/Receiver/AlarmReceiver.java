@@ -147,7 +147,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             for (TodoEvent event :tempList) {
                 title = event.getEventName();
                 content = event.getEventDetail();
-                if(content.isEmpty())
+                if((content==null)||content.isEmpty())
                     content = "no detail yet";
                 else
                     content = "详情: " + content;
