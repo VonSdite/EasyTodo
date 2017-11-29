@@ -124,7 +124,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         return holder;
     }
 
-
+    //标注忽略指定的警告。
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(EventsAdapter.ViewHolder holder, int position) {

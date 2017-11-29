@@ -18,8 +18,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.litepal.crud.DataSupport;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import xyz.wendyltanpcy.easytodo.Adapter.EventsAdapter;
 import xyz.wendyltanpcy.easytodo.R;
@@ -105,7 +109,9 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
         switch (view.getId()){
             case R.id.save:
                 if (!editEvent.getText().toString().isEmpty()) {
-
+                    if (checkEvent(editEvent.getText().toString())){
+                        break;
+                    }
                     Toast.makeText(getContext(), "Event save", Toast.LENGTH_SHORT).show();
                     TodoEvent event = new TodoEvent();
                     event.setEventName(editEvent.getText().toString()); // 设置事件的名称
@@ -144,5 +150,18 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
     public void onDestroy() {
         super.onDestroy();
         getActivity().findViewById(R.id.add_event).setVisibility(View.VISIBLE); // 显示加号按钮
+    }
+
+    //检查事件是否已经存在
+    public boolean checkEvent(String eventName){
+        List<TodoEvent> eventList = new ArrayList<>();
+        eventList = DataSupport.findAll(TodoEvent.class); // 获取 待办事项数据库
+        for (TodoEvent event : eventList) {
+            if (event.getEventName().toString().equals(eventName)) {
+                Toast.makeText(getContext(), "The Event is existed!", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        }
+        return false;
     }
 }

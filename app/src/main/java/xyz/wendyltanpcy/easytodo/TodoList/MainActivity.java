@@ -374,6 +374,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         //define drawer items
         final SecondaryDrawerItem item1 = new SecondaryDrawerItem()
                 .withIdentifier(1)
+//                .withSetSelected(true)
                 .withName("未完成")
                 .withIcon(R.drawable.ic_featured_play_list_black_24dp)
                 .withDescription("Your todo event here");
@@ -426,6 +427,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                 .withTranslucentStatusBar(false)
                 .withActionBarDrawerToggle(true)
                 .withActionBarDrawerToggleAnimated(true)
+                .withSelectedItem(1)
                 .withAccountHeader(headerResult)
                 .addDrawerItems(
                         new SectionDrawerItem().withName("常规").withDivider(false),
@@ -436,6 +438,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                         item4
                 )
                 .withCloseOnClick(false)
+//                .withSelectedItem(1)
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
@@ -445,7 +448,8 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                                 setCategoryList(-1);
                                 break;
                             case 2:
-                                startActivity(new Intent(MainActivity.this,FinishEventListActivity.class));
+                                startActivity(new Intent(getApplicationContext(),FinishEventListActivity.class));
+//                                mDrawer.setSelection(1);
                                 mDrawer.closeDrawer();
                                 break;
                             case 4:
@@ -461,7 +465,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                                 setCategoryList(4);
                                 break;
                             case 8:
-                                startActivity(new Intent(MainActivity.this,SettingsActivity.class));
+                                startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
                                 mDrawer.closeDrawer();
                                 break;
 
@@ -617,6 +621,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     protected void onResume() {
         super.onResume();
 //        initDrawerLayout(); // 重新加载侧滑菜单选择在已完成上
+        mDrawer.setSelection(1);
         showNoEvent();      // 判断是否显示空的layout
         if (ColorManager.IS_COLOR_CHANGE) {
             syncButtonColor();
@@ -649,6 +654,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                 eventList.remove(clickedItemPosition);
                 MyAdapter.notifyItemRangeRemoved(clickedItemPosition, 1);
                 Snackbar.make(MyAdapter.getHolder().itemView,"你删掉了这条项目",Snackbar.LENGTH_SHORT).show();
+                showNoEvent();
                 break;
             default:
                 break;

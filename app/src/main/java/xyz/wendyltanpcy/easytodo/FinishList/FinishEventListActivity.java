@@ -133,6 +133,9 @@ public class FinishEventListActivity extends AppCompatActivity implements Naviga
 
             showNoEvent();
         }
+    }
+
+    private void initDrawerLayout(){
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.finsh_toolbar);
         setSupportActionBar(toolbar);
@@ -189,6 +192,7 @@ public class FinishEventListActivity extends AppCompatActivity implements Naviga
                 .withActionBarDrawerToggle(true)
                 .withActionBarDrawerToggleAnimated(true)
                 .withAccountHeader(headerResult)
+                .withSelectedItem(2)
                 .addDrawerItems(
                         new SectionDrawerItem().withName("常规").withDivider(false),
                         item1,
@@ -204,10 +208,15 @@ public class FinishEventListActivity extends AppCompatActivity implements Naviga
                         switch ((int) drawerItem.getIdentifier()){
                             case 1:
                                 onBackPressed();
+                                startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                                mDrawer.closeDrawer();
+                                break;
+                            case 2:
+                                startActivity(new Intent(getApplicationContext(),FinishEventListActivity.class));
                                 mDrawer.closeDrawer();
                                 break;
                             case 4:
-                                startActivity(new Intent(FinishEventListActivity.this,SettingsActivity.class));
+                                startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
                                 mDrawer.closeDrawer();
                                 break;
 
@@ -266,5 +275,11 @@ public class FinishEventListActivity extends AppCompatActivity implements Naviga
         }
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initDrawerLayout();
     }
 }
