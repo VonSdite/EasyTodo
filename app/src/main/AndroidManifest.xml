@@ -33,7 +33,7 @@
         <activity
             android:name="xyz.wendyltanpcy.easytodo.TodoList.EventContentActivity"
             android:theme="@style/eventContentTheme"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden" >
+            android:windowSoftInputMode="adjustPan|stateHidden">
 
         </activity>
         <activity android:name="xyz.wendyltanpcy.easytodo.TodoList.EditMenuActivity">

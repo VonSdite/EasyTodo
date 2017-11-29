@@ -345,7 +345,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         }
 
 
-
         if (index==-1){
             eventList.addAll(tempList);
         }else{
@@ -476,14 +475,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                 })
                 .build();
 
-        //activating the toggle for ordinary drawer
-//        NavigationView navView = (NavigationView) findViewById(R.id.nav_view);
-//        navView.setNavigationItemSelectedListener(this);
-//        mDrawerLayout = mDrawer.getDrawerLayout();
-//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-//                this, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        mDrawerLayout.addDrawerListener(toggle);
-//        toggle.syncState();
+
 
     }
 
@@ -523,7 +515,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
             Calendar c = Calendar.getInstance();
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH) + 1;
-            int day = c.get(Calendar.DAY_OF_MONTH)+1;
+            int day = c.get(Calendar.DAY_OF_MONTH);
             StringBuilder builder;
             if (day<10){
                 builder = new StringBuilder().append(year+"年"+month+"月"+"0"+day+"日");

@@ -55,8 +55,6 @@ public class EventContentFragment extends Fragment {
         categoryAdapter = new ExpandListAdapter();
         //传入事件
         categoryExpandList.setAdapter(categoryAdapter);
-
-
         return mView;
     }
 

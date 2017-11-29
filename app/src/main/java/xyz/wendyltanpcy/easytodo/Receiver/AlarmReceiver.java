@@ -143,23 +143,11 @@ public class AlarmReceiver extends BroadcastReceiver {
             id=1;
             int requestCode = 777;
             Notification notification;
-
-            //construct the group header here
-            title = "今天要做的事情 "+num;
-            content = "";
-            Intent intent1 = new Intent(context,MainActivity.class);
-            PendingIntent pending = PendingIntent.getActivity(context,requestCode,intent1,0);
-            if (vibrate)
-                notification = createBuilderWithRing(context,title,content,pending,ringtoneName).setGroupSummary(true).build();
-            else
-                notification = createBuilder(context,title,content,pending).setGroupSummary(true).build();
-            manager.notify(0,notification);
-
             //construct the group item notification
             for (TodoEvent event :tempList) {
                 title = event.getEventName();
                 content = event.getEventDetail();
-                if(content.isEmpty())
+                if((content==null)||content.isEmpty())
                     content = "no detail yet";
                 else
                     content = "详情: " + content;
@@ -168,9 +156,15 @@ public class AlarmReceiver extends BroadcastReceiver {
                 intent2.putExtra("event",event);
                 PendingIntent pi = PendingIntent.getActivity(context, requestCode, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
                 if (vibrate) {
-                    notification = createBuilderWithRing(context, title, content, pi, ringtoneName).build();
+                    if (id==1)
+                        notification = createBuilderWithRing(context, title, content, pi, ringtoneName).setGroupSummary(true).build();
+                    else
+                        notification = createBuilderWithRing(context, title, content, pi, ringtoneName).build();
                 } else {
-                    notification = createBuilder(context, title, content, pi).build();
+                    if (id==1)
+                        notification = createBuilder(context, title, content, pi).setGroupSummary(true).build();
+                    else
+                        notification = createBuilder(context, title, content, pi).build();
                 }
                 manager.notify(id, notification);
                 id++;
