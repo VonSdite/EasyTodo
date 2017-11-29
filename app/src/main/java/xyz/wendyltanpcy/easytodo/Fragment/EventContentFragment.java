@@ -1,11 +1,8 @@
 package xyz.wendyltanpcy.easytodo.Fragment;
 
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,10 +15,7 @@ import java.util.Date;
 
 import xyz.wendyltanpcy.easytodo.Adapter.ExpandListAdapter;
 import xyz.wendyltanpcy.easytodo.R;
-import xyz.wendyltanpcy.easytodo.Service.AlarmService;
 import xyz.wendyltanpcy.easytodo.model.TodoEvent;
-
-import static android.content.Context.ALARM_SERVICE;
 
 /**
  * Created by Wendy on 2017/9/6.
@@ -111,30 +105,8 @@ public class EventContentFragment extends Fragment {
                 Event.setEventTime();
                 Event.save();
                 eventAlarmText.setText(Event.getEventTime());
-
-//                //听说是原生的方法
-                Intent i = new Intent(getContext(),AlarmService.class);
-                i.putExtra("event",Event);
-                PendingIntent sender = PendingIntent.getBroadcast(getContext(),0,i,0);
-                AlarmManager manager = (AlarmManager)getContext().getSystemService(ALARM_SERVICE);
-                Calendar c = Calendar.getInstance();
-                c.setTime(Event.getEventDeadline());
-                manager.set(AlarmManager.RTC_WAKEUP,c.getTimeInMillis(),sender);
-                manager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()+5000, 5000, sender);
-                getContext().startService(i);
-
-                //尝试双进程
-
-
-//                Intent service = new Intent(getContext(),LocalService.class);
-//                getContext().startService(service);
-//                Intent remoteService = new Intent(getContext(),AlarmService.class);
-//
-//                remoteService.putExtra("event",Event);
-//                getContext().startService(remoteService);
-//
-//                Toast.makeText(getActivity(),"将会在指定时间提醒！",Toast.LENGTH_SHORT).show();
-
+            // TODO
+                // 需要设置闹钟提醒
             default:
                 break;
         }

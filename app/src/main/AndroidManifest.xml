@@ -59,17 +59,6 @@
         <activity android:name="xyz.wendyltanpcy.easytodo.TodoList.MotiveActivity"/>
 
 
-        <service android:name="xyz.wendyltanpcy.easytodo.Service.AlarmService"
-                 android:enabled="true"
-                 android:exported="true"
-                 android:persistent="true"
-                 android:priority="1000"
-                 android:process=":remoteService">
-        </service>
-
-        <service android:name="xyz.wendyltanpcy.easytodo.Service.LocalService" >
-        </service>
-
         <receiver android:name="xyz.wendyltanpcy.easytodo.Receiver.AlarmReceiver">
             <intent-filter>
                 <action android:name="intent_alarm"/>
