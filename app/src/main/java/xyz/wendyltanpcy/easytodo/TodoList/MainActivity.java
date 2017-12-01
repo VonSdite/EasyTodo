@@ -543,7 +543,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     }
 
     /**
-     * 一键自动推迟到明天
+     * 一键自动推迟到今天
      *
      * @param list
      * @return
@@ -552,20 +552,24 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         for (Integer num : callbackList) {
             TodoEvent event = list.get(num.intValue());
 
-            Calendar c = Calendar.getInstance();
-            c.add(Calendar.DAY_OF_MONTH, 1);    // 获取明天的日期
-            c.set(Calendar.SECOND, 0);          // 设置秒为0
+            Calendar c = Calendar.getInstance();        // 获取当前的时间
+            Calendar origin = Calendar.getInstance();
+            origin.setTime(event.getEventDeadline());   // 获取原来的时间
+
+            // 控制原来的时分秒是一致的
+            c.set(Calendar.HOUR_OF_DAY, origin.get(Calendar.HOUR_OF_DAY));
+            c.set(Calendar.MINUTE, origin.get(Calendar.MINUTE));
+            c.set(Calendar.SECOND, origin.get(Calendar.SECOND));
+
             Date date = c.getTime();
-
             event.setEventDeadline(date);
-
             event.setEventDate();       // 设置事件年月日字符串
             event.setEventTime();       // 设置事件时分字符串
 
             event.save();
         }
         MyAdapter.notifyDataSetChanged();
-        Toast.makeText(this, "已将事件推迟到明天！ ", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "已将事件推迟到今天！ ", Toast.LENGTH_SHORT).show();
         return list;
     }
 

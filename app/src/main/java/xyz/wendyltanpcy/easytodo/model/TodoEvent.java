@@ -6,6 +6,7 @@ import org.litepal.crud.DataSupport;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -17,7 +18,7 @@ public class TodoEvent extends DataSupport implements Serializable, Comparable<T
     private String eventName;        // 事件的名称
     private String eventDetail;      // 事件的详情
 
-    private int eventCategory = 0; //no category
+    private int eventCategory = 0;   // no category
 
     private Date eventDeadline;      // 事件的deadline 这是个Date类型
 
@@ -26,16 +27,28 @@ public class TodoEvent extends DataSupport implements Serializable, Comparable<T
 
     private byte[] eventImageBitMap; // 事件的照片
 
-    private int pos;  // 标记是item的第几项, 显示的时候按这个顺序显示出来
-
     private boolean isClicked;  // 标记是否被点击了
 
+    private boolean isSetAlarm; // 是否设置了闹钟提醒
+
+    private int pos;  // 标记是item的第几项, 显示的时候按这个顺序显示出来
+
+    // 是否已完成该项
     public void setClicked(boolean clicked) {
         isClicked = clicked;
     }
 
     public boolean isClicked() {
         return isClicked;
+    }
+
+    // 是否设置了闹钟
+    public void setSetAlarm(boolean setAlarm) {
+        isSetAlarm = setAlarm;
+    }
+
+    public boolean isSetAlarm() {
+        return isSetAlarm;
     }
 
     // deadline的日期
@@ -46,7 +59,6 @@ public class TodoEvent extends DataSupport implements Serializable, Comparable<T
     public Date getEventDeadline() {
         return eventDeadline;
     }
-
 
     // deadline的年月日
     public void setEventDate() {
@@ -78,7 +90,6 @@ public class TodoEvent extends DataSupport implements Serializable, Comparable<T
     public void setEventImageBitMap(byte[] eventImageBitMap) {
         this.eventImageBitMap = eventImageBitMap;
     }
-
 
     // event的详情
     public void setEventDetail(String eventDetail) {
@@ -114,7 +125,12 @@ public class TodoEvent extends DataSupport implements Serializable, Comparable<T
     }
 
     public boolean isEventExpired(){
-        Date date = new Date();
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+
+        Date date = c.getTime();
         return date.compareTo(eventDeadline) > 0;
     }
 
