@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                 .event_name_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         MyAdapter = new EventsAdapter(eventList, eventNameRecyclerView, visibility);
+        MyAdapter.setTodoEventSize(eventList.size());
 
         // 设置侧滑菜单和侧滑菜单监听器
         eventNameRecyclerView.setSwipeMenuCreator(mSwipeMenuCreator); // 创建滑动菜单
@@ -217,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                     break;
                 case 1:
                     Intent i = new Intent(Intent.ACTION_SEND);//setting action
-                    i.setType("text/plain");//setting intent data type
+                    i.setType("text/plain");    //setting intent data type
                     StringBuilder builder = new StringBuilder();
                     builder.append("你的朋友通过ToDoList给你分享他的事件！\n");
                     builder.append("标题: " + todoEvent.getEventName() + "\n");
@@ -234,6 +235,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                     todoEvent.delete();
                     eventList.remove(adapterPosition);
                     MyAdapter.notifyItemRangeRemoved(adapterPosition, 1);
+                    MyAdapter.setTodoEventSize(MyAdapter.getTodoEventSize()-1);
                     Snackbar.make(MyAdapter.getHolder().itemView,"你删掉了这条项目",Snackbar.LENGTH_SHORT).show();
                     showNoEvent(); // 如果evenList为空会显示没有事件时的提示
                     break;
@@ -651,6 +653,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                 event.delete();
                 eventList.remove(clickedItemPosition);
                 MyAdapter.notifyItemRangeRemoved(clickedItemPosition, 1);
+                MyAdapter.setTodoEventSize(MyAdapter.getTodoEventSize()-1);
                 Snackbar.make(MyAdapter.getHolder().itemView,"你删掉了这条项目",Snackbar.LENGTH_SHORT).show();
                 showNoEvent();
                 break;
@@ -713,6 +716,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                     eventList.clear();
                     DataSupport.deleteAll(TodoEvent.class);
                     MyAdapter.notifyDataSetChanged();
+                    MyAdapter.setTodoEventSize(0);
                     showNoEvent();
                 }
             });

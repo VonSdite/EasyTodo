@@ -115,7 +115,8 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
                     Toast.makeText(getContext(), "Event save", Toast.LENGTH_SHORT).show();
                     TodoEvent event = new TodoEvent();
                     event.setEventName(editEvent.getText().toString()); // 设置事件的名称
-                    event.setPos(adapter.getTodoEventSize());         // 设置事件的位置
+                    event.setPos(adapter.getTodoEventSize());           // 设置事件的位置
+                    adapter.setTodoEventSize(adapter.getTodoEventSize()+1);
 
                     event.setEventCategory(-1);
 
