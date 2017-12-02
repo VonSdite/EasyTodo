@@ -107,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                 .event_name_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         MyAdapter = new EventsAdapter(eventList, eventNameRecyclerView, visibility);
+        MyAdapter.setTodoEventSize(eventList.size());
 
         // 设置侧滑菜单和侧滑菜单监听器
         eventNameRecyclerView.setSwipeMenuCreator(mSwipeMenuCreator); // 创建滑动菜单
@@ -119,6 +120,39 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
 
         registerForContextMenu(eventNameRecyclerView); // 长按上下文菜单
 
+        showData();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mDrawer.setSelection(1);
+        showNoEvent();      // 判断是否显示空的layout
+        if (ColorManager.IS_COLOR_CHANGE) {
+            syncButtonColor();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        notifySwapItem();   // 如果发生了交换位置，保存到数据库
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        haveInit = false;
     }
 
     // 创建滑动菜单
@@ -184,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                     break;
                 case 1:
                     Intent i = new Intent(Intent.ACTION_SEND);//setting action
-                    i.setType("text/plain");//setting intent data type
+                    i.setType("text/plain");    //setting intent data type
                     StringBuilder builder = new StringBuilder();
                     builder.append("你的朋友通过ToDoList给你分享他的事件！\n");
                     builder.append("标题: " + todoEvent.getEventName() + "\n");
@@ -201,6 +235,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                     todoEvent.delete();
                     eventList.remove(adapterPosition);
                     MyAdapter.notifyItemRangeRemoved(adapterPosition, 1);
+                    MyAdapter.setTodoEventSize(MyAdapter.getTodoEventSize()-1);
                     Snackbar.make(MyAdapter.getHolder().itemView,"你删掉了这条项目",Snackbar.LENGTH_SHORT).show();
                     showNoEvent(); // 如果evenList为空会显示没有事件时的提示
                     break;
@@ -223,6 +258,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
             int toPosition = targetHolder.getAdapterPosition();
 
             Collections.swap(eventList, fromPosition, toPosition); // 交换这两个对象
+
             eventList.get(fromPosition).setPos(fromPosition); // 重新设置pos， Item根据pos排序
             eventList.get(toPosition).setPos(toPosition);     // 重新设置pos， Item根据pos排序
 
@@ -248,18 +284,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         LitePal.getDatabase();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        haveInit = false;
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        notifySwapItem();   // 如果发生了交换位置，保存到数据库
-    }
-
     private void notifySwapItem(){
         // 保存数据库， 如果发生交换位置
         if (isSwap) {
@@ -268,11 +292,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
             }
             isSwap = false;         // 重新设置标志为false
         }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
     }
 
     /**
@@ -308,7 +327,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         sendNotification(eventList);
         initThemeColor();
         initDrawerLayout();
-
     }
 
     /**
@@ -318,12 +336,17 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
 
     private void setCategoryList(int index){
         //pass -1 in to show all
-        List<TodoEvent> tempList;
-        tempList = DataSupport.findAll(TodoEvent.class);
-        eventList.clear();
+        notifySwapItem();   // 如果发生了交换位置，保存到数据库
         ActionBar actionBar = getSupportActionBar();
         String barTitle = "";
-        switch (index){
+
+        List<TodoEvent> tempList;
+        tempList = DataSupport.findAll(TodoEvent.class);
+        Collections.sort(tempList);  // 按tempList每个元素的pos进行排序， 即为显示的顺序
+
+        eventList.clear();
+
+        switch (index) {
             case -1:
                 barTitle = "EasyTodo";
                 break;
@@ -340,26 +363,23 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                 barTitle = "Private";
                 break;
         }
-        if (actionBar!=null){
+
+        for (TodoEvent event : tempList) {
+            if (index == -1) {
+                // 只要是-1 都添加
+                eventList.add(event);
+            } else if (event.getEventCategory() == index) {
+                eventList.add(event);
+            }
+        }
+
+        if (actionBar != null) {
             actionBar.setTitle(barTitle);
         }
 
-
-        if (index==-1){
-            eventList.addAll(tempList);
-        }else{
-            //else
-            for (TodoEvent event:tempList){
-                if (event.getEventCategory()==index){
-                    eventList.add(event);
-                }
-            }
-
-        }
-
-
         MyAdapter.notifyDataSetChanged();
         mDrawer.closeDrawer();
+        showNoEvent();
     }
 
     /**
@@ -464,19 +484,15 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                                 setCategoryList(4);
                                 break;
                             case 8:
-                                startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
+                                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                                 mDrawer.closeDrawer();
                                 break;
-
                         }
 
                         return true;
                     }
                 })
                 .build();
-
-
-
     }
 
     @Override
@@ -543,7 +559,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     }
 
     /**
-     * 一键自动推迟到明天
+     * 一键自动推迟到今天
      *
      * @param list
      * @return
@@ -552,20 +568,24 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         for (Integer num : callbackList) {
             TodoEvent event = list.get(num.intValue());
 
-            Calendar c = Calendar.getInstance();
-            c.add(Calendar.DAY_OF_MONTH, 1);    // 获取明天的日期
-            c.set(Calendar.SECOND, 0);          // 设置秒为0
+            Calendar c = Calendar.getInstance();        // 获取当前的时间
+            Calendar origin = Calendar.getInstance();
+            origin.setTime(event.getEventDeadline());   // 获取原来的时间
+
+            // 控制原来的时分秒是一致的
+            c.set(Calendar.HOUR_OF_DAY, origin.get(Calendar.HOUR_OF_DAY));
+            c.set(Calendar.MINUTE, origin.get(Calendar.MINUTE));
+            c.set(Calendar.SECOND, origin.get(Calendar.SECOND));
+
             Date date = c.getTime();
-
             event.setEventDeadline(date);
-
             event.setEventDate();       // 设置事件年月日字符串
             event.setEventTime();       // 设置事件时分字符串
 
             event.save();
         }
         MyAdapter.notifyDataSetChanged();
-        Toast.makeText(this, "已将事件推迟到明天！ ", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "已将事件推迟到今天！ ", Toast.LENGTH_SHORT).show();
         return list;
     }
 
@@ -609,18 +629,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-//        initDrawerLayout(); // 重新加载侧滑菜单选择在已完成上
-        mDrawer.setSelection(1);
-        showNoEvent();      // 判断是否显示空的layout
-        if (ColorManager.IS_COLOR_CHANGE) {
-            syncButtonColor();
-        }
-        MyAdapter.notifyDataSetChanged();
-    }
-
     /**
      * when onResume,'init' all theme color again
      */
@@ -645,6 +653,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                 event.delete();
                 eventList.remove(clickedItemPosition);
                 MyAdapter.notifyItemRangeRemoved(clickedItemPosition, 1);
+                MyAdapter.setTodoEventSize(MyAdapter.getTodoEventSize()-1);
                 Snackbar.make(MyAdapter.getHolder().itemView,"你删掉了这条项目",Snackbar.LENGTH_SHORT).show();
                 showNoEvent();
                 break;
@@ -707,6 +716,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                     eventList.clear();
                     DataSupport.deleteAll(TodoEvent.class);
                     MyAdapter.notifyDataSetChanged();
+                    MyAdapter.setTodoEventSize(0);
                     showNoEvent();
                 }
             });
@@ -739,7 +749,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     public void showData(){
         for(TodoEvent l : eventList)
         {
-            Log.i(TAG, "onCreate: "+l);
+            Log.i(TAG, "showData: "+l.getEventName()+" "+l.getPos());
         }
     }
 

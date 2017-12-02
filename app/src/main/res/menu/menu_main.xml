@@ -14,6 +14,6 @@
         android:id="@+id/delay"
         android:contentDescription="delay to tomorrow"
         app:showAsAction="never"
-        android:title="推迟到明天"/>
+        android:title="推迟到今天"/>
 
 </menu>

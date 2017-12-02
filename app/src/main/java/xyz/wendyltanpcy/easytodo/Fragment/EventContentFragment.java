@@ -57,9 +57,8 @@ public class EventContentFragment extends Fragment {
         eventNameText.setText(event.getEventName());
         eventDetailText.setText(event.getEventDetail());
         eventDeadLineText.setText(event.getEventDate());
-        eventAlarmText.setText(event.getEventTime());
         categoryAdapter.setEvent(event);
-
+        if (Event.isSetAlarm()) eventAlarmText.setText(event.getEventTime());
     }
 
 
@@ -79,9 +78,7 @@ public class EventContentFragment extends Fragment {
                 origin.set(newC.get(Calendar.YEAR), newC.get(Calendar.MONTH), newC.get(Calendar.DATE));
 
                 Date date = origin.getTime();
-
                 Event.setEventDeadline(date);
-
                 Event.setEventDate();
                 Event.setEventTime();
                 Event.save();
@@ -92,18 +89,20 @@ public class EventContentFragment extends Fragment {
             case REQUEST_TIME:
                 int hour = data.getIntExtra("hour", 0);
                 int min = data.getIntExtra("min", 0);
+
                 // 控制年月日不变
                 Calendar originC = Calendar.getInstance();
                 originC.setTime(Event.getEventDeadline());
                 originC.set(Calendar.HOUR_OF_DAY, hour);
                 originC.set(Calendar.MINUTE, min);
-                Date date_time = originC.getTime();
 
+                Date date_time = originC.getTime();
                 Event.setEventDeadline(date_time);
                 Event.setEventDate();
-
                 Event.setEventTime();
+                Event.setSetAlarm(true);        // 表明设置了闹钟
                 Event.save();
+
                 eventAlarmText.setText(Event.getEventTime());
             // TODO
                 // 需要设置闹钟提醒

@@ -41,8 +41,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     private ViewHolder holder;
     public SwipeMenuRecyclerView menuRecyclerView;
 
-
-
     private View visibility;        // showNoEvent用
 
     public ViewHolder getHolder() {
@@ -53,8 +51,14 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         this.position = position;
     }
 
+    private int todoEventSize;
+
     public int getTodoEventSize(){
-        return mTodoEventList.size();
+        return todoEventSize;
+    }
+
+    public void setTodoEventSize(int todoEventSize) {
+        this.todoEventSize = todoEventSize;
     }
 
     /**

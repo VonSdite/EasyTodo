@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
     <dbname value="EventStore"></dbname>
-    <version value="48"></version>
+    <version value="49"></version>
     <list>
         <mapping class="xyz.wendyltanpcy.easytodo.model.TodoEvent"></mapping>
     </list>
