@@ -115,11 +115,12 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
                     Toast.makeText(getContext(), "Event save", Toast.LENGTH_SHORT).show();
                     TodoEvent event = new TodoEvent();
                     event.setEventName(editEvent.getText().toString()); // 设置事件的名称
-                    event.setPos(adapter.getTodoEventSize()+1);         // 设置事件的位置
+                    event.setPos(adapter.getTodoEventSize());         // 设置事件的位置
+
+                    event.setEventCategory(-1);
 
                     //set to default deadline-- today's date
                     Calendar c = Calendar.getInstance();
-
                     // 将时分秒设置为0
                     c.set(Calendar.HOUR_OF_DAY, 0);
                     c.set(Calendar.MINUTE, 0);

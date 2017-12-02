@@ -14,7 +14,7 @@ import java.util.Date;
  */
 public class TodoEvent extends DataSupport implements Serializable, Comparable<TodoEvent>{
 
-//    @Column(nullable = false)
+    //    @Column(nullable = false)
     private String eventName;        // 事件的名称
     private String eventDetail;      // 事件的详情
 
@@ -129,6 +129,7 @@ public class TodoEvent extends DataSupport implements Serializable, Comparable<T
         c.set(Calendar.HOUR_OF_DAY, 0);
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
 
         Date date = c.getTime();
         return date.compareTo(eventDeadline) > 0;

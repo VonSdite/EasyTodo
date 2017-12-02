@@ -119,6 +119,39 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
 
         registerForContextMenu(eventNameRecyclerView); // 长按上下文菜单
 
+        showData();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mDrawer.setSelection(1);
+        showNoEvent();      // 判断是否显示空的layout
+        if (ColorManager.IS_COLOR_CHANGE) {
+            syncButtonColor();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        notifySwapItem();   // 如果发生了交换位置，保存到数据库
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        haveInit = false;
     }
 
     // 创建滑动菜单
@@ -223,6 +256,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
             int toPosition = targetHolder.getAdapterPosition();
 
             Collections.swap(eventList, fromPosition, toPosition); // 交换这两个对象
+
             eventList.get(fromPosition).setPos(fromPosition); // 重新设置pos， Item根据pos排序
             eventList.get(toPosition).setPos(toPosition);     // 重新设置pos， Item根据pos排序
 
@@ -248,18 +282,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         LitePal.getDatabase();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        haveInit = false;
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        notifySwapItem();   // 如果发生了交换位置，保存到数据库
-    }
-
     private void notifySwapItem(){
         // 保存数据库， 如果发生交换位置
         if (isSwap) {
@@ -268,11 +290,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
             }
             isSwap = false;         // 重新设置标志为false
         }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
     }
 
     /**
@@ -308,7 +325,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         sendNotification(eventList);
         initThemeColor();
         initDrawerLayout();
-
     }
 
     /**
@@ -318,12 +334,17 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
 
     private void setCategoryList(int index){
         //pass -1 in to show all
-        List<TodoEvent> tempList;
-        tempList = DataSupport.findAll(TodoEvent.class);
-        eventList.clear();
+        notifySwapItem();   // 如果发生了交换位置，保存到数据库
         ActionBar actionBar = getSupportActionBar();
         String barTitle = "";
-        switch (index){
+
+        List<TodoEvent> tempList;
+        tempList = DataSupport.findAll(TodoEvent.class);
+        Collections.sort(tempList);  // 按tempList每个元素的pos进行排序， 即为显示的顺序
+
+        eventList.clear();
+
+        switch (index) {
             case -1:
                 barTitle = "EasyTodo";
                 break;
@@ -340,26 +361,23 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                 barTitle = "Private";
                 break;
         }
-        if (actionBar!=null){
+
+        for (TodoEvent event : tempList) {
+            if (index == -1) {
+                // 只要是-1 都添加
+                eventList.add(event);
+            } else if (event.getEventCategory() == index) {
+                eventList.add(event);
+            }
+        }
+
+        if (actionBar != null) {
             actionBar.setTitle(barTitle);
         }
 
-
-        if (index==-1){
-            eventList.addAll(tempList);
-        }else{
-            //else
-            for (TodoEvent event:tempList){
-                if (event.getEventCategory()==index){
-                    eventList.add(event);
-                }
-            }
-
-        }
-
-
         MyAdapter.notifyDataSetChanged();
         mDrawer.closeDrawer();
+        showNoEvent();
     }
 
     /**
@@ -464,19 +482,15 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                                 setCategoryList(4);
                                 break;
                             case 8:
-                                startActivity(new Intent(getApplicationContext(),SettingsActivity.class));
+                                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                                 mDrawer.closeDrawer();
                                 break;
-
                         }
 
                         return true;
                     }
                 })
                 .build();
-
-
-
     }
 
     @Override
@@ -613,18 +627,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-//        initDrawerLayout(); // 重新加载侧滑菜单选择在已完成上
-        mDrawer.setSelection(1);
-        showNoEvent();      // 判断是否显示空的layout
-        if (ColorManager.IS_COLOR_CHANGE) {
-            syncButtonColor();
-        }
-        MyAdapter.notifyDataSetChanged();
-    }
-
     /**
      * when onResume,'init' all theme color again
      */
@@ -743,7 +745,7 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     public void showData(){
         for(TodoEvent l : eventList)
         {
-            Log.i(TAG, "onCreate: "+l);
+            Log.i(TAG, "showData: "+l.getEventName()+" "+l.getPos());
         }
     }
 
