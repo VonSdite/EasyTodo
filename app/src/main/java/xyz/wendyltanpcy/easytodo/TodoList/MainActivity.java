@@ -309,6 +309,9 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                 EditMenuFragment dialog = new EditMenuFragment();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("adapter", MyAdapter);
+                //获取当前事件类别并传入bundle
+                int category = (int)mDrawer.getCurrentSelection();
+                bundle.putInt("category", category);
                 dialog.setArguments(bundle);
                 dialog.show(getSupportFragmentManager(), "edit bar");
                 view.setVisibility(View.GONE); // 隐藏加号按钮
