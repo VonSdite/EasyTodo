@@ -40,6 +40,8 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
     private EventsAdapter adapter;
     private FloatingActionButton add;
     private EditText editEvent;
+    private int category;
+
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -63,9 +65,10 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
 
         saveButton.setOnClickListener(this);
 
-        //获得传入的适配器
+        //获得传入的适配器和当前事件类别
         Bundle bundle = getArguments();
         adapter = (EventsAdapter) bundle.getSerializable("adapter");
+        category = bundle.getInt("category");
 
         // 当点击软件盘确定按钮时， 保存文本
         editEvent.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -115,13 +118,39 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
                     Toast.makeText(getContext(), "Event save", Toast.LENGTH_SHORT).show();
                     TodoEvent event = new TodoEvent();
                     event.setEventName(editEvent.getText().toString()); // 设置事件的名称
-                    event.setPos(adapter.getTodoEventSize()+1);         // 设置事件的位置
+                    event.setPos(adapter.getTodoEventSize());           // 设置事件的位置
+                    adapter.setTodoEventSize(adapter.getTodoEventSize()+1);
+
+                    switch (category){
+                        case 1:
+                            //无分类
+                            event.setEventCategory(-1);
+                            break;
+                        case 4:
+                            //生活类别
+                            event.setEventCategory(1);
+                            break;
+                        case 5:
+                            //工作类别
+                            event.setEventCategory(2);
+                            break;
+                        case 6:
+                            //紧急类别
+                            event.setEventCategory(3);
+                            break;
+                        case 7:
+                            //私人类别
+                            event.setEventCategory(4);
+                            break;
+                        default:
+                    }
 
                     //set to default deadline-- today's date
                     Calendar c = Calendar.getInstance();
-                    //默认两小时后提醒
-                    c.add(Calendar.HOUR_OF_DAY,2);
-                    c.set(Calendar.SECOND, 0);          // 设置秒为0
+                    // 将时分秒设置为0
+                    c.set(Calendar.HOUR_OF_DAY, 0);
+                    c.set(Calendar.MINUTE, 0);
+                    c.set(Calendar.SECOND, 0);
                     Date date = c.getTime();
 
                     event.setEventDeadline(date);
@@ -130,6 +159,7 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
                     event.setEventTime();       // 设置事件时分字符串
 
                     event.setClicked(false);    // 设置为没被点击
+                    event.setSetAlarm(false);   // 设置默认没有设置闹钟
                     event.save();               // 保存到数据库
 
                     int newItemPos = adapter.getItemCount();
