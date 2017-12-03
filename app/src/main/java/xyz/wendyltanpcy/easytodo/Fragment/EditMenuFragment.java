@@ -40,6 +40,8 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
     private EventsAdapter adapter;
     private FloatingActionButton add;
     private EditText editEvent;
+    private int category;
+
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -63,9 +65,10 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
 
         saveButton.setOnClickListener(this);
 
-        //获得传入的适配器
+        //获得传入的适配器和当前事件类别
         Bundle bundle = getArguments();
         adapter = (EventsAdapter) bundle.getSerializable("adapter");
+        category = bundle.getInt("category");
 
         // 当点击软件盘确定按钮时， 保存文本
         editEvent.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -118,7 +121,29 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
                     event.setPos(adapter.getTodoEventSize());           // 设置事件的位置
                     adapter.setTodoEventSize(adapter.getTodoEventSize()+1);
 
-                    event.setEventCategory(-1);
+                    switch (category){
+                        case 1:
+                            //无分类
+                            event.setEventCategory(-1);
+                            break;
+                        case 4:
+                            //生活类别
+                            event.setEventCategory(1);
+                            break;
+                        case 5:
+                            //工作类别
+                            event.setEventCategory(2);
+                            break;
+                        case 6:
+                            //紧急类别
+                            event.setEventCategory(3);
+                            break;
+                        case 7:
+                            //私人类别
+                            event.setEventCategory(4);
+                            break;
+                        default:
+                    }
 
                     //set to default deadline-- today's date
                     Calendar c = Calendar.getInstance();
