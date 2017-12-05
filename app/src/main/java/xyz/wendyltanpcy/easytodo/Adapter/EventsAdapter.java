@@ -35,7 +35,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         Serializable
 
 {
-    private transient Context mContext;
+    private Context mContext;
     private List<TodoEvent> mTodoEventList;
     private int position;
     private ViewHolder holder;
