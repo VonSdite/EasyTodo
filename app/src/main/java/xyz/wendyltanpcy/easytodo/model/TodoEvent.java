@@ -33,6 +33,16 @@ public class TodoEvent extends DataSupport implements Serializable, Comparable<T
 
     private int pos;  // 标记是item的第几项, 显示的时候按这个顺序显示出来
 
+    private String eventPhotoPath;//用于存储图片的保存路径
+
+    public void setEventPhotoPath(String eventPhotoPath) {
+        this.eventPhotoPath = eventPhotoPath;
+    }
+
+    public String getEventPhotoPath() {
+        return eventPhotoPath;
+    }
+
     // 是否已完成该项
     public void setClicked(boolean clicked) {
         isClicked = clicked;
