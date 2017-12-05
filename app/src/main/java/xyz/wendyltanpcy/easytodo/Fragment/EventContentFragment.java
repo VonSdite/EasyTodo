@@ -143,9 +143,9 @@ public class EventContentFragment extends Fragment {
                         intent);
             }
             //查看日志测试
-            Log.i(TAG, "onReceive: AlarmBroadcast");
+            Log.i(TAG, "onReceive: AlarmBroadcast from event:"+eventName);
 
-            int flag = intent.getIntExtra("soundOrVibrator", 0);
+            int flag = intent.getIntExtra("soundOrVibrator", 2);
 
             Intent clockIntent = new Intent(context, ClockAlarmActivity.class);
             clockIntent.putExtra("flag", flag);
