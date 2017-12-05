@@ -58,7 +58,7 @@
         <activity android:name="xyz.wendyltanpcy.easytodo.TodoList.MotiveActivity"/>
 
 
-        <activity android:name=".ClockAlarmActivity"/>
+        <activity android:name=".TodoList.ClockAlarmActivity"/>
 
 
 

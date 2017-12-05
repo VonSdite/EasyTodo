@@ -14,12 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.Date;
 
 import xyz.wendyltanpcy.easytodo.Adapter.ExpandListAdapter;
-import xyz.wendyltanpcy.easytodo.ClockAlarmActivity;
+import xyz.wendyltanpcy.easytodo.TodoList.ClockAlarmActivity;
 import xyz.wendyltanpcy.easytodo.R;
 import xyz.wendyltanpcy.easytodo.helper.AlarmManagerUtil;
 import xyz.wendyltanpcy.easytodo.model.TodoEvent;
@@ -41,7 +42,7 @@ public class EventContentFragment extends Fragment {
     private TextView eventDetailText ;
     private TextView eventDeadLineText ;
     private TextView eventAlarmText;
-    private TodoEvent Event;
+    private static TodoEvent Event;
     private ExpandableListView categoryExpandList;
     private ExpandListAdapter categoryAdapter;
 
@@ -66,6 +67,7 @@ public class EventContentFragment extends Fragment {
         eventDeadLineText.setText(event.getEventDate());
         categoryAdapter.setEvent(event);
         if (Event.isSetAlarm()) eventAlarmText.setText(event.getEventTime());
+        else eventAlarmText.setText("闹钟尚未设置");
     }
 
 
@@ -111,9 +113,12 @@ public class EventContentFragment extends Fragment {
                 Event.save();
 
                 eventAlarmText.setText(Event.getEventTime());
+                Toast.makeText(getActivity(),"闹钟已设置！",Toast.LENGTH_SHORT).show();
             // TODO
                 // 需要设置闹钟提醒
-                AlarmManagerUtil.setAlarm(getContext(), 0, hour, min, 1, 0, "时间到了", 0);
+                //using position of event as alarm id:
+                int id = Event.getPos();
+                AlarmManagerUtil.setAlarm(getContext(), 0, hour, min, id, 0, "时间到了", 0);
             default:
                 break;
         }
@@ -141,6 +146,8 @@ public class EventContentFragment extends Fragment {
             Intent clockIntent = new Intent(context, ClockAlarmActivity.class);
             clockIntent.putExtra("msg", msg);
             clockIntent.putExtra("flag", flag);
+            clockIntent.putExtra("eventName",Event.getEventName());
+            clockIntent.putExtra("eventDetail",Event.getEventDetail());
             clockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
 //            PendingIntent pi = PendingIntent.getActivity(context,0,clockIntent,0);

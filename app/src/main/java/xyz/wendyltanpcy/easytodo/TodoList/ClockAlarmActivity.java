@@ -1,4 +1,4 @@
-package xyz.wendyltanpcy.easytodo;
+package xyz.wendyltanpcy.easytodo.TodoList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -9,12 +9,14 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Vibrator;
 
-import xyz.wendyltanpcy.easytodo.TodoList.MainActivity;
+import xyz.wendyltanpcy.easytodo.R;
 
 
 public class ClockAlarmActivity extends Activity {
     private MediaPlayer mediaPlayer;
     private Vibrator vibrator;
+    private String eventName;
+    private String eventDetail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +24,8 @@ public class ClockAlarmActivity extends Activity {
         setContentView(R.layout.activity_clock_alarm);
         String message = this.getIntent().getStringExtra("msg");
         int flag = this.getIntent().getIntExtra("flag", 0);
+        eventName = this.getIntent().getStringExtra("eventName");
+        eventDetail = this.getIntent().getStringExtra("eventDetail");
         showDialogInBroadcastReceiver(message, flag);
     }
 
@@ -40,7 +44,8 @@ public class ClockAlarmActivity extends Activity {
 
         new AlertDialog.Builder(this).setTitle("EasyTodo:")
                 .setIcon(R.mipmap.icon2)//设置图标
-                .setMessage("It's time to do list！")
+                .setTitle(eventName)
+                .setMessage("事件详情: "+eventDetail)
                 .setCancelable(true)//可取消
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override

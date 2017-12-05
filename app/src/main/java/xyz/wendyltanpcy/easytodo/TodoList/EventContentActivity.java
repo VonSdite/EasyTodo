@@ -55,7 +55,6 @@ public class EventContentActivity extends AppCompatActivity {
     private TextView eventNameText ;
     private TextView eventDetailText ;
     private TextView eventDeadLineText ;
-    private TextView eventEventAlram ;
     private static TodoEvent Event;
     private ImageView eventImage;
     private EventsAdapter.ViewHolder holder;
@@ -126,7 +125,7 @@ public class EventContentActivity extends AppCompatActivity {
                 getSupportFragmentManager().findFragmentById(R.id.news_content_fragment);
         EventContentFragment.refresh(Event);
 
-        eventEventAlram = (TextView) findViewById(R.id.event_alram);
+
         chooseDate = (ImageView) findViewById(R.id.choose_date);
         chooseAlarm = (ImageView) findViewById(R.id.choose_alarm);
         eventNameText = (TextView) findViewById(R.id.event_name);
@@ -158,17 +157,8 @@ public class EventContentActivity extends AppCompatActivity {
             }
         });
 
-        chooseAlarm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentManager manager = EventContentFragment.getFragmentManager();
-                PickTimeFragment dialog = PickTimeFragment.newInstance(Event.getEventDeadline());
-                dialog.setTargetFragment(EventContentFragment,REQUEST_TIME);
-                dialog.show(manager,DIALOG_TIME);
-            }
-        });
 
-        eventEventAlram.setOnClickListener(new View.OnClickListener() {
+        chooseAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FragmentManager manager = EventContentFragment.getFragmentManager();
