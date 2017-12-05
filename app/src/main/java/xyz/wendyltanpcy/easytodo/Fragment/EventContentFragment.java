@@ -42,11 +42,9 @@ public class EventContentFragment extends Fragment {
     private TextView eventDetailText ;
     private TextView eventDeadLineText ;
     private TextView eventAlarmText;
-    private TodoEvent Event;
+    private static TodoEvent Event;
     private ExpandableListView categoryExpandList;
     private ExpandListAdapter categoryAdapter;
-    private String eventName;
-    private String eventDetial;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.events_content_frag,container,false);
@@ -116,11 +114,10 @@ public class EventContentFragment extends Fragment {
 
                 eventAlarmText.setText(Event.getEventTime());
                 Toast.makeText(getActivity(),"闹钟已设置！",Toast.LENGTH_SHORT).show();
-            // TODO
-                // 需要设置闹钟提醒
+
                 //using position of event as alarm id:
                 int id = Event.getPos();
-                AlarmManagerUtil.setAlarm(getContext(), 0, hour, min, id, 0, Event.getEventName(), Event.getEventDetail(), 2);
+                AlarmManagerUtil.setAlarm(getContext(), 1, hour, min, id, 0, Event.getEventName(), Event.getEventDetail(), 2);
             default:
                 break;
         }
@@ -135,26 +132,37 @@ public class EventContentFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             // TODO Auto-generated method stub
-            String eventName = intent.getStringExtra("eventName");
-            String eventDetail = intent.getStringExtra("eventDetail");
-            long intervalMillis = intent.getLongExtra("intervalMillis", 0);
-            if (intervalMillis != 0) {
-                AlarmManagerUtil.setAlarmTime(context, System.currentTimeMillis() + intervalMillis,
-                        intent);
-            }
-            //查看日志测试
-            Log.i(TAG, "onReceive: AlarmBroadcast from event:"+eventName);
+            Calendar eventSetTime = Calendar.getInstance();
+            eventSetTime.setTime(Event.getEventDeadline());
+            Calendar currentTime = Calendar.getInstance();
 
-            int flag = intent.getIntExtra("soundOrVibrator", 2);
+            //judge if the time in event is today,if yes, set alarm.
+            if (eventSetTime.get(Calendar.YEAR)==currentTime.get(Calendar.YEAR)&&
+                    eventSetTime.get(Calendar.MONTH)==currentTime.get(Calendar.MONTH)&&
+                    eventSetTime.get(Calendar.DAY_OF_MONTH)==currentTime.get(Calendar.DAY_OF_MONTH))
+            {
+                String eventName = intent.getStringExtra("eventName");
+                String eventDetail = intent.getStringExtra("eventDetail");
+                long intervalMillis = intent.getLongExtra("intervalMillis", 0);
+                if (intervalMillis != 0) {
+                    AlarmManagerUtil.setAlarmTime(context, System.currentTimeMillis() + intervalMillis,
+                            intent);
+                }
+                //查看日志测试
+                Log.i(TAG, "onReceive: AlarmBroadcast from event:"+eventName);
 
-            Intent clockIntent = new Intent(context, ClockAlarmActivity.class);
-            clockIntent.putExtra("flag", flag);
-            clockIntent.putExtra("eventName", eventName );
-            clockIntent.putExtra("eventDetail", eventDetail);
-            clockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                int flag = intent.getIntExtra("soundOrVibrator", 2);
+
+                Intent clockIntent = new Intent(context, ClockAlarmActivity.class);
+                clockIntent.putExtra("flag", flag);
+                clockIntent.putExtra("eventName", eventName );
+                clockIntent.putExtra("eventDetail", eventDetail);
+                clockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
 //            PendingIntent pi = PendingIntent.getActivity(context,0,clockIntent,0);
-            context.startActivity(clockIntent);
+                context.startActivity(clockIntent);
+            }
+
         }
     }
 }

@@ -4,11 +4,18 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
+import android.util.Log;
+
+import java.io.File;
 
 import xyz.wendyltanpcy.easytodo.R;
+import xyz.wendyltanpcy.easytodo.model.Consts;
 
 
 public class ClockAlarmActivity extends Activity {
@@ -16,6 +23,9 @@ public class ClockAlarmActivity extends Activity {
     private Vibrator vibrator;
     private String eventName;
     private String eventDetail;
+    private boolean vibrate;
+    private String ringtoneName;
+    private SharedPreferences setting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,21 +34,39 @@ public class ClockAlarmActivity extends Activity {
         int flag = this.getIntent().getIntExtra("flag", 2);
         eventName = this.getIntent().getStringExtra("eventName");
         eventDetail = this.getIntent().getStringExtra("eventDetail");
+
+        //开启了通知，才能够通知
+
         showDialogInBroadcastReceiver(flag);
+
+
     }
 
     private void showDialogInBroadcastReceiver(final int flag) {
+
+        //获得设置里的通知设置，响铃类型和震动
+        setting = PreferenceManager.getDefaultSharedPreferences(this);
+        vibrate = setting.getBoolean(Consts.VIBRATE_KEY, false);
+        ringtoneName = setting.getString("ringtoneName", "");
+        Log.i("TAG",ringtoneName);
+        Log.i("TAG", String.valueOf(vibrate));
+        if (ringtoneName!=null){
+            ringtoneName = "/system/media/audio/notifications/"+ringtoneName+".ogg";
+        }
+
         if (flag == 1 || flag == 2) {
-            mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.in_call_alarm);
+            mediaPlayer = MediaPlayer.create(getApplicationContext(), Uri.fromFile(new File(ringtoneName)));
             mediaPlayer.setLooping(true);
             mediaPlayer.start();
         }
         //数组参数意义：第一个参数为等待指定时间后开始震动，震动时间为第二个参数。后边的参数依次为等待震动和震动的时间
         //第二个参数为重复次数，-1为不重复，0为一直震动
-        if (flag == 0 || flag == 2) {
-            vibrator = (Vibrator) this.getSystemService(Service.VIBRATOR_SERVICE);
-            vibrator.vibrate(new long[]{100, 10, 100, 600}, 0);
-        }
+        //如果设置了震动
+        if (vibrate)
+            if (flag == 0 || flag == 2) {
+                vibrator = (Vibrator) this.getSystemService(Service.VIBRATOR_SERVICE);
+                vibrator.vibrate(new long[]{100, 10, 100, 600}, 0);
+            }
 
         new AlertDialog.Builder(this).setTitle("EasyTodo:")
                 .setIcon(R.mipmap.icon2)//设置图标

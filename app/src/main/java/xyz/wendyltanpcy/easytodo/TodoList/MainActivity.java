@@ -750,11 +750,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
             case R.id.nav_finish:
                 startActivity(new Intent(getApplicationContext(), FinishEventListActivity.class));
                 break;
-            //取消浏览器的入口，浏览器只留作测试版本开放
-//                    case R.id.nav_broswer:
-//                        startActivity(new Intent(getApplicationContext(), BrowserActivity.class));
-//                        mDrawerLayout.closeDrawer(Gravity.START);
-//                        break;
             case R.id.nav_setting:
                 startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                 break;
