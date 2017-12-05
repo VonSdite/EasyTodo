@@ -57,12 +57,11 @@
 
         <activity android:name="xyz.wendyltanpcy.easytodo.TodoList.MotiveActivity"/>
 
-<<<<<<< HEAD
+
         <activity android:name=".ClockAlarmActivity"/>
 
 
-=======
->>>>>>> 0ac3c66fd0597e53602574db260261a5f3324dfc
+
         <receiver android:name="xyz.wendyltanpcy.easytodo.Receiver.AlarmReceiver">
             <intent-filter>
                 <action android:name="intent_alarm"/>
@@ -70,15 +69,15 @@
             </intent-filter>
         </receiver>
 
-<<<<<<< HEAD
+
         <receiver android:name=".Fragment.EventContentFragment$MyAlarmReceiver">
             <intent-filter>
                 <action android:name="com.todolist.alarm.clock"/>
             </intent-filter>
         </receiver>
-=======
+
         <activity android:name="xyz.wendyltanpcy.easytodo.helper.PictureHandle"/>
->>>>>>> 0ac3c66fd0597e53602574db260261a5f3324dfc
+
 
     </application>
 
