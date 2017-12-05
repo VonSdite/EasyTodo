@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -22,16 +21,15 @@ public class ClockAlarmActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clock_alarm);
-        String message = this.getIntent().getStringExtra("msg");
-        int flag = this.getIntent().getIntExtra("flag", 0);
+        int flag = this.getIntent().getIntExtra("flag", 2);
         eventName = this.getIntent().getStringExtra("eventName");
         eventDetail = this.getIntent().getStringExtra("eventDetail");
-        showDialogInBroadcastReceiver(message, flag);
+        showDialogInBroadcastReceiver(flag);
     }
 
-    private void showDialogInBroadcastReceiver(String message, final int flag) {
+    private void showDialogInBroadcastReceiver(final int flag) {
         if (flag == 1 || flag == 2) {
-            mediaPlayer = MediaPlayer.create(this, R.raw.in_call_alarm);
+            mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.in_call_alarm);
             mediaPlayer.setLooping(true);
             mediaPlayer.start();
         }
@@ -44,8 +42,8 @@ public class ClockAlarmActivity extends Activity {
 
         new AlertDialog.Builder(this).setTitle("EasyTodo:")
                 .setIcon(R.mipmap.icon2)//设置图标
-                .setTitle(eventName)
-                .setMessage("事件详情: "+eventDetail)
+                .setTitle("EasyTodo")
+                .setMessage("It's time to do event："+eventName+"\n\n事件详情: "+eventDetail)
                 .setCancelable(true)//可取消
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
@@ -57,7 +55,7 @@ public class ClockAlarmActivity extends Activity {
                         if (flag == 0 || flag == 2) {
                             vibrator.cancel();
                         }
-                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         finish();
                     }
                 })

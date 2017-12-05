@@ -42,9 +42,11 @@ public class EventContentFragment extends Fragment {
     private TextView eventDetailText ;
     private TextView eventDeadLineText ;
     private TextView eventAlarmText;
-    private static TodoEvent Event;
+    private TodoEvent Event;
     private ExpandableListView categoryExpandList;
     private ExpandListAdapter categoryAdapter;
+    private String eventName;
+    private String eventDetial;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.events_content_frag,container,false);
@@ -118,7 +120,7 @@ public class EventContentFragment extends Fragment {
                 // 需要设置闹钟提醒
                 //using position of event as alarm id:
                 int id = Event.getPos();
-                AlarmManagerUtil.setAlarm(getContext(), 0, hour, min, id, 0, "时间到了", 0);
+                AlarmManagerUtil.setAlarm(getContext(), 0, hour, min, id, 0, Event.getEventName(), Event.getEventDetail(), 2);
             default:
                 break;
         }
@@ -133,21 +135,22 @@ public class EventContentFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             // TODO Auto-generated method stub
-            String msg = intent.getStringExtra("msg");
+            String eventName = intent.getStringExtra("eventName");
+            String eventDetail = intent.getStringExtra("eventDetail");
             long intervalMillis = intent.getLongExtra("intervalMillis", 0);
             if (intervalMillis != 0) {
                 AlarmManagerUtil.setAlarmTime(context, System.currentTimeMillis() + intervalMillis,
                         intent);
             }
-            Log.i(TAG, "onReceive: AlarmBroadcast");
+            //查看日志测试
+            Log.i(TAG, "onReceive: AlarmBroadcast from event:"+eventName);
 
-            int flag = intent.getIntExtra("soundOrVibrator", 0);
+            int flag = intent.getIntExtra("soundOrVibrator", 2);
 
             Intent clockIntent = new Intent(context, ClockAlarmActivity.class);
-            clockIntent.putExtra("msg", msg);
             clockIntent.putExtra("flag", flag);
-            clockIntent.putExtra("eventName",Event.getEventName());
-            clockIntent.putExtra("eventDetail",Event.getEventDetail());
+            clockIntent.putExtra("eventName", eventName );
+            clockIntent.putExtra("eventDetail", eventDetail);
             clockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
 //            PendingIntent pi = PendingIntent.getActivity(context,0,clockIntent,0);

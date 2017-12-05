@@ -39,11 +39,12 @@ public class AlarmManagerUtil {
      * @param minute          分
      * @param id              闹钟的id
      * @param week            week=0表示一次性闹钟或者按天的周期性闹钟，非0 的情况下是几就代表以周为周期性的周几的闹钟
-     * @param tips            闹钟提示信息
+     * @param eventName       闹钟提示事件名字
+     * @param eventDetail     闹钟提示事件详情
      * @param soundOrVibrator 2表示声音和震动都执行，1表示只有铃声提醒，0表示只有震动提醒
      */
     public static void setAlarm(Context context, int flag, int hour, int minute, int id, int
-            week, String tips, int soundOrVibrator) {
+            week, String eventName, String eventDetail, int soundOrVibrator) {
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Calendar calendar = Calendar.getInstance();
         long intervalMillis = 0;
@@ -59,7 +60,8 @@ public class AlarmManagerUtil {
         //发送广播
         Intent intent = new Intent(ALARM_ACTION);
         intent.putExtra("intervalMillis", intervalMillis);
-        intent.putExtra("msg", tips);
+        intent.putExtra("eventName", eventName);
+        intent.putExtra("eventDetail", eventDetail);
         intent.putExtra("id", id);
         intent.putExtra("soundOrVibrator", soundOrVibrator);
         PendingIntent sender = PendingIntent.getBroadcast(context, id, intent, PendingIntent
