@@ -29,7 +29,6 @@
                   android:label="FinishEvent"
                   android:theme="@style/AppTheme.NoActionBar"
                 android:launchMode="singleTask">
-
         </activity>
         <activity
             android:name="xyz.wendyltanpcy.easytodo.TodoList.EventContentActivity"
@@ -54,11 +53,7 @@
                 android:resource="@xml/file_paths"/>
         </provider>
 
-        <activity android:name="xyz.wendyltanpcy.easytodo.TodoBrowser.BrowserActivity">
-        </activity>
-
         <activity android:name="xyz.wendyltanpcy.easytodo.TodoList.MotiveActivity"/>
-
 
         <receiver android:name="xyz.wendyltanpcy.easytodo.Receiver.AlarmReceiver">
             <intent-filter>
