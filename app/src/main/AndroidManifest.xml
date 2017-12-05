@@ -5,6 +5,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
+
 
     <application
         android:name="org.litepal.LitePalApplication"
@@ -58,11 +60,19 @@
 
         <activity android:name="xyz.wendyltanpcy.easytodo.TodoList.MotiveActivity"/>
 
+        <activity android:name=".ClockAlarmActivity"/>
+
 
         <receiver android:name="xyz.wendyltanpcy.easytodo.Receiver.AlarmReceiver">
             <intent-filter>
                 <action android:name="intent_alarm"/>
                 <action android:name="intent_event"/>
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".Fragment.EventContentFragment$MyAlarmReceiver">
+            <intent-filter>
+                <action android:name="com.todolist.alarm.clock"/>
             </intent-filter>
         </receiver>
 
