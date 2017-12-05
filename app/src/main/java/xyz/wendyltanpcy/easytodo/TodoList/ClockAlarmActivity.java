@@ -1,7 +1,5 @@
 package xyz.wendyltanpcy.easytodo.TodoList;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Service;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -10,6 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import java.io.File;
@@ -18,7 +18,7 @@ import xyz.wendyltanpcy.easytodo.R;
 import xyz.wendyltanpcy.easytodo.model.Consts;
 
 
-public class ClockAlarmActivity extends Activity {
+public class ClockAlarmActivity extends AppCompatActivity {
     private MediaPlayer mediaPlayer;
     private Vibrator vibrator;
     private String eventName;
@@ -34,8 +34,6 @@ public class ClockAlarmActivity extends Activity {
         int flag = this.getIntent().getIntExtra("flag", 2);
         eventName = this.getIntent().getStringExtra("eventName");
         eventDetail = this.getIntent().getStringExtra("eventDetail");
-
-        //开启了通知，才能够通知
 
         showDialogInBroadcastReceiver(flag);
 
@@ -68,7 +66,8 @@ public class ClockAlarmActivity extends Activity {
                 vibrator.vibrate(new long[]{100, 10, 100, 600}, 0);
             }
 
-        new AlertDialog.Builder(this).setTitle("EasyTodo:")
+        new AlertDialog.Builder(this)
+                .setTitle("EasyTodo:")
                 .setIcon(R.mipmap.icon2)//设置图标
                 .setTitle("EasyTodo")
                 .setMessage("It's time to do event："+eventName+"\n\n事件详情: "+eventDetail)
