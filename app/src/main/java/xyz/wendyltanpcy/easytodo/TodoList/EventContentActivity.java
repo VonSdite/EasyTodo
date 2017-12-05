@@ -27,8 +27,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-
 import org.litepal.crud.DataSupport;
 
 import java.io.ByteArrayOutputStream;
@@ -44,6 +42,7 @@ import xyz.wendyltanpcy.easytodo.Fragment.PickDateFragment;
 import xyz.wendyltanpcy.easytodo.Fragment.PickTimeFragment;
 import xyz.wendyltanpcy.easytodo.R;
 import xyz.wendyltanpcy.easytodo.helper.ColorManager;
+import xyz.wendyltanpcy.easytodo.helper.PictureHandle;
 import xyz.wendyltanpcy.easytodo.helper.PictureUtils;
 import xyz.wendyltanpcy.easytodo.model.ThemeColor;
 import xyz.wendyltanpcy.easytodo.model.TodoEvent;
@@ -122,7 +121,6 @@ public class EventContentActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         collapsingToolbar.setTitle(Event.getEventName());
-        Glide.with(this);
 
         EventContentFragment = (EventContentFragment)
                 getSupportFragmentManager().findFragmentById(R.id.news_content_fragment);
@@ -136,14 +134,9 @@ public class EventContentActivity extends AppCompatActivity {
         eventDeadLineText = (TextView) findViewById(R.id.event_deadline);
         eventImage = (ImageView) findViewById(R.id.event_content_image);
 
-        /*
-        如果事件具有图片的字节属性，就设置事件图片
-         */
-        if (Event.getEventImageBitMap()!=null){
-            byte[]images=Event.getEventImageBitMap();
-            Bitmap bitmap = BitmapFactory.decodeByteArray(images,0,images.length);
-            eventImage.setImageBitmap(bitmap);
-        }
+
+
+
 
         chooseDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -324,6 +317,8 @@ public class EventContentActivity extends AppCompatActivity {
                 if (resultCode != Activity.RESULT_OK) return;
                 uri = Uri.parse(mPublicPhotoPath);
                 path = uri.getPath();
+                //save pic file path
+                Event.setEventPhotoPath(path);
                 PictureUtils.galleryAddPic(mPublicPhotoPath, this);
                 break;
             //获取相册的图片
@@ -427,4 +422,23 @@ public class EventContentActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onResume() {
+          /*
+        如果事件具有图片的字节属性，就设置事件图片
+         */
+        super.onResume();
+        //显示图片并增加点击监听
+        if (Event.getEventImageBitMap() != null) {
+            byte[] images = Event.getEventImageBitMap();
+            Bitmap bitmap = BitmapFactory.decodeByteArray(images, 0, images.length);
+            eventImage.setImageBitmap(bitmap);
+            eventImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    PictureHandle.actionStart(EventContentActivity.this, Event.getEventPhotoPath());
+                }
+            });
+        }
+    }
 }

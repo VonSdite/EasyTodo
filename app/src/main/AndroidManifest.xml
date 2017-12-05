@@ -15,6 +15,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:largeHeap="true"
         android:theme="@style/AppTheme">
         <activity
             android:name="xyz.wendyltanpcy.easytodo.TodoList.MainActivity"
@@ -30,7 +31,6 @@
                   android:label="FinishEvent"
                   android:theme="@style/AppTheme.NoActionBar"
                 android:launchMode="singleTask">
-
         </activity>
         <activity
             android:name="xyz.wendyltanpcy.easytodo.TodoList.EventContentActivity"
@@ -55,14 +55,14 @@
                 android:resource="@xml/file_paths"/>
         </provider>
 
-        <activity android:name="xyz.wendyltanpcy.easytodo.TodoBrowser.BrowserActivity">
-        </activity>
-
         <activity android:name="xyz.wendyltanpcy.easytodo.TodoList.MotiveActivity"/>
 
+<<<<<<< HEAD
         <activity android:name=".ClockAlarmActivity"/>
 
 
+=======
+>>>>>>> 0ac3c66fd0597e53602574db260261a5f3324dfc
         <receiver android:name="xyz.wendyltanpcy.easytodo.Receiver.AlarmReceiver">
             <intent-filter>
                 <action android:name="intent_alarm"/>
@@ -70,11 +70,15 @@
             </intent-filter>
         </receiver>
 
+<<<<<<< HEAD
         <receiver android:name=".Fragment.EventContentFragment$MyAlarmReceiver">
             <intent-filter>
                 <action android:name="com.todolist.alarm.clock"/>
             </intent-filter>
         </receiver>
+=======
+        <activity android:name="xyz.wendyltanpcy.easytodo.helper.PictureHandle"/>
+>>>>>>> 0ac3c66fd0597e53602574db260261a5f3324dfc
 
     </application>
 

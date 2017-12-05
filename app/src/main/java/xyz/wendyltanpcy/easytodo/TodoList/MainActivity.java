@@ -13,8 +13,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +20,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -79,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
     private EventsAdapter MyAdapter;
     private List<TodoEvent> eventList = new ArrayList<>();
     private static boolean haveInit = false;
-    private DrawerLayout mDrawerLayout;
     private Drawer mDrawer;
     private ImageView homeImage;
     private FloatingActionButton add;
@@ -119,8 +115,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
         eventNameRecyclerView.setAdapter(MyAdapter);    // 设置adapter
 
         registerForContextMenu(eventNameRecyclerView); // 长按上下文菜单
-
-        showData();
     }
 
     @Override
@@ -732,8 +726,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
             });
             deleteAlert.show();
 
-        } else if (id == android.R.id.home) {
-            mDrawerLayout.openDrawer(GravityCompat.START);
         } else if (id == R.id.delay) {
             DelayList.clear();
             showDelayDialog();
@@ -748,13 +740,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
             eventList = autoDelayOne(eventList, DelayList);
     }
 
-    // 输出eventList中的对象， 查看数据库 测试用
-    public void showData(){
-        for(TodoEvent l : eventList)
-        {
-            Log.i(TAG, "showData: "+l.getEventName()+" "+l.getPos());
-        }
-    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -774,7 +759,6 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
                 startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                 break;
         }
-        mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 }
