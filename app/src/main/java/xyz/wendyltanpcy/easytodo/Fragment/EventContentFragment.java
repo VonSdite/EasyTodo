@@ -1,9 +1,14 @@
 package xyz.wendyltanpcy.easytodo.Fragment;
 
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +19,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 import xyz.wendyltanpcy.easytodo.Adapter.ExpandListAdapter;
+import xyz.wendyltanpcy.easytodo.ClockAlarmActivity;
 import xyz.wendyltanpcy.easytodo.R;
+import xyz.wendyltanpcy.easytodo.helper.AlarmManagerUtil;
 import xyz.wendyltanpcy.easytodo.model.TodoEvent;
 
 /**
@@ -106,9 +113,38 @@ public class EventContentFragment extends Fragment {
                 eventAlarmText.setText(Event.getEventTime());
             // TODO
                 // 需要设置闹钟提醒
+                AlarmManagerUtil.setAlarm(getContext(), 0, hour, min, 1, 0, "时间到了", 0);
             default:
                 break;
         }
 
+    }
+
+    //内部类广播接收器，接受闹钟发送的广播,需要定义为静态类
+    public static class MyAlarmReceiver extends BroadcastReceiver {
+        private MediaPlayer mediaPlayer;
+        private Vibrator vibrator;
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // TODO Auto-generated method stub
+            String msg = intent.getStringExtra("msg");
+            long intervalMillis = intent.getLongExtra("intervalMillis", 0);
+            if (intervalMillis != 0) {
+                AlarmManagerUtil.setAlarmTime(context, System.currentTimeMillis() + intervalMillis,
+                        intent);
+            }
+            Log.i(TAG, "onReceive: AlarmBroadcast");
+
+            int flag = intent.getIntExtra("soundOrVibrator", 0);
+
+            Intent clockIntent = new Intent(context, ClockAlarmActivity.class);
+            clockIntent.putExtra("msg", msg);
+            clockIntent.putExtra("flag", flag);
+            clockIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+//            PendingIntent pi = PendingIntent.getActivity(context,0,clockIntent,0);
+            context.startActivity(clockIntent);
+        }
     }
 }
