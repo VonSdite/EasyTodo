@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
@@ -46,25 +45,31 @@ public class ClockAlarmActivity extends AppCompatActivity {
         setting = PreferenceManager.getDefaultSharedPreferences(this);
         vibrate = setting.getBoolean(Consts.VIBRATE_KEY, false);
         ringtoneName = setting.getString("ringtoneName", "");
-        Log.i("TAG",ringtoneName);
-        Log.i("TAG", String.valueOf(vibrate));
-        if (ringtoneName!=null){
+        Log.i("TAG", "ringtoneName is:" + ringtoneName);
+        Log.i("TAG", "vibrate is:"+String.valueOf(vibrate));
+        /*if (ringtoneName!=null){
             ringtoneName = "/system/media/audio/notifications/"+ringtoneName+".ogg";
-        }
+        }*/
 
-        if (flag == 1 || flag == 2) {
-            mediaPlayer = MediaPlayer.create(getApplicationContext(), Uri.fromFile(new File(ringtoneName)));
+        if (!ringtoneName.equals("静音")) {
+            ringtoneName = "/system/media/audio/notifications/"+ringtoneName+".ogg";
+            if (new File(ringtoneName) != null ){
+                //这里加一个判断音频文件是否存在，如果存在则按照指定铃声实例化mediaPlayer，否则默认为in_call_alarm
+//                mediaPlayer = MediaPlayer.create(getApplicationContext(), Uri.fromFile(new File(ringtoneName)));
+            }
+//            else {
+                mediaPlayer = MediaPlayer.create(this, R.raw.in_call_alarm);
+//            }
             mediaPlayer.setLooping(true);
             mediaPlayer.start();
         }
         //数组参数意义：第一个参数为等待指定时间后开始震动，震动时间为第二个参数。后边的参数依次为等待震动和震动的时间
         //第二个参数为重复次数，-1为不重复，0为一直震动
         //如果设置了震动
-        if (vibrate)
-            if (flag == 0 || flag == 2) {
-                vibrator = (Vibrator) this.getSystemService(Service.VIBRATOR_SERVICE);
-                vibrator.vibrate(new long[]{100, 10, 100, 600}, 0);
-            }
+        if (vibrate) {
+            vibrator = (Vibrator) this.getSystemService(Service.VIBRATOR_SERVICE);
+            vibrator.vibrate(new long[]{100, 10, 100, 600}, 0);
+        }
 
         new AlertDialog.Builder(this)
                 .setTitle("EasyTodo:")
@@ -75,13 +80,15 @@ public class ClockAlarmActivity extends AppCompatActivity {
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        if (flag == 1 || flag == 2) {
+                        if (!ringtoneName.equals("静音")) {
                             mediaPlayer.stop();
                             mediaPlayer.release();
                         }
-                        if (flag == 0 || flag == 2) {
+
+                        if (vibrate){
                             vibrator.cancel();
                         }
+
 //                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         finish();
                     }

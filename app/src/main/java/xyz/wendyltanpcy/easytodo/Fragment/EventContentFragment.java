@@ -16,12 +16,14 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 import xyz.wendyltanpcy.easytodo.Adapter.ExpandListAdapter;
-import xyz.wendyltanpcy.easytodo.TodoList.ClockAlarmActivity;
 import xyz.wendyltanpcy.easytodo.R;
+import xyz.wendyltanpcy.easytodo.TodoList.ClockAlarmActivity;
 import xyz.wendyltanpcy.easytodo.helper.AlarmManagerUtil;
 import xyz.wendyltanpcy.easytodo.model.TodoEvent;
 
@@ -117,7 +119,7 @@ public class EventContentFragment extends Fragment {
 
                 //using position of event as alarm id:
                 int id = Event.getPos();
-                AlarmManagerUtil.setAlarm(getContext(), 1, hour, min, id, 0, Event.getEventName(), Event.getEventDetail(), 2);
+                AlarmManagerUtil.setAlarm(getContext(), 1, hour, min, id, 0, Event.getEventName(), Event.getEventDetail(), date_time,2);
             default:
                 break;
         }
@@ -133,7 +135,15 @@ public class EventContentFragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
             // TODO Auto-generated method stub
             Calendar eventSetTime = Calendar.getInstance();
-            eventSetTime.setTime(Event.getEventDeadline());
+
+            //获取事件日期
+            String strDate = intent.getStringExtra("eventDate");
+            Log.i(TAG, "onReceive: eventDate:" + strDate);
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            ParsePosition pos = new ParsePosition(0);
+            Date eventDate = formatter.parse(strDate, pos);
+
+            eventSetTime.setTime(eventDate);
             Calendar currentTime = Calendar.getInstance();
 
             //judge if the time in event is today,if yes, set alarm.
