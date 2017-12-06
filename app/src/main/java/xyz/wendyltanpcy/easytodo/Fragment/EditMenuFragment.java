@@ -124,7 +124,7 @@ public class EditMenuFragment extends DialogFragment implements View.OnClickList
                     switch (category){
                         case 1:
                             //无分类
-                            event.setEventCategory(-1);
+                            event.setEventCategory(0);
                             break;
                         case 4:
                             //生活类别

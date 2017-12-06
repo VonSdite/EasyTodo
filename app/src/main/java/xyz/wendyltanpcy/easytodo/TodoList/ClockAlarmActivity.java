@@ -4,12 +4,12 @@ import android.app.Service;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import java.io.File;
 
@@ -45,21 +45,27 @@ public class ClockAlarmActivity extends AppCompatActivity {
         setting = PreferenceManager.getDefaultSharedPreferences(this);
         vibrate = setting.getBoolean(Consts.VIBRATE_KEY, false);
         ringtoneName = setting.getString("ringtoneName", "");
-        Log.i("TAG", "ringtoneName is:" + ringtoneName);
-        Log.i("TAG", "vibrate is:"+String.valueOf(vibrate));
+
+
         /*if (ringtoneName!=null){
             ringtoneName = "/system/media/audio/notifications/"+ringtoneName+".ogg";
         }*/
 
         if (!ringtoneName.equals("静音")) {
+
+            //从默认铃声中提取文件名
+            if (ringtoneName.startsWith("默认铃声 (")&&ringtoneName.endsWith(")"))
+                ringtoneName = ringtoneName.replace("默认铃声 (","").replace(")","");
+
             ringtoneName = "/system/media/audio/notifications/"+ringtoneName+".ogg";
-            if (new File(ringtoneName) != null ){
+            File soundFile =new File(ringtoneName);
+            if (soundFile.exists()){
                 //这里加一个判断音频文件是否存在，如果存在则按照指定铃声实例化mediaPlayer，否则默认为in_call_alarm
-//                mediaPlayer = MediaPlayer.create(getApplicationContext(), Uri.fromFile(new File(ringtoneName)));
+                mediaPlayer = MediaPlayer.create(getApplicationContext(), Uri.fromFile(soundFile));
             }
-//            else {
+            else {
                 mediaPlayer = MediaPlayer.create(this, R.raw.in_call_alarm);
-//            }
+            }
             mediaPlayer.setLooping(true);
             mediaPlayer.start();
         }
@@ -76,7 +82,7 @@ public class ClockAlarmActivity extends AppCompatActivity {
                 .setIcon(R.mipmap.icon2)//设置图标
                 .setTitle("EasyTodo")
                 .setMessage("It's time to do event："+eventName+"\n\n事件详情: "+eventDetail)
-                .setCancelable(true)//可取消
+                .setCancelable(false)//点击确认才可取消，点击对话框外不能取消
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {

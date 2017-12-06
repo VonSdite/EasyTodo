@@ -539,11 +539,15 @@ public class MainActivity extends AppCompatActivity implements Serializable, Dia
             int eventCount = 0;
             boolean vibrate = setting.getBoolean(Consts.VIBRATE_KEY, false);
             String ringtoneName = setting.getString("ringtoneName", "");
+            if (ringtoneName.startsWith("默认铃声 (")&&ringtoneName.endsWith(")"))
+                ringtoneName = ringtoneName.replace("默认铃声 (","").replace(")","");
+
             for (TodoEvent event : todoEventList) {
                 if (event.getEventDate().equals(dayString)) {
                     eventCount++;
                 }
             }
+
             Intent i = new Intent(INTENT_EVENT);
             i.putExtra("event_num", eventCount);
             i.putExtra("vibrate", vibrate);
